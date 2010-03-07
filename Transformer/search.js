@@ -50,8 +50,7 @@ function replaceKeysWithValues() {
 function getHashMap() {
 	var map = new Map;
 	map
-		.put(DELIMITER + 'bl', 'Benjamin Lehejcek')
-		.put(DELIMITER + 'ma', 'Martin Becker')
+		.put(DELIMITER + 'mp', 'Max Power')
 		.put(DELIMITER + 'mfg', 'Mit freundlichen Grüßen')
 		.put(DELIMITER + 'hp', 'Sehr geehrter Herr Prof. Dr.');
 	return map;
