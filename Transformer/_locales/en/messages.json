@@ -6,5 +6,22 @@
   "extdescription": {
     "message": "Convert replacement character into longer values. For Example !ys -> Yours sincerely.",
     "description": "Long extension description"
+  },
+  "options": {
+    "message": "Options",
+    "description": "The word options for the optionpage"
+  },
+  "option_add": {
+    "message": "Add",
+    "description": ""
+  },
+  "option_del": {
+    "message": "Delete",
+    "description": ""
+  },
+  "save": {
+    "message": "Save",
+    "description": ""
   }
+
 }

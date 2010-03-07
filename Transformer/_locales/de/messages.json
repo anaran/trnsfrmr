@@ -6,5 +6,9 @@
   "extdescription": {
     "message": "Hier noch einen schönen Text. Beispiel: !mfg -> Mit freundlichen Grüßen",
     "description": "Ausführliche Beschreibung der Erweiterung"
+  },
+  "options": {
+    "message": "Optionen",
+    "description": "Das Wort Optionen fuer die Optionsseite"
   }
 }

@@ -1,50 +1,70 @@
 <html>
 	<head>
 	<title>My Test Extension Options</title>
-	</head>
+
 	<script type="text/javascript">
 	
-	// Saves options to localStorage.
-	function save_options() {
-	  var select = document.getElementById("color");
-	  var color = select.children[select.selectedIndex].value;
-	  localStorage["favorite_color"] = color;
+	var sub_line = "<div class=\"sub_line\"><input class=\"sub_key\" type=\"text\" value=\"\"/><textarea class=\"sub_value\" rows=\"1\" cols=\"20\" ></textarea><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></div>";
+			
 	
-	  // Update status to let user know options were saved.
-	  var status = document.getElementById("status");
-	  status.innerHTML = "Options Saved.";
-	  setTimeout(function() {
-	    status.innerHTML = "";
-	  }, 750);
+	function localize(elementname, messageid)
+	{
+		var el = document.getElementsByName(elementname);
+		for (var i = 0; i < el.length; i++)
+		{
+			el[i].innerHTML =  chrome.i18n.getMessage(messageid);
+		}
+		
+	}
+	
+	// Inits Strings (i18n) and restores data
+	function init()
+	{
+		localize("caption", "options");
+		localize("save", "save");
+		localize("add", "option_add");
+		
+		restore_options();
+	}
+	
+	function add()
+	{
+		document.getElementById("subs").innerHTML += sub_line;
+	}
+	
+	function del(button)
+	{
+		button.parentElement.outerHTML='';
+	}
+	
+
+	// Saves options to localStorage.
+	function save_options()
+	{
+		//localStorage["favorite_color"] = color;
 	}
 	
 	// Restores select box state to saved value from localStorage.
-	function restore_options() {
-	  var favorite = localStorage["favorite_color"];
-	  if (!favorite) {
-	    return;
-	  }
-	  var select = document.getElementById("color");
-	  for (var i = 0; i < select.children.length; i++) {
-	    var child = select.children[i];
-	    if (child.value == favorite) {
-	      child.selected = "true";
-	      break;
-	    }
-	  }
+	function restore_options()
+	{
+		// var favorite = localStorage["favorite_color"];
+  
+		// test: lege ein leeres Element an
+		document.getElementById("subs").innerHTML = sub_line;
 	}
 	
 	</script>
-	
-	<body onload="restore_options()">
-		Favorite Color:
-		<select id="color">
-			 <option value="red">red</option>
-			 <option value="green">green</option>
-			 <option value="blue">blue</option>
-			 <option value="yellow">yellow</option>
-		</select>
+	</head>
+	<body onload="init()">
+		
+	<h1 name="caption"></h1>
+	<hr>
+		<button onclick="add()" name="add"></button>
+		<div class="subs" id="subs">
+		</div>
+		<button onclick="add()" name="add"></button>
+	<hr>
 		<br>
-		<button onclick="save_options()">Save</button>
+		<button onclick="save_options()" name="save"></button>
 	</body>
 </html>
