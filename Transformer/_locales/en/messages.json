@@ -1,0 +1,10 @@
+﻿{
+  "extname": {
+    "message": "Transformer",
+    "description": "Extensionname"
+  },
+  "extdescription": {
+    "message": "Convert replacement character into longer values. For Example !ys -> Yours sincerely.",
+    "description": "Long extension description"
+  }
+}

@@ -1,7 +1,8 @@
-{
-	"name": "Transformer",
+﻿{
+	"name": "__MSG_extname__",
 	"version": "1.0",
-	"description": "Convert replacement character into longer values. For Example !ys -> Yours sincerely.",
+	"description": "__MSG_extdescription__",
+	"default_locale": "en",
 	"icons": {
 		"128": "icon-128x128.png"
 	},
