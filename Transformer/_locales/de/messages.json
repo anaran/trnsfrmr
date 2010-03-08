@@ -10,5 +10,29 @@
   "options": {
     "message": "Optionen",
     "description": "Das Wort Optionen fuer die Optionsseite"
+  },
+  "option_add": {
+    "message": "Hinzufügen",
+    "description": ""
+  },
+  "option_del": {
+    "message": "Entfernen",
+    "description": ""
+  },
+  "save": {
+    "message": "Speichern",
+    "description": ""
+  },
+  "restore": {
+    "message": "Laden",
+    "description": ""
+  },
+  "abbr": {
+    "message": "Abkürzung",
+    "description": ""
+  },
+  "long": {
+    "message": "Wird erweitert zu...",
+    "description": ""
   }
 }

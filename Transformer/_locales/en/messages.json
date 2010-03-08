@@ -22,6 +22,18 @@
   "save": {
     "message": "Save",
     "description": ""
+  },
+  "restore": {
+    "message": "Restore",
+    "description": ""
+  },
+  "abbr": {
+    "message": "Abbreviation",
+    "description": ""
+  },
+  "long": {
+    "message": "Expand to...",
+    "description": ""
   }
 
 }
