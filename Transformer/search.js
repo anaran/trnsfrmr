@@ -10,6 +10,8 @@ function include(file) {
 
 // include java script files
 include('./hashmap.js');
+include('./data.js');
+
 //TODO remove JUST FOR DEV - END
 
 // run findAndRepleacer method on key up event
@@ -42,12 +44,14 @@ function findAndReplace() {
 }
 
 // find input types text and text area
-function replaceKeysWithValues() {
+function replaceKeysWithValues()
+{
 	var elem = document.getElementsByTagName("input");
-	alert("input elements:" + elem.length);
+	document.getElementById("log").innerHTML += "input elements:" + elem.length + "\n";
 	replace(elem);
+	
 	var elem = document.getElementsByTagName("textarea");
-	alert("textarea elements:" + elem.length);
+	document.getElementById("log").innerHTML += "textarea elements:" + elem.length + "\n";
 	replace(elem);
 }
 
@@ -64,14 +68,4 @@ function replace(elem) {
 			}
 		}
 	}
-}
-
-// get hash map for key -> value transformation
-function getHashMap() {
-	var map = new Map;
-	map
-		.put(DELIMITER + 'mp', 'Max Power')
-		.put(DELIMITER + 'mfg', 'Mit freundlichen Grüßen')
-		.put(DELIMITER + 'hp', 'Sehr geehrter Herr Prof. Dr.');
-	return map;
 }
