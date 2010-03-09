@@ -29,6 +29,9 @@
 		localize("restore", "restore");
 		localize("add", "option_add");
 		
+		localize("abbr", "abbr");
+		localize("long", "long");
+		
 		restore_options();
 	}
 	
@@ -84,12 +87,7 @@
 		}
 		
 	}
-	
-	function test_button()
-	{
-		chrome.extension.sendRequest({read: "map"}, function(response) { console.log(response); });
-	}
-	
+		
 	</script>
 	<link href="style.css" rel="stylesheet" type="text/css">
     </head>
@@ -108,8 +106,8 @@
                 <br>
                 <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <th width="200px">Shortcut</th>
-                    <th width="700px">Longform</th>
+                    <th width="200px" name="abbr"></th>
+                    <th width="700px" name="long"></th>
                     <th>&nbsp;</th>
                   </tr>
                 </table>
