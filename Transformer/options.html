@@ -6,7 +6,7 @@
 	
 	
 	
-	var sub_line = "<div class=\"sub_line\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></div>";
+	var sub_line = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
 			
 	
 	function localize(elementname, messageid)
@@ -91,20 +91,38 @@
 	}
 	
 	</script>
-	</head>
-	<body onload="init()">
-		
-	<h1 name="caption"></h1>
-		<hr>
-		<button onclick="add()" name="add"></button>
-		<div class="subs" id="subs">
-		</div>
-		<button onclick="add()" name="add"></button>
-		<hr>
-		<br>
-		<button onclick="save_options()" name="save"></button>
-		<button onclick="restore_options()" name="restore"></button>
-		<button onclick="test_button()">Test</button>
-		<div id="log"></div>
+	<link href="style.css" rel="stylesheet" type="text/css">
+    </head>
+	<body onLoad="init()">
+        <table id="main" border="0" cellspacing="3" cellpadding="0" >
+          <tr>
+            <td><h1 name="caption"></h1></td>
+          </tr>
+          <tr>
+            <td id="body">
+                <br>
+                <br>
+                <hr noshade color="#F8D77E">
+                <button onClick="add()" name="add"></button>
+                <br>
+                <br>
+                <table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <th width="200px">Shortcut</th>
+                    <th width="700px">Longform</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                </table>
+                <table border="0" cellspacing="10" cellpadding="0" class="subs" id="subs">
+                </table>
+                <button onClick="add()" name="add"></button>
+                <hr noshade color="#F8D77E" align="center">
+                <br>
+                <button onClick="save_options()" name="save"></button>
+                <button onClick="restore_options()" name="restore"></button>
+                <div id="log"></div>
+            </td>
+          </tr>
+        </table>
 	</body>
 </html>

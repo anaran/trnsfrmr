@@ -14,3 +14,37 @@ body {
 .item_desc {
   font-size: 12px;
 }
+.sub_key {
+	width: 200px;
+}
+.sub_value {
+	width: 650px;
+	height:50px;
+}
+
+.sub_line {
+	width:900px;
+}
+
+
+#main {
+	position: absolute;
+	margin-top: 100px;
+	width: 1000px;
+	left:50%;
+	margin-left:-500px;
+	font-family:Arial, Helvetica, sans-serif;
+	background-color: #F8D77E;
+	height: inherit;
+}
+#head {
+	width: 1000px;
+}
+
+#body {
+	background-color: #FFF8E0;
+	width: 990px;
+}
+hr {
+	width: 980px;
+}
