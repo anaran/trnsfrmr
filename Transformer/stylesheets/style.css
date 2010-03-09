@@ -34,7 +34,7 @@ body {
 	left:50%;
 	margin-left:-500px;
 	font-family:Arial, Helvetica, sans-serif;
-	background-color: #F8D77E;
+	background-color: #F5CA58;
 	height: inherit;
 }
 #head {
@@ -42,9 +42,48 @@ body {
 }
 
 #body {
-	background-color: #FFF8E0;
+	background-color: #FFF7D9;
 	width: 990px;
 }
-hr {
-	width: 980px;
+#tabs {
+	position: relative;
+	top: -22px;
+}
+span {
+	vertical-align: middle;
+	padding: 3px;
+}
+
+.selected-tab {
+	font-size: 14px;
+	color: #000000;
+	background-color: #FFF7D9;
+	font-weight: bold;
+}
+
+.unselected-tab {
+	font-size: 14px;
+	color: 0000;
+	font-weight: bold;
+	background-color: #F5CA58;
+	text-decoration: underline;
+}
+.selected-div {
+	visibility: visible;
+
+
+
+
+
+
+}
+.unselected-div {
+	visibility: hidden;
+	height: 0px;
+
+
+
+
+
+
 }

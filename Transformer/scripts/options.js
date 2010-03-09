@@ -85,3 +85,28 @@
 		}
 		
 	}
+	// Show the selected settings tab
+	function tabClick(elem)
+	{
+		if(elem == 'single')
+		{
+			document.getElementById("single").className = "selected-tab";
+			document.getElementById("single_div").className = "selected-div";	
+		}
+		else
+		{
+			document.getElementById("single").className = "unselected-tab";
+			document.getElementById("single_div").className = "unselected-div";
+		}
+		
+		if(elem == 'multi')
+		{
+			document.getElementById("multi").className = "selected-tab";
+			document.getElementById("multi_div").className = "selected-div";	
+		}
+		else
+		{
+			document.getElementById("multi").className = "unselected-tab";
+			document.getElementById("multi_div").className = "unselected-div";
+		}
+	}
