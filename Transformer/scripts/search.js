@@ -23,15 +23,12 @@ function init() {
 function findAndReplace()
  {
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
-	var keyId = event.keyCode;
-	switch(keyId) {
-		case KEYCODE_SPACE:
-			replaceKeysWithValues();
-			break;
-		case KEYCODE_ENTER:
-			replaceKeysWithValues();
-			break;
-	}
+ 	var e = window.event;
+ 	var keyId = e.keyCode;
+ 	var ctrl = (e.ctrlKey) ? true : false;
+ 	if (ctrl && (keyId == KEYCODE_SPACE)) {
+		replaceKeysWithValues();
+ 	}
 }
 
 // find input types text and text area
