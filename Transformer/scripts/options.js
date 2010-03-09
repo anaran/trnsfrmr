@@ -1,14 +1,19 @@
 	var sub_line = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
 			
 	
-	function localize(elementname, messageid)
+	
+	function localizeString(elementname, text)
 	{
 		var el = document.getElementsByName(elementname);
 		for (var i = 0; i < el.length; i++)
 		{
-			el[i].innerHTML =  chrome.i18n.getMessage(messageid);
+			el[i].innerHTML =  text;
 		}
 		
+	}
+	function localize(elementname, messageid)
+	{
+		localizeString(elementname, chrome.i18n.getMessage(messageid) );
 	}
 	
 	// Inits Strings (i18n) and restores data
@@ -16,7 +21,8 @@
 	{
 		document.title = chrome.i18n.getMessage("extname") + " - " + chrome.i18n.getMessage("options");
 		
-		localize("caption", "options");
+		localizeString("caption", document.title);
+		
 		localize("save", "save");
 		localize("restore", "restore");
 		localize("add", "option_add");
