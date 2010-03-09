@@ -15,8 +15,9 @@
 	"content_scripts": [
 		{
 			"matches": ["http://*/*", "https://*/*", "file://*/*"],
-			"js": ["search.js", "hashmap.js", "data.js"],
+			"js": ["search.js", "hashmap.js"],
 			"all_frames": true
 		}
-	]
+	],
+	"background_page": "background.html"
 }

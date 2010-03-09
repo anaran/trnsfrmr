@@ -1,7 +1,7 @@
 <html>
 	<head>
+	<title></title>
 	<script type="text/javascript" src="hashmap.js"></script>
-	<script type="text/javascript" src="data.js"></script>
 	<script type="text/javascript">
 	
 	
@@ -22,6 +22,8 @@
 	// Inits Strings (i18n) and restores data
 	function init()
 	{
+		document.title = chrome.i18n.getMessage("extname") + " - " + chrome.i18n.getMessage("options");
+		
 		localize("caption", "options");
 		localize("save", "save");
 		localize("restore", "restore");
@@ -70,7 +72,7 @@
 	function restore_options()
 	{
 		document.getElementById("subs").innerHTML = "";
-		var map = getHashMap();
+		var map = chrome.extension.getBackgroundPage().getHashMap();
 		
 		for(var j = 0; j++ < map.size; map.next())
 		{ // check all keys
@@ -81,6 +83,11 @@
 			document.getElementById("subs").innerHTML += new_line;
 		}
 		
+	}
+	
+	function test_button()
+	{
+		chrome.extension.sendRequest({read: "map"}, function(response) { console.log(response); });
 	}
 	
 	</script>
@@ -97,6 +104,7 @@
 		<br>
 		<button onclick="save_options()" name="save"></button>
 		<button onclick="restore_options()" name="restore"></button>
+		<button onclick="test_button()">Test</button>
 		<div id="log"></div>
 	</body>
 </html>
