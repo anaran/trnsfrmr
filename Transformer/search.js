@@ -22,8 +22,7 @@ function init() {
 // trigger replaceKeysWithValues method on key event space or enter
 function findAndReplace()
  {
- 
-	chrome.extension.sendRequest({read: "map"}, refreshMap);
+ 	chrome.extension.sendRequest({read: "map"}, refreshMap);
 	var keyId = event.keyCode;
 	switch(keyId) {
 		case KEYCODE_SPACE:
@@ -48,13 +47,12 @@ function replaceKeysWithValues()
 //replaces the keys with the assigned values in the element.
 function replace(elem) {
 	for(var i = 0; i < elem.length; i++) { // check all elements
-		var type = elem[i].type;
-		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA)){
-			var id = elem[i].id;
-			
+		var e = elem[i];
+		var type = e.type;
+		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA))
+		{
 			for(var j = 0; j++ < map.size; map.next()) { // check all keys
-				var value = document.getElementById(id).value;
-				document.getElementById(id).value = value.replace(map.key(),  map.value());
+				e.value = e.value.replace(map.key(),  map.value());
 			}
 		}
 	}
