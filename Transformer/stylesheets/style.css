@@ -7,7 +7,7 @@ body {
 }
 .item_title {
   color: #2244D2;
-  font-size: 20px;
+  font-size: 16px;
   font-weight:bold;
   text-decoration: none;
 }
@@ -26,16 +26,13 @@ body {
 	width:900px;
 }
 
-
 #main {
 	position: absolute;
-	margin-top: 100px;
-	width: 1000px;
-	left:50%;
-	margin-left:-500px;
 	font-family:Arial, Helvetica, sans-serif;
-	background-color: #F5CA58;
 	height: inherit;
+	border: 4px solid #FFCC66; 
+	border-radius: 4px; 
+	background-color: #FFCC66;
 }
 #head {
 	width: 1000px;
@@ -53,37 +50,20 @@ span {
 	vertical-align: middle;
 	padding: 3px;
 }
-
 .selected-tab {
 	font-size: 14px;
 	color: #000000;
 	background-color: #FFF7D9;
 	font-weight: bold;
 }
-
 .unselected-tab {
 	font-size: 14px;
-	color: 0000;
 	font-weight: bold;
-	background-color: #F5CA58;
-	text-decoration: underline;
 }
 .selected-div {
 	visibility: visible;
-
-
-
-
-
-
 }
 .unselected-div {
 	visibility: hidden;
 	height: 0px;
-
-
-
-
-
-
 }
