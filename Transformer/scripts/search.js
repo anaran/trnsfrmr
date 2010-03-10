@@ -23,7 +23,21 @@ function init() {
 }
 
 function pageHasEditableElements() {
-	return (elemInput.length > 0 || elemTextarea.length > 0);
+	if (checkElements(elemInput) || checkElements(elemTextarea)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function checkElements(elem) {
+	for(var i = 0; i < elem.length; i++) {
+		var type = elem[i].type;
+		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 // trigger replaceKeysWithValues method on key event space or enter
