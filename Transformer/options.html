@@ -11,18 +11,19 @@
     <td height="75px"><h1 name="caption"></h1></td>
   </tr>
   <tr>
-    <td id="body"><div id="tabs"> 
-    <span id="single" class="selected-tab" onClick="tabClick('single')">Single Text Area</span>
-    <span id="multi" class="unselected-tab" onClick="tabClick('multi')">&nbsp;Multi Text Area&nbsp;</span>
-    </div>
+    <td id="body">
+      <div id="tabs"> 
+        <span id="single" class="selected-tab" onClick="tabClick('single')"><a href="">Single Text Area</a></span>
+        <span id="multi" class="unselected-tab" onClick="tabClick('multi')"><a href="">Multi Text Area</a></span>
+      </div>
       <div id="single_div" class="selected-div">
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="50px" valign="top"><button onClick="add()" name="add"></button></td>
+            <td id="add_button"><button onClick="add()" name="add"></button></td>
           </tr>
           <tr>
-            <th width="200px" name="abbr"></th>
-            <th width="700px" name="long"></th>
+            <th id="head_abbr" name="abbr"></th>
+            <th id="head_long" name="long"></th>
             <th>&nbsp;</th>
           </tr>
           <tr>
@@ -30,21 +31,22 @@
               </table></td>
           </tr>
           <tr>
-            <td  height="30px" valign="top"><button onClick="add()" name="add"></button></td>
+            <td id="add_button"><button onClick="add()" name="add"></button></td>
           </tr>
           <tr>
             <td><button onClick="save_options()" name="save"></button></td>
           </tr>
+          <div id="log"></div>
         </table>
       </div>
       <div id="multi_div" class="unselected-div">
-              <table border="0" cellspacing="0" cellpadding="0">
+        <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="50px" valign="top"><button onClick="add_multi()" name="add"></button></td>
+            <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
           </tr>
           <tr>
-            <th width="200px" name="abbr"></th>
-            <th width="700px" name="long"></th>
+            <th id="head_abbr" name="abbr"></th>
+            <th id="head_long" name="long"></th>
             <th>&nbsp;</th>
           </tr>
           <tr>
@@ -52,7 +54,7 @@
               </table></td>
           </tr>
           <tr>
-            <td  height="30px" valign="top"><button onClick="add_multi()" name="add"></button></td>
+            <td  id="add_button"><button onClick="add_multi()" name="add"></button></td>
           </tr>
           <tr>
             <td><button onClick="save_options()" name="save"></button><button onClick="restore_options()" name="restore"></button></td>
