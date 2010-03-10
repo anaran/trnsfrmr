@@ -22,7 +22,7 @@ function init() {
 function pageHasEditableElements() {
 	var elemInput = document.getElementsByTagName("input");
 	var elemTextarea = document.getElementsByTagName("textarea");
-	if (checkElements(elemInput) || checkElements(elemTextarea)) {
+	if (checkElements(elemInput) || elemTextarea.length > 0 ) {
 		return true;
 	} else {
 		return false;
