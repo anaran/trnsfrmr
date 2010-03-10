@@ -15,8 +15,6 @@ var map;
 // init extension
 function init() {
 	// TODO show icon in omnimbar
-	
-	
 }
 
 // trigger replaceKeysWithValues method on key event space or enter
@@ -24,9 +22,7 @@ function findAndReplace()
  {
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
  	var e = window.event;
- 	var keyId = e.keyCode;
- 	var ctrl = (e.ctrlKey) ? true : false;
- 	if (ctrl && (keyId == KEYCODE_SPACE)) {
+ 	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
 		replaceKeysWithValues();
  	}
 }
@@ -46,9 +42,9 @@ function replace(elem) {
 	for(var i = 0; i < elem.length; i++) { // check all elements
 		var e = elem[i];
 		var type = e.type;
-		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA))
-		{
+		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA)) {
 			for(var j = 0; j++ < map.size; map.next()) { // check all keys
+				// TODO just replace focused phrase 
 				e.value = e.value.replace(map.key(),  map.value());
 			}
 		}
@@ -63,7 +59,7 @@ function refreshMap(response)
 	
 	for (var i = 0; (i+1) < a.length; i+=2)
 	{
-		map.put(a[i], a[i+1])	
+		map.put(a[i], a[i+1]);
 	}
 }
 
