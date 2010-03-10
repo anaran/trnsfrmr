@@ -7,7 +7,7 @@ function getHashMap()
 	
 	for (var i = 0; (i+1) < a.length; i+=2)
 	{
-		map.put(a[i], a[i+1])	
+		map.put(a[i], a[i+1]);
 	}
 			
 	return map;
@@ -23,3 +23,10 @@ chrome.extension.onRequest.addListener(
 			sendResponse({}); // snub them.
 	}
 );
+
+function onRequest(request, sender, sendResponse) {
+  chrome.pageAction.show(sender.tab.id);
+  sendResponse({});
+};
+
+chrome.extension.onRequest.addListener(onRequest);

@@ -12,9 +12,18 @@ var INPUT_TYPE_PASSWORD = "password";
 var INPUT_TYPE_TEXTAREA = "textarea";
 var map;
 
+var elemInput = document.getElementsByTagName("input");
+var elemTextarea = document.getElementsByTagName("textarea");
+
 // init extension
 function init() {
-	// TODO show icon in omnimbar
+	if (pageHasEditableElements()) {
+		chrome.extension.sendRequest({}, function(response) {});
+	}
+}
+
+function pageHasEditableElements() {
+	return (elemInput.length > 0 || elemTextarea.length > 0);
 }
 
 // trigger replaceKeysWithValues method on key event space or enter
@@ -28,13 +37,9 @@ function findAndReplace()
 }
 
 // find input types text and text area
-function replaceKeysWithValues()
-{
-	var elem = document.getElementsByTagName("input");
-	replace(elem);
-	
-	var elem = document.getElementsByTagName("textarea");
-	replace(elem);
+function replaceKeysWithValues() {
+	replace(elemInput);
+	replace(elemTextarea);
 }
 
 //replaces the keys with the assigned values in the element.
