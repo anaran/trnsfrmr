@@ -33,7 +33,7 @@ function pageHasEditableElements() {
 function checkElements(elem) {
 	for(var i = 0; i < elem.length; i++) {
 		var type = elem[i].type;
-		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA)) {
+		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) || type == "body") {
 			return true;
 		}
 	}
@@ -61,7 +61,7 @@ function replace(elem) {
 	for(var i = 0; i < elem.length; i++) { // check all elements
 		var e = elem[i];
 		var type = e.type;
-		if ((type == INPUT_TYPE_TEXT) || (type = INPUT_TYPE_PASSWORD) || (type = INPUT_TYPE_TEXTAREA)) {
+		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
 			for(var j = 0; j++ < map.size; map.next()) { // check all keys
 				// TODO just replace focused phrase 
 				e.value = e.value.replace(map.key(),  map.value());
