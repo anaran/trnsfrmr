@@ -55,8 +55,7 @@ function replaceKeysWithValues() {
 	var type = element.type;
 	if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
 		for(var j = 0; j++ < map.size; map.next()) { // check all keys
-			// TODO replace all keys 
-			element.value = element.value.replace(map.key(),  map.value());
+			element.value = element.value.replace(new RegExp(map.key(), "g"),  map.value());
 		}
 	}
 }
