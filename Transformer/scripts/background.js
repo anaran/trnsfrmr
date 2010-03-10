@@ -13,20 +13,24 @@ function getHashMap()
 	return map;
 }
 
-  
-chrome.extension.onRequest.addListener(
-	function(request, sender, sendResponse)
-	{
-		if (request.read == "map")
-			sendResponse( localStorage["map"] );
-		else
-			sendResponse({}); // snub them.
-	}
-);
+function onRequest(request, sender, sendResponse)
+{
 
-function onRequest(request, sender, sendResponse) {
-	chrome.pageAction.show(sender.tab.id);
-	sendResponse({});
+	if (request.read == "map")
+	{
+		sendResponse( localStorage["map"] );
+	}
+	else if(request.pageaction == "show")
+	{
+		chrome.pageAction.show(sender.tab.id);
+		sendResponse({});
+	}
+	else
+	{
+		sendResponse({}); // snub them.
+	}
+
+	
 };
 
-chrome.extension.onRequest.addListener(onRequest);
+chrome.extension.onRequest.addListener(onRequest)

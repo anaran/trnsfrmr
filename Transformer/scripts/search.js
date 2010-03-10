@@ -13,9 +13,12 @@ var INPUT_TYPE_TEXTAREA = "textarea";
 var map;
 
 // init extension
-function init() {
+function init()
+{
+ 	chrome.extension.sendRequest({read: "map"}, refreshMap);
+	
 	if (pageHasEditableElements()) {
-		chrome.extension.sendRequest({}, function(response) {});
+		chrome.extension.sendRequest({pageaction: "show"}, function(response) {});
 	}
 }
 
@@ -41,8 +44,7 @@ function checkElements(elem) {
 
 // trigger replaceKeysWithValues method on key event space or enter
 function findAndReplace()
- {
- 	chrome.extension.sendRequest({read: "map"}, refreshMap);
+{
  	var e = window.event;
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
 		replaceKeysWithValues();
