@@ -12,9 +12,6 @@ var INPUT_TYPE_PASSWORD = "password";
 var INPUT_TYPE_TEXTAREA = "textarea";
 var map;
 
-var elemInput = document.getElementsByTagName("input");
-var elemTextarea = document.getElementsByTagName("textarea");
-
 // init extension
 function init() {
 	if (pageHasEditableElements()) {
@@ -23,6 +20,8 @@ function init() {
 }
 
 function pageHasEditableElements() {
+	var elemInput = document.getElementsByTagName("input");
+	var elemTextarea = document.getElementsByTagName("textarea");
 	if (checkElements(elemInput) || checkElements(elemTextarea)) {
 		return true;
 	} else {
@@ -33,7 +32,7 @@ function pageHasEditableElements() {
 function checkElements(elem) {
 	for(var i = 0; i < elem.length; i++) {
 		var type = elem[i].type;
-		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) || type == "body") {
+		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA)) {
 			return true;
 		}
 	}
@@ -50,22 +49,14 @@ function findAndReplace()
  	}
 }
 
-// find input types text and text area
-function replaceKeysWithValues() {
-	replace(elemInput);
-	replace(elemTextarea);
-}
-
 //replaces the keys with the assigned values in the element.
-function replace(elem) {
-	for(var i = 0; i < elem.length; i++) { // check all elements
-		var e = elem[i];
-		var type = e.type;
-		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
-			for(var j = 0; j++ < map.size; map.next()) { // check all keys
-				// TODO just replace focused phrase 
-				e.value = e.value.replace(map.key(),  map.value());
-			}
+function replaceKeysWithValues() {
+	var element = document.activeElement;
+	var type = element.type;
+	if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
+		for(var j = 0; j++ < map.size; map.next()) { // check all keys
+			// TODO replace all keys 
+			element.value = element.value.replace(map.key(),  map.value());
 		}
 	}
 }
