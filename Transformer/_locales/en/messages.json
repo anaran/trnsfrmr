@@ -35,5 +35,8 @@
     "message": "Expand to...",
     "description": ""
   }
-
+  "and": {
+    "message": "and...",
+    "description": ""
+  }
 }

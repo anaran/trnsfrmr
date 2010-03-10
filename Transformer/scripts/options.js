@@ -1,4 +1,6 @@
 	var sub_line = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
+
+	var sub_line_multi = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><input id=\"value\" class=\"sub_value_multi\" value=\"##VALUE##\" /><br><input id=\"value2\" class=\"sub_value_multi\" value=\"##VALUE2##\" /></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
 			
 	
 	
@@ -29,6 +31,7 @@
 		
 		localize("abbr", "abbr");
 		localize("long", "long");
+		localize("and", "and");
 		
 		restore_options();
 	}
@@ -41,6 +44,17 @@
 		document.getElementById("subs").innerHTML += new_line;
 
 	}
+	
+	function add_multi()
+	{
+		var new_line = sub_line_multi.replace(/##KEY##/,chrome.i18n.getMessage("abbr") );
+		new_line = new_line.replace(/##VALUE##/, chrome.i18n.getMessage("long") );
+		new_line = new_line.replace(/##VALUE2##/, chrome.i18n.getMessage("and") );
+			
+		document.getElementById("subs_multi").innerHTML += new_line;
+
+	}
+
 	
 	function del(button)
 	{
@@ -99,7 +113,10 @@
 			document.getElementById("subs").innerHTML += new_line;
 		}
 		
+		
+		
 	}
+	
 	// Show the selected settings tab
 	function tabClick(elem)
 	{

@@ -12,8 +12,8 @@
   </tr>
   <tr>
     <td id="body"><div id="tabs"> 
-    <span id="single" class="selected-tab" onClick="tabClick('single')">&nbsp;Single Text Area&nbsp;</span> 
-    <span id="multi" class="unselected-tab" onClick="tabClick('multi')">&nbsp;Multi Text Area&nbsp;</span> 
+    <span id="single" class="selected-tab" onClick="tabClick('single')">Single Text Area</span>
+    <span id="multi" class="unselected-tab" onClick="tabClick('multi')">&nbsp;Multi Text Area&nbsp;</span>
     </div>
       <div id="single_div" class="selected-div">
         <table border="0" cellspacing="0" cellpadding="0">
@@ -37,7 +37,29 @@
           </tr>
         </table>
       </div>
-      <div id="multi_div" class="unselected-div"> <p>saldfjlasdjfjalösfdj</p> </div>
+      <div id="multi_div" class="unselected-div">
+              <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td height="50px" valign="top"><button onClick="add_multi()" name="add"></button></td>
+          </tr>
+          <tr>
+            <th width="200px" name="abbr"></th>
+            <th width="700px" name="long"></th>
+            <th>&nbsp;</th>
+          </tr>
+          <tr>
+            <td colspan="3"><table border="0" cellspacing="10" cellpadding="0" class="subs_multi" id="subs_multi">
+              </table></td>
+          </tr>
+          <tr>
+            <td  height="30px" valign="top"><button onClick="add_multi()" name="add"></button></td>
+          </tr>
+          <tr>
+            <td><button onClick="save_options()" name="save"></button><button onClick="restore_options()" name="restore"></button></td>
+          </tr>
+          <div id="log"></div>
+        </table>
+      </div>
     </td>
   </tr>
 </table>

@@ -22,6 +22,10 @@ body {
 	height:50px;
 }
 
+.sub_value_multi {
+	width: 650px;
+}
+
 .sub_line {
 	width:900px;
 }
@@ -48,7 +52,11 @@ body {
 }
 span {
 	vertical-align: middle;
-	padding: 3px;
+	cursor: default;
+	padding-top: 3px;
+	padding-right: 6px;
+	padding-bottom: 3px;
+	padding-left: 6px;
 }
 .selected-tab {
 	font-size: 14px;

@@ -35,4 +35,8 @@
     "message": "Wird erweitert zu...",
     "description": ""
   }
+  "and": {
+    "message": "und...",
+    "description": ""
+  }
 }
