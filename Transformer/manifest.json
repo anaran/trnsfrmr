@@ -10,7 +10,7 @@
 	"options_page": "options.html",
 	"page_action": {
 	    "default_icon": "icons/icon-16x16.png",
-	    "default_title": "Add keys and values",
+	    "default_title": "__MSG_extname__ - __MSG_options__",
 		"popup": "popup.html"
 	},
 	"content_scripts": [
