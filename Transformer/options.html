@@ -3,19 +3,92 @@
 	<title></title>
 	<script type="text/javascript" src="scripts/hashmap.js"></script>
 	<script type="text/javascript" src="scripts/options.js"></script>
-	<link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+    
+    <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui-1.8rc3.custom.min.js"></script>
+    
+    <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
+    
+	<script type="text/javascript">
+	$(function() {
+		$("#tabs").tabs();
+
+		$("button, input:submit, a", ".demo").button();
+		
+		var stop = false;
+		$("#subs h3").click(function(event) {
+			if (stop) {
+				event.stopImmediatePropagation();
+				event.preventDefault();
+				stop = false;
+			}
+		});
+		$("#subs").accordion({
+			header: "> div > h3"
+		}).sortable({
+			axis: "y",
+			handle: "h3",
+			stop: function(event, ui) {
+				stop = true;
+			}
+		});
+
+
+	});
+	</script>
+    
     </head>
 <body onLoad="init()">
 <table id="main" border="0" cellspacing="3" cellpadding="0" >
   <tr>
-    <td height="75px"><h1 name="caption"></h1></td>
+    <td id="head"><h1 name="caption"></h1></td>
   </tr>
   <tr>
     <td id="body">
-      <div id="tabs"> 
-        <span id="single" class="selected-tab" onClick="tabClick('single')"><a href="">Single Text Area</a></span>
-        <span id="multi" class="unselected-tab" onClick="tabClick('multi')"><a href="">Multi Text Area</a></span>
+    
+    <div id="tabs">
+	<ul>
+		<li><a href="#tabs-1">Single Text Area</a></li>
+		<li><a href="#tabs-2">Multi Text Area</a></li>
+	</ul>
+    
+	<div id="tabs-1">
+    <input onClick="add()" name="add"  value="Add"  type="submit">
+		
+        <div id="subs">
+          <div>
+			<h3><a href="#"><input id="key" class="sub_key" type="text" value="##KEY##"/><button onclick="del(this)">" + chrome.i18n.getMessage("option_del")+ "</button></a></h3>
+            <div>
+                <textarea id="value" class="sub_value" rows="2" cols="30" >##VALUE##</textarea>      
+        	</div>
+		  </div>
+          <div>
+            <h3><a href="#"><input id="key" class="sub_key" type="text" value="##KEY##"/><button onclick="del(this)">" + chrome.i18n.getMessage("option_del")+ "</button></a></h3>
+            <div>
+                <textarea id="value" class="sub_value" rows="2" cols="30" >##VALUE##</textarea>      
+        	</div>
+		  </div>
+ 	    </div>
+     
+    <input onClick="add()" name="add"  value="Add"  type="submit">
+    <input onClick="save_options()" name="save" type="submit">   
+	</div>
+    
+    
+	<div id="tabs-2">
+
+		<p>Multi Text Area Settings</p>
+	</div>
+</div>
+
+  
+    
+   <!--   <div id="tabs"> 
+        <span id="single" class="selected-tab" onClick="tabClick('single')"><a href="#">Single Text Area</a></span>
+        <span id="multi" class="unselected-tab" onClick="tabClick('multi')"><a href="#">Multi Text Area</a></span>
       </div>
+      
       <div id="single_div" class="selected-div">
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
@@ -32,36 +105,41 @@
           </tr>
           <tr>
             <td id="add_button"><button onClick="add()" name="add"></button></td>
+            <td rowspan="2" name="guide" id="guide"></td>
           </tr>
           <tr>
-            <td><button onClick="save_options()" name="save"></button></td>
+            <td id="add_button"><button onClick="save_options()" name="save"></button></td>
           </tr>
           <div id="log"></div>
         </table>
       </div>
-      <div id="multi_div" class="unselected-div">
-        <table border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
-          </tr>
-          <tr>
-            <th id="head_abbr" name="abbr"></th>
-            <th id="head_long" name="long"></th>
-            <th>&nbsp;</th>
-          </tr>
-          <tr>
-            <td colspan="3"><table border="0" cellspacing="10" cellpadding="0" class="subs_multi" id="subs_multi">
-              </table></td>
-          </tr>
-          <tr>
-            <td  id="add_button"><button onClick="add_multi()" name="add"></button></td>
-          </tr>
-          <tr>
-            <td><button onClick="save_options()" name="save"></button><button onClick="restore_options()" name="restore"></button></td>
-          </tr>
-          <div id="log"></div>
-        </table>
-      </div>
+      
+              <div id="multi_div" class="unselected-div">
+                <table border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
+                  </tr>
+                  <tr>
+                    <th id="head_abbr" name="abbr"></th>
+                    <th id="head_long" name="long"></th>
+                    <th>&nbsp;</th>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><table border="0" cellspacing="10" cellpadding="0" class="subs_multi" id="subs_multi">
+                      </table></td>
+                  </tr>
+                  <tr>
+                    <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
+                    <td rowspan="2" name="guide" id="guide"></td>
+                  </tr>
+                  <tr>
+                    <td id="add_button"></button></td>
+                  </tr>
+                  <div id="log"></div>
+                </table>
+              </div>
+      
+      -->
     </td>
   </tr>
 </table>

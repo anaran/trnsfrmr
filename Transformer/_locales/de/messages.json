@@ -38,5 +38,9 @@
   "and": {
     "message": "und...",
     "description": ""
+  },
+  "guide": {
+    "message": "Um die Abkürzung in der Erweitung umzuwandeln, einfach 'Strg + Leertaste' nach dem eingegen drücken.",
+    "description": ""
   }
 }

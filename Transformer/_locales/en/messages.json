@@ -38,5 +38,9 @@
   "and": {
     "message": "and...",
     "description": ""
+  },
+  "guide": {
+    "message": "To expande the abbreviation, just hit 'Ctrl + Space' after it.",
+    "description": ""
   }
 }
