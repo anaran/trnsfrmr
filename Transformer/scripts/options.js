@@ -52,33 +52,20 @@
 		row.outerHTML="";
 	}
 
-	function getElementsByClassName(classname, node)
-	{
-		if(!node) node = document.getElementsByTagName("body")[0];
-		var a = [];
-		var re = new RegExp('\\b' + classname + '\\b');
-		var els = node.getElementsByTagName("*");
-		
-		for(var i=0,j=els.length; i<j; i++)
-			if(re.test(els[i].className))a.push(els[i]);
-			
-		return a;
-	}
 	
 	// Saves options to localStorage.
 	function save_options()
 	{
 		$.Watermark.HideAll();
-		var subs = document.getElementById("subs");
-		
-		var lines = getElementsByClassName("sub_line", subs);
+				
+		var lines = $("#subs .sub_line");
 	
 		var a = new Array();
 		
 		for(var i=0; i<lines.length; i++)
 		{
-			var key = getElementsByClassName("sub_key", lines[i])[0].value;
-			var value = getElementsByClassName("sub_value", lines[i])[0].value;
+			var key =$(".sub_key", lines[i])[0].value;
+			var value = $(".sub_value", lines[i])[0].value;
 			
 			if( key!="" || value!="")
 			{
@@ -109,11 +96,9 @@
 			var line = $("#subs .sub_line_template").clone();
 			line.removeClass("sub_line_template").addClass("sub_line");	
 			
-			var key = $(".sub_key", line)[0];
-			key.value = map.key();
+			$(".sub_key", line)[0].value = map.key();
 			
-			var val = $(".sub_value", line)[0];
-			val.value = map.value();
+			$(".sub_value", line)[0].value = map.value();
 	
 			subs.append(line);		
 		}
