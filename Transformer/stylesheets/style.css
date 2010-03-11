@@ -94,7 +94,7 @@ a:visited {
 #add_button {
 	height: 40px;
 	width: 200px;
-	vertical-align: top;
+	vertical-align: middle;
 	padding-left: 8px;
 }
 #guide {

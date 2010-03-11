@@ -5,16 +5,9 @@
 <script type="text/javascript" src="scripts/options.js"></script>
 
 <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="scripts/jquery-ui-1.8rc3.custom.min.js"></script>
 
 <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
 
-<script type="text/javascript">
-	$(function() {
-		$("#tabs").tabs();
-	});
-	</script>
     
 </head>
 <body onLoad="init()">
@@ -24,13 +17,6 @@
   </tr>
   <tr>
     <td id="body">
-      <div id="tabs">
-        <ul>
-          <li><a href="#tabs-1">Single Text Area</a></li>
-          <li><a href="#tabs-2">Multi Text Area</a></li>
-        </ul>
-        
-        <div id="tabs-1">
           <table border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td id="add_button"><button onClick="add()" name="add"></button></td>
@@ -53,34 +39,6 @@
             </tr>
             <div id="log"></div>
           </table>
-        </div>
-        
-        <div id="tabs-2">
-          <table border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
-            </tr>
-            <tr>
-              <th id="head_abbr" name="abbr"></th>
-              <th id="head_long" name="long"></th>
-              <th>&nbsp;</th>
-            </tr>
-            <tr>
-              <td colspan="3"><table border="0" cellspacing="10" cellpadding="0" class="subs_multi" id="subs_multi">
-                </table></td>
-            </tr>
-            <tr>
-              <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
-              <td rowspan="2" name="guide" id="guide"></td>
-            </tr>
-            <tr>
-              <td id="add_button"><button onClick="save_options()" name="save"></button></td>
-            </tr>
-            <div id="log"></div>
-          </table>
-        </div>
-      </div>
-     
     </td>
   </tr>
 </table>
