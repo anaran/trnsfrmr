@@ -1,4 +1,4 @@
-	var sub_line = "<div><h3 class=\"ui-accordion-header ui-helper-reset ui-state-default ui-corner-all\" role=\"tab\" aria-expended=\"false\" tabindex=\"2\"><a href=\"#\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></a></h3><div class=\"ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom\" role=\"tabpanel\"><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea></div></div>";
+	var sub_line = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
 
 	var sub_line_multi = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><input id=\"value\" class=\"sub_value_multi\" value=\"##VALUE##\" /><br><input id=\"value2\" class=\"sub_value_multi\" value=\"##VALUE2##\" /></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
 	
@@ -58,7 +58,7 @@
 	
 	function del(button)
 	{
-		var row = button.parentElement.parentElement.parentElement;
+		var row = button.parentElement.parentElement;
 		
 		row.outerHTML="";
 	}
