@@ -40,7 +40,7 @@
 		var new_line = sub_line.replace(/##KEY##/,chrome.i18n.getMessage("abbr") );
 		new_line = new_line.replace(/##VALUE##/, chrome.i18n.getMessage("long") );
 			
-		document.getElementById("subs").innerHTML += new_line;
+		document.getElementById("subs").innerHTML = new_line + document.getElementById("subs").innerHTML;
 
 	}
 	
