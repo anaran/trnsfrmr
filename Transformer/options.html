@@ -1,22 +1,46 @@
 <html>
 <head>
 <title></title>
+<script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="scripts/jquery-ui-1.8rc3.custom.min.js"></script>
+<script type="text/javascript" src="scripts/jquery.watermarkinput.js"></script>
+
+
+<link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+<link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
+
+
+
 <script type="text/javascript" src="scripts/hashmap.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
 
-<script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
-
-<link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-
+<script type="text/javascript">
+	$(function() {
+		$("#tabs").tabs();
+		
+		
+	});
+	
+	</script>
     
 </head>
 <body onLoad="init()">
+
+<input type="text" class="lame" id="shitfuck"/>
+
 <table id="main" border="0" cellspacing="3" cellpadding="0" >
   <tr>
     <td id="head"><h1 name="caption"></h1></td>
   </tr>
   <tr>
     <td id="body">
+      <div id="tabs">
+        <ul>
+          <li><a href="#tabs-1">Single Text Area</a></li>
+          <li><a href="#tabs-2">Multi Text Area</a></li>
+        </ul>
+        
+        <div id="tabs-1">
           <table border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td id="add_button"><button onClick="add()" name="add"></button></td>
@@ -27,18 +51,50 @@
               <th>&nbsp;</th>
             </tr>
             <tr>
-              <td colspan="3"><table border="0" cellspacing="10" cellpadding="0" class="subs" id="subs">
+              <td colspan="3">
+				<table border="0" cellspacing="10" cellpadding="0" class="subs" id="subs">
+					<tr class="sub_line_template">
+						<td valign="top"><input id="key" class="sub_key" type="text" value=""/></td>
+						<td valign="top"><textarea id="value" class="sub_value" rows="2" cols="30"></textarea></td>
+						<td align="right" valign="top"><button onclick="del(this)" name="delete"></button></td>
+					</tr>
                 </table></td>
             </tr>
             <tr>
-              <td id="add_button"><button onClick="add()" name="add"></button></td>
+              <td id="add_button"><button class="ui-icon ui-icon-plusthick" onClick="add()" name="add"></button></td>
               <td rowspan="2" name="guide" id="guide"></td>
             </tr>
             <tr>
               <td id="add_button"><button onClick="save_options()" name="save"></button></td>
             </tr>
-            <div id="log"></div>
           </table>
+        </div>
+        
+        <div id="tabs-2">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
+            </tr>
+            <tr>
+              <th id="head_abbr" name="abbr"></th>
+              <th id="head_long" name="long"></th>
+              <th>&nbsp;</th>
+            </tr>
+            <tr>
+              <td colspan="3"><table border="0" cellspacing="10" cellpadding="0" class="subs_multi" id="subs_multi">
+                </table></td>
+            </tr>
+            <tr>
+              <td id="add_button"><button onClick="add_multi()" name="add"></button></td>
+              <td rowspan="2" name="guide" id="guide"></td>
+            </tr>
+            <tr>
+              <td id="add_button"><button onClick="save_options()" name="save"></button></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+     
     </td>
   </tr>
 </table>

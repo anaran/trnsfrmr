@@ -1,4 +1,3 @@
-	var sub_line = "<tr class=\"sub_line\"><td valign=\"top\"><input id=\"key\" class=\"sub_key\" type=\"text\" value=\"##KEY##\"/></td><td valign=\"top\"><textarea id=\"value\" class=\"sub_value\" rows=\"2\" cols=\"30\" >##VALUE##</textarea></td><td align=\"right\" valign=\"top\"><button onclick=\"del(this)\">" + chrome.i18n.getMessage("option_del")+ "</button></td></tr>";
 	
 	function localizeString(elementname, text)
 	{
@@ -24,21 +23,26 @@
 		localize("save", "save");
 		localize("restore", "restore");
 		localize("add", "option_add");
+		localize("delete", "option_del");
 		localize("guide", "guide");
 		
 		localize("abbr", "abbr");
 		localize("long", "long");
+		localize("and", "and");
 		
 		restore_options();
 	}
 	
 	function add()
 	{
-		var new_line = sub_line.replace(/##KEY##/,chrome.i18n.getMessage("abbr") );
-		new_line = new_line.replace(/##VALUE##/, chrome.i18n.getMessage("long") );
-			
-		document.getElementById("subs").innerHTML = new_line + document.getElementById("subs").innerHTML;
-
+		var subs = $("#subs");
+		var line = $("#subs .sub_line_template").clone();
+		line.removeClass("sub_line_template").addClass("sub_line");	
+		subs.prepend(line);
+		
+		$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr"));
+		$(".sub_value", line).Watermark(chrome.i18n.getMessage("long"));
+		
 	}
 		
 	function del(button)
@@ -64,6 +68,7 @@
 	// Saves options to localStorage.
 	function save_options()
 	{
+		$.Watermark.HideAll();
 		var subs = document.getElementById("subs");
 		
 		var lines = getElementsByClassName("sub_line", subs);
@@ -75,29 +80,41 @@
 			var key = getElementsByClassName("sub_key", lines[i])[0].value;
 			var value = getElementsByClassName("sub_value", lines[i])[0].value;
 			
-			a.push(key);
-			a.push(value);
-			// console.log(key + ", " + value);
+			if( key!="" || value!="")
+			{
+				a.push(key);
+				a.push(value);
+			}
 		}
 	
 		localStorage["map"] = JSON.stringify(a);
+		
+		$.Watermark.ShowAll();
+
+		restore_options();
 	}
 	
 	// Restores select box state to saved value from localStorage.
 	function restore_options()
 	{
-		document.getElementById("subs").innerHTML = "";
+	
+		$("#subs .sub_line").remove();
+		
 		var map = chrome.extension.getBackgroundPage().getHashMap();
 		
+		var subs = $("#subs");
+		
 		for(var j = 0; j++ < map.size; map.next())
-		{ // check all keys
-		
-			var new_line = sub_line.replace(/##KEY##/, map.key() );
-			new_line = new_line.replace(/##VALUE##/, map.value() );
+		{		
+			var line = $("#subs .sub_line_template").clone();
+			line.removeClass("sub_line_template").addClass("sub_line");	
 			
-			document.getElementById("subs").innerHTML += new_line;
+			var key = $(".sub_key", line)[0];
+			key.value = map.key();
+			
+			var val = $(".sub_value", line)[0];
+			val.value = map.value();
+	
+			subs.append(line);		
 		}
-		
-		
-		
 	}

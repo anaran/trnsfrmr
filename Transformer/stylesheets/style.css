@@ -39,6 +39,10 @@ a:visited {
 	width: 650px;
 }
 
+.sub_line_template{
+	display: none;
+}
+
 .sub_line {
 	width:900px;
 }
