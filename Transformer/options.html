@@ -36,7 +36,10 @@
         <div id="tabs-1">
           <table border="0" cellspacing="0" cellpadding="0">
             <tr>
-              <td id="add_button"><button onClick="add()" name="add"></button></td>
+              <td id="add_button">
+              	<button onClick="add()" name="add"></button>
+              	<button onClick="save_options()" name="save"></button>
+              </td>
             </tr>
             <tr>
               <th id="head_abbr" name="abbr"></th>
@@ -52,13 +55,6 @@
 						<td align="right" valign="top"><button onclick="del(this)" name="delete"></button></td>
 					</tr>
                 </table></td>
-            </tr>
-            <tr>
-              <td id="add_button"><button class="ui-icon ui-icon-plusthick" onClick="add()" name="add"></button></td>
-              <td rowspan="2" name="guide" id="guide"></td>
-            </tr>
-            <tr>
-              <td id="add_button"><button onClick="save_options()" name="save"></button></td>
             </tr>
           </table>
         </div>
