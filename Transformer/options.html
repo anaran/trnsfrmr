@@ -4,74 +4,67 @@
 <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="scripts/jquery-ui-1.8rc3.custom.min.js"></script>
 <script type="text/javascript" src="scripts/jquery.watermarkinput.js"></script>
-
 <script type="text/javascript" src="scripts/hashmap.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
-
 <script type="text/javascript">
 	$(function() {
 		$("#tabs").tabs();
 	});
 	</script>
-
-
 <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
 <link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
-
 </head>
 <body onLoad="init()">
-
-    <div id="main">
-        <h1 name="caption" id="head"></h1>        
-
-        <div id="body">
-        
-        <div id="tabs">
-        
-            <ul>
-                <li><a href="#tabs-1">Text i18n!</a></li>
-				<li><a href="#tabs-2">Einstellungen i18n!</a></li>
-                <li><a href="#tabs-3">Hilfe i18n!</a></li>	
-                <li><a href="#tabs-4">Changelog i18n!</a></li>	
-            </ul>
-            
-        <div  id="tabs-1">
-        
-              <div id="header1">
-                <button onClick="add()" name="add" id="button"></button>
-                    <button onClick="save_options()" name="save" id="button"></button>
-                </div>
-                
-                <div id="header2">
-                    <span id="head_abbr" name="abbr" ></span><span id="head_long" name="long" ></span>
-                </div>
-                
-               <div class="subs" id="subs">                
-                <div class="sub_line_template">
-                  <div class="key_div"><input class="sub_key" type="text" value=""/><button onClick="del(this)" name="delete" class="del_button"></button></div>
-                  <div class="value_div"><textarea class="sub_value" rows="2" cols="30"  ></textarea></div>      
-                </div>                  
-                </div>
-                                      
-              </div>
-             
-        <div  id="tabs-2">
-			<div><input id="checkbox_animate" type="checkbox" value="animate"/>Animate i18n!</div>
-			<div><input id="checkbox_sound" type="checkbox" value="sound"/>Play Sound i18n!</div>
+<div id="main">
+  <h1 name="caption" id="head"></h1>
+  <div id="body">
+  
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">Text i18n!</a></li>
+        <li><a href="#tabs-2">Einstellungen i18n!</a></li>
+        <li><a href="#tabs-3">Hilfe i18n!</a></li>
+        <li><a href="#tabs-4">Changelog i18n!</a></li>
+        <button onClick="save_options()" name="save" id="save"></button>
+      </ul>
+      
+      <div  id="tabs-1">
+      
+        <div id="header1">
+          <button onClick="add()" name="add" id="button"></button>
         </div>
         
-        <div  id="tabs-3">
-        	<div name="guide" id="guide"></div>
-        </div>
-		
-		<div  id="tabs-4">
-        	<div name="changelog" id="chhangelog">Ein Monsterfeature nach dem anderern....</div>
-		</div>
-		
+        <div id="header2"> <span id="head_abbr" name="abbr" ></span><span id="head_long" name="long" ></span> </div>
+        
+        <div class="subs" id="subs">
+          <div class="sub_line_template">
+            <div class="key_div">              <input class="sub_key" type="text" value=""/>            </div>
+            <div class="value_div">              <textarea class="sub_value" rows="2" cols="30"  ></textarea>            </div>
+            <div class="del_button">              <button onClick="del(this)" name="delete"></button>            </div>
+          </div>
         </div>
         
+      </div>
+      
+      <div  id="tabs-2">
+        <div>
+          <input id="checkbox_animate" type="checkbox" value="animate"/>
+          Animate i18n!</div>
+        <div>
+          <input id="checkbox_sound" type="checkbox" value="sound"/>
+          Play Sound i18n!</div>
+      </div>
+      
+      <div  id="tabs-3">
+        <div name="guide" id="guide"></div>
+      </div>
+      
+      <div  id="tabs-4">
+        <div name="changelog" id="chhangelog">Ein Monsterfeature nach dem anderern....</div>
+      </div>
+      
     </div>
-    </div>
-        
+  </div>
+</div>
 </body>
 </html>
