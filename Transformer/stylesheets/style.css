@@ -2,12 +2,10 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 11px;
 }
-
 .sub_line {
 	width:900px;
 	height: 60px;
 }
-
 .sub_key {
 	width: 200px;
 	top: -34px;
@@ -26,18 +24,12 @@ body {
 	visibility: hidden;
 	height: 0px;
 }
-
 .del_button {
 	position: relative;
 	top: -61px;
-
-	left: 85
-";
+	left: 85;
 	left: 852px;
 }
-
-
-
 #main {
 	font-family:Arial, Helvetica, sans-serif;
 	height: inherit;
@@ -50,7 +42,6 @@ body {
 	font-size: 24pt;
 
 }
-
 #body {
 	background-color: #FFF7D9;
 	padding: 5px;
@@ -66,14 +57,12 @@ body {
 	left: 65px;
 	position: relative;
 }
-
 #head_long {
 	font-size: 12pt;
 	font-weight: bold;
 	position: relative;
 	left: 390px;
 }
-
 #button {
 	margin: 10px;
 
