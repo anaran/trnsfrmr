@@ -5,63 +5,37 @@
 <script type="text/javascript" src="scripts/jquery-ui-1.8rc3.custom.min.js"></script>
 <script type="text/javascript" src="scripts/jquery.watermarkinput.js"></script>
 
-
-<link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
-
-
-
 <script type="text/javascript" src="scripts/hashmap.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
 
-<script type="text/javascript">
-	$(function() {
-		$("#tabs").tabs();
-		
-		
-	});
-	
-	</script>
-    
+<link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+
 </head>
 <body onLoad="init()">
 
-<table id="main" border="0" cellspacing="3" cellpadding="0" >
-  <tr>
-    <td id="head"><h1 name="caption"></h1></td>
-  </tr>
-  <tr>
-    <td id="body">
-      <div id="tabs">        
-        <div id="tabs-1">
-          <table border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td id="add_button">
-              	<button onClick="add()" name="add"></button>
-              	<button onClick="save_options()" name="save"></button>
-              </td>
-            </tr>
-            <tr>
-              <th id="head_abbr" name="abbr"></th>
-              <th id="head_long" name="long"></th>
-              <th>&nbsp;</th>
-            </tr>
-            <tr>
-              <td colspan="3">
-				<table border="0" cellspacing="10" cellpadding="0" class="subs" id="subs">
-					<tr class="sub_line_template">
-						<td valign="top"><input id="key" class="sub_key" type="text" value=""/></td>
-						<td valign="top"><textarea id="value" class="sub_value" rows="2" cols="30"></textarea></td>
-						<td align="right" valign="top"><button onclick="del(this)" name="delete"></button></td>
-					</tr>
-                </table></td>
-            </tr>
-          </table>
-        </div>
-	</div>
-     
-    </td>
-  </tr>
-</table>
+    <div id="main">
+        <h1 name="caption" id="head"></h1>
+        
+        <div id="body">
+            <button onClick="add()" name="add" id="button"></button> <button onClick="save_options()" name="save" id="button"></button>
+            
+            <div id="header">
+                <span id="head_abbr" name="abbr" ></span><span id="head_long" name="long" ></span>
+            </div>
+            
+            <div class="subs" id="subs">
+            	<div class="sub_line_template">
+                    <input id="key" class="sub_key" type="text" value=""/>
+                    <textarea id="value" class="sub_value" rows="2" cols="30"></textarea>
+                    <button onClick="del(this)" name="delete" class="del_button"></button>
+                </div>
+            </div>
+            
+            <div name="guide" id="guide"></div>
+            
+      </div>
+        
+    </div>
+
 </body>
 </html>

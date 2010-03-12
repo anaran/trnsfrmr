@@ -28,7 +28,6 @@
 		
 		localize("abbr", "abbr");
 		localize("long", "long");
-		localize("and", "and");
 		
 		restore_options();
 	}
@@ -47,7 +46,7 @@
 		
 	function del(button)
 	{
-		var row = button.parentElement.parentElement;
+		var row = button.parentElement;
 		
 		row.outerHTML="";
 	}
