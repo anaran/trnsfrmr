@@ -2,7 +2,6 @@
 <head>
 <title></title>
 <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="scripts/jquery-ui-1.8rc3.custom.min.js"></script>
 <script type="text/javascript" src="scripts/jquery.watermarkinput.js"></script>
 
 <script type="text/javascript" src="scripts/hashmap.js"></script>
@@ -18,17 +17,22 @@
         <h1 name="caption" id="head"></h1>
         
         <div id="body">
-            <div id="header1"><button onClick="add()" name="add" id="button"></button> <button onClick="save_options()" name="save" id="button"></button></div>
+            <div id="header1">
+                <button onClick="add()" name="add" id="button"></button>
+                <button onClick="save_options()" name="save" id="button"></button>
+            </div>
             
-          <div id="header2">
+            <div id="header2">
                 <span id="head_abbr" name="abbr" ></span><span id="head_long" name="long" ></span>
-          </div>
+            </div>
             
             <div class="subs" id="subs">
+            
               <div class="sub_line_template">
                     <div id="key_div"><input id="key" class="sub_key" type="text" value=""/><button onClick="del(this)" name="delete" class="del_button"></button></div>
-                    <div id="value_div"><textarea id="value" class="sub_value" rows="2" cols="30" ></textarea></div>                    
+                    <div id="value_div"><textarea id="value" class="sub_value" rows="2" cols="30"  ></textarea></div>      
               </div>
+              
             </div>
             
             <div name="guide" id="guide"></div>
