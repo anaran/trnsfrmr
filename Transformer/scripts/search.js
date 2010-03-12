@@ -71,6 +71,7 @@ function findAndReplace()
 	
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
 		checkElements(element);
+		e.returnValue=false;
  	}
 }
 
@@ -96,9 +97,9 @@ function checkElements(element)
 	else if (element.tagName=="HTML" && element.isContentEditable)
 	{	
 		var body = element.getElementsByTagName("body")[0];
-		body.innerHTML = replacer(body.innerHTML);
-		
-	} else 
+		body.innerHTML = replacer(body.innerHTML);		body.focus();		
+	}
+	else 
 	{
 		console.warn("nothing replaced ");
 		console.warn(element);
