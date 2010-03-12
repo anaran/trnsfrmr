@@ -34,7 +34,11 @@ function addEventListenerToIframes(iframes)
 	{
 		var iframe = iframes[i];
 //		(iframe.contentWindow || iframe.contentDocument).addEventListener("keydown", findAndReplace, false);
-		iframe.contentDocument.addEventListener("keydown", findAndReplace, false);
+
+		if(iframe.contentDocument)
+			iframe.contentDocument.addEventListener("keydown", findAndReplace, false);
+		else if (iframe.contentWindow)
+			iframe.contentWindow.addEventListener("keydown", findAndReplace, false);
 	}
 }
 
@@ -77,9 +81,13 @@ function checkElements(element)
 	{
 		var type = element.type;
 
-		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
+		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) ) {
 			element.value = replacer(element.value);
 		}
+	}
+	else if (element.tagName=="TEXTAREA")
+	{
+		element.value = replacer(element.value);
 	}
 	else if (element.tagName=="BODY" && element.contentEditable)
 	{	
