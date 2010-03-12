@@ -11,7 +11,10 @@
 	<script type="text/javascript">
 	$(function() {
 		$("#main").resizable({
-			ghost: true
+			ghost: true,
+			minHeight: 200,
+			minWidth: 560
+
 		});
 	});
 	</script>
@@ -27,11 +30,11 @@
         <h1 name="caption" id="head"></h1>
         
         <div id="body">
-            <button onClick="add()" name="add" id="button"></button> <button onClick="save_options()" name="save" id="button"></button>
+            <div id="header1"><button onClick="add()" name="add" id="button"></button> <button onClick="save_options()" name="save" id="button"></button></div>
             
-            <div id="header">
+          <div id="header2">
                 <span id="head_abbr" name="abbr" ></span><span id="head_long" name="long" ></span>
-            </div>
+          </div>
             
             <div class="subs" id="subs">
             	<div class="sub_line_template">

@@ -3,12 +3,13 @@ body {
 	font-size: 11px;
 }
 .sub_line {
-	width:90%;
+
+
 }
 .sub_key {
 	width: 23%;
-	position: relative;
 	left: 1%;
+	position: relative;
 }
 .sub_value {
 	height:50px;
@@ -47,21 +48,25 @@ body {
 	font-size: 24pt;
 
 }
-#header {
+#header1 {
+	text-align: center;
+}
+
+#header2 {
 	height: 30px;
 }
 #head_abbr {
 	width: 20%;
 	font-size: 12pt;
 	font-weight: bold;
-	left: 65px;
+	left: 6%;
 	position: relative;
 }
 #head_long {
 	font-size: 12pt;
 	font-weight: bold;
 	position: relative;
-	left: 390px;
+	left: 39%;
 }
 #button {
 	margin: 10px;
