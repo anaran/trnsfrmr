@@ -1,7 +1,7 @@
 
 
 // run findAndRepleacer method on key up event
-document.onkeyup = findAndReplace; 
+// document.onkeyup = findAndReplace; 
 
 // constants
 var DELIMITER = '!';
@@ -15,6 +15,10 @@ var map;
 // init extension
 function init()
 {
+	console.log( document.getElementsByTagName("body"));
+	
+	document.addEventListener("keydown", findAndReplace, false); 
+
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
 	
 	if (pageHasEditableElements()) {
@@ -45,8 +49,10 @@ function checkElements(elem) {
 // trigger replaceKeysWithValues method on key event space or enter
 function findAndReplace()
 {
+	console.log("key event");
  	var e = window.event;
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
+		e.cancelBubble = true;
 		replaceKeysWithValues();
  	}
 }
@@ -57,7 +63,7 @@ function replaceKeysWithValues() {
 	var type = element.type;
 	if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
 		for(var j = 0; j++ < map.size; map.next()) { // check all keys
-			element.value = element.value.replace(new RegExp(map.key(), "g"),  map.value());
+			element.value = element.value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
 		}
 	}
 }
