@@ -15,32 +15,25 @@ var map;
 // init extension
 function init()
 {
-	console.warn(document.getElementById(":pq"));
-	
-	var ghtml = document.getElementById(":pq");
-	
-	if(ghtml)
-	{
-		ghtml.contentDocument.addEventListener("keydown", findAndReplace, false); 
-	}
-	
-//	console.warn(document.getElementById(":pq");
-//	console.log( document.getElementById("tinymce") );
 
-//	var iframes = document.getElementsByTagName("iframe");
-	
-//	for(f in iframes)
-//	{
-//		f.contentWindow.document.addEventListener("keydown", findAndReplace, false); 
-//	}
+	addEventListenerToIframes(document.getElementsByTagName("iframe"));
 	
 	document.addEventListener("keydown", findAndReplace, false); 
-
 	
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
 	
-	if (pageHasEditableElements()) {
+	if (pageHasEditableElements()) 
+	{
 		chrome.extension.sendRequest({pageaction: "show"}, function(response) {});
+	}
+}
+
+function addEventListenerToIframes(iframes) 
+{
+	for ( var i = 0; i < iframes.length; i++) 
+	{
+		var iframe = iframes[i];
+		(iframe.contentWindow || iframe.contentDocument).addEventListener("keydown", findAndReplace, false);
 	}
 }
 
@@ -90,14 +83,14 @@ function replaceKeysWithValues(element)
 		}
 	}
 	else if (element.tagName=="BODY" && element.contentEditable)
-	{
+	{	
 		for(var j = 0; j++ < map.size; map.next()) { // check all keys
 			element.innerHTML = element.innerHTML.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
 		}
 		
-//		element.innerHTML = element.innerHTML.replace(/test/g,"hallo");
-		
-//		console.warn(element.innerHTML);
+	} else 
+	{
+		console.warn("nothing replaced " + element.innerHTML);
 	}
 }
 
