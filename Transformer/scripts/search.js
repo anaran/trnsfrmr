@@ -111,6 +111,7 @@ function checkElements(element)
 function replacer(value) {
 	for(var j = 0; j++ < map.size; map.next()) { // check all keys
 		value = value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+		value = replaceDates(value);
 	}
 	return value;
 }
