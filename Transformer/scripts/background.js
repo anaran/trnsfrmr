@@ -27,9 +27,8 @@ function getHashMap()
 function playSound()
  {	
   try {
-		var soundPlayer = document.getElementById('notify_sound');
-		soundPlayer.currentTime = 0;
-		soundPlayer.play();
+    document.getElementById('notify_sound').currentTime = 0;
+    document.getElementById('notify_sound').play();
   }
   catch(e) { console.error(e); }
 }
