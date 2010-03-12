@@ -21,10 +21,20 @@ function init()
 	document.addEventListener("keydown", findAndReplace, false); 
 	
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
+	chrome.extension.onRequest.addListener(onRequest);
 	
 	if (pageHasEditableElements()) 
 	{
 		chrome.extension.sendRequest({pageaction: "show"}, function(response) {});
+	}
+}
+
+function onRequest(request, sender, sendResponse)
+{
+	if (request.push == "map")
+	{
+		refreshMap(request.map);
+		sendResponse({}); // snub them.
 	}
 }
 
@@ -117,6 +127,8 @@ function replacer(value) {
 }
 function refreshMap(response)
 {
+	console.log("refreshMap");
+	
 	var a = JSON.parse(response);
 	
 	map = new Map;
