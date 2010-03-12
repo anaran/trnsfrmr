@@ -33,7 +33,8 @@ function addEventListenerToIframes(iframes)
 	for ( var i = 0; i < iframes.length; i++) 
 	{
 		var iframe = iframes[i];
-		(iframe.contentWindow || iframe.contentDocument).addEventListener("keydown", findAndReplace, false);
+//		(iframe.contentWindow || iframe.contentDocument).addEventListener("keydown", findAndReplace, false);
+		iframe.contentDocument.addEventListener("keydown", findAndReplace, false);
 	}
 }
 
@@ -88,9 +89,19 @@ function replaceKeysWithValues(element)
 			element.innerHTML = element.innerHTML.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
 		}
 		
+	}
+	else if (element.tagName=="HTML" && element.isContentEditable)
+	{	
+		var body = element.getElementsByTagName("body")[0];
+		
+		for(var j = 0; j++ < map.size; map.next()) { // check all keys
+			body.innerHTML = body.innerHTML.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+		}
+		
 	} else 
 	{
-		console.warn("nothing replaced " + element.innerHTML);
+		console.warn("nothing replaced ");
+		console.warn(element);
 	}
 }
 
