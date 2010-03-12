@@ -8,7 +8,17 @@
 <script type="text/javascript" src="scripts/hashmap.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
 
+	<script type="text/javascript">
+	$(function() {
+		$("#main").resizable({
+			ghost: true
+		});
+	});
+	</script>
+
 <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+<link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
+
 
 </head>
 <body onLoad="init()">
@@ -16,7 +26,7 @@
     <div id="main">
         <h1 name="caption" id="head"></h1>
         
-        <div id="body" re>
+        <div id="body">
             <button onClick="add()" name="add" id="button"></button> <button onClick="save_options()" name="save" id="button"></button>
             
             <div id="header">
@@ -33,9 +43,9 @@
             
             <div name="guide" id="guide"></div>
             
-      </div>
+        </div>
         
     </div>
-
+    
 </body>
 </html>

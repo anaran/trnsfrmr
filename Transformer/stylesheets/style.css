@@ -25,22 +25,27 @@ body {
 	visibility: hidden;
 	height: 0px;
 }
+
+	.ui-resizable-ghost {
+	border: 1px dotted black;
+}
+
 #main {
 	font-family:Arial, Helvetica, sans-serif;
-	height: inherit;
 	border: 6px solid #FFCC66;
 	border-radius: 4px;
 	background-color: #FFCC66;
 	width: 1000px;
-}
-#head {
-	font-size: 24pt;
-
+	height: inherit;
 }
 #body {
 	background-color: #FFF7D9;
 	padding: 5px;
 	height: inherit;
+}
+#head {
+	font-size: 24pt;
+
 }
 #header {
 	height: 30px;
