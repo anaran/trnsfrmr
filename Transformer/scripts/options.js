@@ -46,7 +46,7 @@
 		
 	function del(button)
 	{
-		var row = button.parentElement;
+		var row = button.parentElement.parentElement;
 		
 		row.outerHTML="";
 	}
