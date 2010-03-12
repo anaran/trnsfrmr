@@ -8,37 +8,36 @@ function currentTime() {
 }
 
 function replaceDates(value) {
-
-	var pDay = /%DAY(\+\d+)?%/;
-	var pMonth = /%MONTH(\+\d+)?%/;
-	var pYear = /%YEAR(\+\d+)?%/;
-
-	var pd = new RegExp(pDay);
-	var pm = new RegExp(pMonth);
-	var py = new RegExp(pYear);
 	
-	while ((md = pd.exec(value)) || (mm = pm.exec(value)) || (my = py.exec(value)))
-	{
-		d = getNewDate(getAddOn(pDay,value), getAddOn(pMonth,value), getAddOn(pYear,value));
-		if (md)	{
-			value = value.replace(pDay , (d.getDate()<10)?"0"+d.getDate():d.getDate());
-		} if (mm) {
-			month = d.getMonth()+1;
-			value = value.replace(pMonth , (month<10)?"0"+month: month);
-		} if (my) {
-			value = value.replace(pYear , d.getFullYear());
-		}
-	}
+	d = new Date();
+	value = value.replace(/%DAY%/ , (d.getDate()<10)?"0"+d.getDate():d.getDate());
+	month = d.getMonth()+1;
+	value = value.replace(/%MONTH%/ , (month<10)?"0"+month: month);
+	value = value.replace(/%YEAR%/ , d.getFullYear());
+	value = replaceDate(value);
+	
 	return value;
 }
 
-function getNewDate(days, month, years){
-	var now = new Date();
+function replaceDate(value){
+	var pDate = /%DATE\+(\d*d)?(\d*m)?(\d*y)?%/;
+	pDate.exec(value);
+	
+	var days = RegExp.$1;
+	days = days.replace("d","");
+	var months = RegExp.$2;
+	months = months.replace("m","");
+	var years = RegExp.$3;
+	years = years.replace("y","");
+
 	future = new Date();
-	future.setDate(now.getDate() + days);
-	future.setMonth(future.getMonth() + month);
-	future.setYear(future.getFullYear() + years);
-	return future;
+	future.setDate(future.getDate() + parseInt(days));
+	future.setMonth(future.getMonth() +  parseInt(month));
+	future.setYear(future.getFullYear() +  parseInt(years));
+	
+	value = value.replace(pDate , future.getDate() + "." + future.getMonth() + "." + future.getFullYear());
+	
+	return value;
 }
 
 function getAddOn(pattern, value) {
