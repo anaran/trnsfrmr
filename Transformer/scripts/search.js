@@ -72,6 +72,8 @@ function findAndReplace()
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
 		checkElements(element);
 		e.returnValue=false;
+		
+		chrome.extension.sendRequest({pageaction: "notify"}, function(response) {});
  	}
 }
 
