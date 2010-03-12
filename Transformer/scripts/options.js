@@ -24,10 +24,17 @@
 		localize("restore", "restore");
 		localize("add", "option_add");
 		localize("delete", "option_del");
-		localize("guide", "guide");
 		
+		localize("guide", "guide");		
 		localize("abbr", "abbr");
 		localize("long", "long");
+		localize("texttab", "texttab");
+		localize("settingstab", "settingstab");
+		localize("helptab", "helptab");
+		localize("changelogtab", "changelogtab");
+		localize("anim", "anim");
+		localize("sound", "sound");
+		
 		
 		restore_options();
 	}

@@ -42,5 +42,29 @@
   "guide": {
     "message": "Um die Abkürzung in die Erweiterung umzuwandeln, einfach 'Strg + Leertaste' drücken.",
     "description": ""
+  },
+  "texttab": {
+    "message": "Text",
+    "description": ""
+  },
+  "settingstab": {
+    "message": "Einstellungen",
+    "description": ""
+  },
+  "helptab": {
+    "message": "Hilfe",
+    "description": ""
+  },
+  "changelogtab": {
+    "message": "Changelog",
+    "description": ""
+  },
+  "anim": {
+    "message": "Animiere Icon?",
+    "description": ""
+  },
+  "sound": {
+    "message": "Spiele Sound?",
+    "description": ""
   }
 }

@@ -42,5 +42,29 @@
   "guide": {
     "message": "To expande the abbreviation, just hit 'Ctrl + Space' after it.",
     "description": ""
+  },
+  "texttab": {
+    "message": "Text",
+    "description": ""
+  },
+  "settingstab": {
+    "message": "Settings",
+    "description": ""
+  },
+  "helptab": {
+    "message": "Help",
+    "description": ""
+  },
+  "changelogtab": {
+    "message": "Changelog",
+    "description": ""
+  },
+  "anim": {
+    "message": "Animate Icon?",
+    "description": ""
+  },
+  "sound": {
+    "message": "Play Sound?",
+    "description": ""
   }
 }

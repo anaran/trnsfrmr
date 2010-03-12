@@ -21,14 +21,14 @@
   
     <div id="tabs">
       <ul>
-        <li><a href="#tabs-1">Text i18n!</a></li>
-        <li><a href="#tabs-2">Einstellungen i18n!</a></li>
-        <li><a href="#tabs-3">Hilfe i18n!</a></li>
-        <li><a href="#tabs-4">Changelog i18n!</a></li>
+        <li><a href="#tabs-1" name="texttab"></a></li>
+        <li><a href="#tabs-2" name="settingstab"></a></li>
+        <li><a href="#tabs-3" name="helptab"></a></li>
+        <li><a href="#tabs-4" name="changelogtab"></a></li>
         <button onClick="save_options()" name="save" id="save"></button>
       </ul>
       
-      <div  id="tabs-1">
+      <div  id="tabs-1"  class="tab_class">
       
         <div id="header1">
           <button onClick="add()" name="add" id="button"></button>
@@ -46,20 +46,20 @@
         
       </div>
       
-      <div  id="tabs-2">
+      <div  id="tabs-2" class="tab_class">
         <div>
           <input id="checkbox_animate" type="checkbox" value="animate"/>
-          Animate i18n!</div>
+          <span name="anim"></span></div>
         <div>
           <input id="checkbox_sound" type="checkbox" value="sound"/>
-          Play Sound i18n!</div>
+          <span name="sound"></span></div>
       </div>
       
-      <div  id="tabs-3">
+      <div  id="tabs-3" class="tab_class">
         <div name="guide" id="guide"></div>
       </div>
       
-      <div  id="tabs-4">
+      <div  id="tabs-4" class="tab_class">
         <div name="changelog" id="chhangelog">Ein Monsterfeature nach dem anderern....</div>
       </div>
       

@@ -3,6 +3,12 @@ body {
 	font-size: 11px;
 	padding: 10px;
 }
+.tab_class {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
 .sub_line {
 
 
@@ -79,14 +85,10 @@ body {
 }
 #head_abbr {
 	width: 20%;
-	font-size: 12pt;
-	font-weight: bold;
 	left: 6%;
 	position: relative;
 }
 #head_long {
-	font-size: 12pt;
-	font-weight: bold;
 	position: relative;
 	left: 39%;
 }
@@ -97,10 +99,7 @@ body {
 }
 #guide {
 	font-weight: bold;
-	position: relative;
 	font-size: 12pt;
-	text-align: center;
-	width: inherit;
 }
 
 #caption {
