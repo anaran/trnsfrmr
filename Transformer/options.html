@@ -8,20 +8,8 @@
 <script type="text/javascript" src="scripts/hashmap.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
 
-	<script type="text/javascript">
-	$(function() {
-		$("#main").resizable({
-			ghost: true,
-			minHeight: 200,
-			minWidth: 560
-
-		});
-	});
-	</script>
 
 <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/jquery-ui-1.8rc3.custom.css" rel="stylesheet" type="text/css">
-
 
 </head>
 <body onLoad="init()">
@@ -37,10 +25,9 @@
           </div>
             
             <div class="subs" id="subs">
-            	<div class="sub_line_template">
-                    <input id="key" class="sub_key" type="text" value=""/>
-                    <textarea id="value" class="sub_value" rows="2" cols="30" ></textarea>
-                    <button onClick="del(this)" name="delete" class="del_button"></button>
+              <div class="sub_line_template">
+                    <div id="key_div"><input id="key" class="sub_key" type="text" value=""/><button onClick="del(this)" name="delete" class="del_button"></button></div>
+                    <div id="value_div"><textarea id="value" class="sub_value" rows="2" cols="30" ></textarea></div>                    
               </div>
             </div>
             
