@@ -49,8 +49,8 @@ function animateNotify(tabId,pos)
 
 function notify(tabId)
 {
-	animateNotify(tabId, 0);
-	playSound();
+	if (localStorage["animate"] == "true") animateNotify(tabId, 0);
+	if (localStorage["sound"] == "true") playSound();
 }
 
 function onRequest(request, sender, sendResponse)

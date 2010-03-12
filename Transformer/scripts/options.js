@@ -77,6 +77,9 @@
 		
 		$.Watermark.ShowAll();
 
+		localStorage["animate"] = $("#checkbox_animate").attr('checked');
+		localStorage["sound"] = $("#checkbox_sound").attr('checked');
+		
 		restore_options();
 	}
 	
@@ -101,4 +104,7 @@
 	
 			subs.append(line);		
 		}
+		
+		document.getElementById("checkbox_animate").checked = localStorage["animate"] == "true";
+		document.getElementById("checkbox_sound").checked = localStorage["sound"] == "true";
 	}
