@@ -1,3 +1,14 @@
+var default_icon = chrome.extension.getURL("icons/icon-16x16.png");
+
+var notifyImages = new Array(
+	chrome.extension.getURL("icons/anim/notify0.png"),
+	chrome.extension.getURL("icons/anim/notify1.png"),
+	chrome.extension.getURL("icons/anim/notify2.png"),
+	chrome.extension.getURL("icons/anim/notify3.png"));
+
+var notifyDelay = 300;
+
+
 function getHashMap()
 {
 	var o = localStorage["map"];
@@ -13,22 +24,23 @@ function getHashMap()
 	return map;
 }
 
-var default_icon = chrome.extension.getURL("icons/icon-16x16.png");
+function playSound()
+ {	
+  try {
+		var soundPlayer = document.getElementById('notify_sound');
+		soundPlayer.currentTime = 0;
+		soundPlayer.play();
+  }
+  catch(e) { console.error(e); }
+}
 
-var notifyImages = new Array(
-	chrome.extension.getURL("icons/anim/notify0.png"),
-	chrome.extension.getURL("icons/anim/notify1.png"),
-	chrome.extension.getURL("icons/anim/notify2.png"),
-	chrome.extension.getURL("icons/anim/notify3.png"));
-
-var notifyDelay = 300;
 
 function animateNotify(tabId,pos)
 {
 	if(pos < notifyImages.length)
 	{
 		chrome.pageAction.setIcon({tabId: tabId, path: notifyImages[pos++] });
-		setTimeout("animateNotify(" + tabId + "," + pos + ")", notifyDelay);
+		setTimeout(function() { animateNotify(tabId, pos); }, notifyDelay);
 	}
 	else
 	{
@@ -39,6 +51,7 @@ function animateNotify(tabId,pos)
 function notify(tabId)
 {
 	animateNotify(tabId, 0);
+	playSound();
 }
 
 function onRequest(request, sender, sendResponse)
@@ -68,4 +81,4 @@ function onRequest(request, sender, sendResponse)
 	
 };
 
-chrome.extension.onRequest.addListener(onRequest)
+chrome.extension.onRequest.addListener(onRequest);
