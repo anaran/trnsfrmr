@@ -13,25 +13,33 @@ function replaceDates(value) {
 	var pDay = /%DAY%(\(\d+\))?/;
 	var pMonth = /%MONTH%/;
 	var pYear = /%YEAR%/;
-	
-//    d.setDate(d.getDate() + getAddOn(pDay,value));
 
-	day = d.getDate();
-	month = d.getMonth()+1; //?
-	year = d.getFullYear();
+	var pd = new RegExp(pDay);
+	var pm = new RegExp(pMonth);
+	var py = new RegExp(pYear);
 	
-	value = value.replace(pDay , day);
-	value = value.replace(pMonth, month);
-	value = value.replace(pYear, year);
+	while ((pd.exec(value)) || (pm.exec(value)) || (py.exec(value)))
+	{
+		d = getNewDate(getAddOn(pDay,value));
+		value = value.replace(pDay , (d.getDate()<10)?"0"+d.getDate():d.getDate());
+		month = d.getMonth()+1;
+		value = value.replace(pMonth , (month<10)?"0"+month: month);
+		value = value.replace(pYear , d.getFullYear());
+	}
 	
 	return value;
+}
+
+function getNewDate(days){
+	var now = new Date();
+	var daylength= 1*24*60*60*1000;
+	var then = new Date(now*1+daylength*days);
+	return then;
 }
 
 function getAddOn(pattern, value) {
 	pattern.exec(value);
 	match = RegExp.$1;
-	console.warn(match);
 	match = match.replace(/[()]/g,"");
-	console.warn(match);
 	return match;
 }
