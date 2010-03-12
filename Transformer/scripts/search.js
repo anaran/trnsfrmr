@@ -66,37 +66,29 @@ function findAndReplace()
 	var element = e.srcElement;
 	
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
-		replaceKeysWithValues(element);
+		checkElements(element);
  	}
 }
 
 //replaces the keys with the assigned values in the element.
-function replaceKeysWithValues(element)
+function checkElements(element)
 {
 	if(element.tagName=="INPUT")
 	{
 		var type = element.type;
 
 		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
-			for(var j = 0; j++ < map.size; map.next()) { // check all keys
-				element.value = element.value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
-			}
+			element.value = replacer(element.value);
 		}
 	}
 	else if (element.tagName=="BODY" && element.contentEditable)
 	{	
-		for(var j = 0; j++ < map.size; map.next()) { // check all keys
-			element.innerHTML = element.innerHTML.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
-		}
-		
+		element.innerHTML = replacer(element.innerHTML);		
 	}
 	else if (element.tagName=="HTML" && element.isContentEditable)
 	{	
 		var body = element.getElementsByTagName("body")[0];
-		
-		for(var j = 0; j++ < map.size; map.next()) { // check all keys
-			body.innerHTML = body.innerHTML.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
-		}
+		body.innerHTML = replacer(body.innerHTML);
 		
 	} else 
 	{
@@ -105,6 +97,12 @@ function replaceKeysWithValues(element)
 	}
 }
 
+function replacer(value) {
+	for(var j = 0; j++ < map.size; map.next()) { // check all keys
+		value = value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+	}
+	return value;
+}
 function refreshMap(response)
 {
 	var a = JSON.parse(response);
