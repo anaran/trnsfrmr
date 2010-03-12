@@ -15,10 +15,28 @@ var map;
 // init extension
 function init()
 {
-	console.log( document.getElementsByTagName("body"));
+	console.warn(document.getElementById(":pq"));
+	
+	var ghtml = document.getElementById(":pq");
+	
+	if(ghtml)
+	{
+		ghtml.contentDocument.addEventListener("keydown", findAndReplace, false); 
+	}
+	
+//	console.warn(document.getElementById(":pq");
+//	console.log( document.getElementById("tinymce") );
+
+//	var iframes = document.getElementsByTagName("iframe");
+	
+//	for(f in iframes)
+//	{
+//		f.contentWindow.document.addEventListener("keydown", findAndReplace, false); 
+//	}
 	
 	document.addEventListener("keydown", findAndReplace, false); 
 
+	
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
 	
 	if (pageHasEditableElements()) {
@@ -49,22 +67,37 @@ function checkElements(elem) {
 // trigger replaceKeysWithValues method on key event space or enter
 function findAndReplace()
 {
-	console.log("key event");
- 	var e = window.event;
+	console.warn("key event");
+ 	var e = window.event;		
+	var element = e.srcElement;
+	
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
-		e.cancelBubble = true;
-		replaceKeysWithValues();
+		replaceKeysWithValues(element);
  	}
 }
 
 //replaces the keys with the assigned values in the element.
-function replaceKeysWithValues() {
-	var element = document.activeElement;
-	var type = element.type;
-	if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
-		for(var j = 0; j++ < map.size; map.next()) { // check all keys
-			element.value = element.value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+function replaceKeysWithValues(element)
+{
+	if(element.tagName=="INPUT")
+	{
+		var type = element.type;
+
+		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA) ) {
+			for(var j = 0; j++ < map.size; map.next()) { // check all keys
+				element.value = element.value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+			}
 		}
+	}
+	else if (element.tagName=="BODY" && element.contentEditable)
+	{
+		for(var j = 0; j++ < map.size; map.next()) { // check all keys
+			element.innerHTML = element.innerHTML.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+		}
+		
+//		element.innerHTML = element.innerHTML.replace(/test/g,"hallo");
+		
+//		console.warn(element.innerHTML);
 	}
 }
 
@@ -80,4 +113,4 @@ function refreshMap(response)
 	}
 }
 
- setTimeout("init()",0);
+ setTimeout("init()", 1000);
