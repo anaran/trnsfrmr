@@ -62,6 +62,8 @@
 	// Saves options to localStorage.
 	function save_options()
 	{
+		$("#saving").html("saving... i18n!");
+		
 		$.Watermark.HideAll();
 				
 		var lines = $("#subs .sub_line");
@@ -89,6 +91,8 @@
 		
 		chrome.windows.getAll({populate: true}, updateMaps);
 		
+		
+		setTimeout(function(){ $("#saving").html("") }, 750);
 		restore_options();
 	}
 	
@@ -131,3 +135,14 @@
 		document.getElementById("checkbox_animate").checked = localStorage["animate"] == "true";
 		document.getElementById("checkbox_sound").checked = localStorage["sound"] == "true";
 	}
+	
+function onKeyDown(e)
+{
+	if(e.ctrlKey && e.keyCode == 83)
+	{
+		save_options();
+		e.returnValue=false;
+	}
+}
+
+document.addEventListener("keydown", onKeyDown, false); 
