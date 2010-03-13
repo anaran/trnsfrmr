@@ -8,6 +8,10 @@ body {
 	font-size: 12pt;
 	font-weight: bold;
 }
+.saving {
+	position: relative;
+	top: 8px;
+}
 
 .sub_line {
 
@@ -50,6 +54,7 @@ body {
 .del_div {
 	position: relative;
 }
+
 
 
 #main {
