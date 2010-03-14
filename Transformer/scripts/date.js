@@ -19,40 +19,46 @@ function replaceDates(value) {
 	return value;
 }
 
-var days = "";
-var month = "";
-var years = "";
 
 function replaceDate(value){
 	var pDate = /%DATE(\+(\d*d)?(\d*m)?(\d*y)?)?%/;
 	pDate.exec(value);
 
-	findDMY(RegExp.$1);
-	findDMY(RegExp.$2);
-	findDMY(RegExp.$3);
+	var days = "";
+	var month = "";
+	var years = "";
+	
+	var regexp = RegExp.$1;
+	
+	var pattern = /(\d*d)/;
+	pattern.exec(regexp);
+	match = RegExp.$1;
+	days = match.replace("d","");
+
+	pattern = /(\d*m)/;
+	pattern.exec(regexp);
+	match = RegExp.$1;
+	months = match.replace("m","");
+	
+	pattern = /(\d*y)/;
+	pattern.exec(regexp);
+	match = RegExp.$1;
+	years = match.replace("y","");
 	
 	future = new Date();
-	if (days.length > 0)
+	if (isNumeric(days)) {
 		future.setDate(future.getDate() + parseInt(days));
-	if (month.length > 0)
-		future.setMonth(future.getMonth() +  parseInt(month));
-	if (years.length > 0)
+	}
+	if (isNumeric(months)) {
+		future.setMonth(future.getMonth() +  parseInt(months));
+	}
+	if (isNumeric(years)) {
 		future.setYear(future.getFullYear() +  parseInt(years));
+	}
 	
 	value = value.replace(pDate , future.getDate() + "." + (future.getMonth()+1) + "." + future.getFullYear());
 	
 	return value;
-}
-
-
-function findDMY(regexp) {
-	if (regexp.search("d") != -1) {
-		days = days.replace("d","");
-	} else if (regexp.search("m") != -1) {
-		months = months.replace("m","");
-	} else if (regexp.search("y") != -1) {
-		years = years.replace("y","");
-	}
 }
 
 function getAddOn(pattern, value) {
@@ -60,4 +66,25 @@ function getAddOn(pattern, value) {
 	match = RegExp.$1;
 	match = match.replace(/\+/,"");
 	return match;
+}
+
+function isNumeric(sText)
+{
+   var validChars = "0123456789";
+   var isNumber=true;
+   var char;
+ 
+   for (i = 0; i < sText.length && isNumber == true; i++) 
+   { 
+      char = sText.charAt(i); 
+      if (validChars.indexOf(char) == -1) 
+      {
+         isNumber = false;
+      }
+   }
+   
+   if (sText.length == 0) 
+	   isNumber = false;
+   
+   return isNumber;
 }
