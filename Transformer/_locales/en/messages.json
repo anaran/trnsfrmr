@@ -42,7 +42,7 @@
   "guide": {
     "message": "To expande the abbreviation, just hit 'Ctrl + Space'.
 
-The are parameters to enter dates easier:
+There are some parameters to enter dates easier:
 Current day:	%DAY%
 Current month:	%MONTH%
 Current year:	%YEAR%
