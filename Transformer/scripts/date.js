@@ -19,25 +19,40 @@ function replaceDates(value) {
 	return value;
 }
 
-function replaceDate(value){
-	var pDate = /%DATE\+(\d*d)?(\d*m)?(\d*y)?%/;
-	pDate.exec(value);
-	
-	var days = RegExp.$1;
-	days = days.replace("d","");
-	var months = RegExp.$2;
-	months = months.replace("m","");
-	var years = RegExp.$3;
-	years = years.replace("y","");
+var days = "";
+var month = "";
+var years = "";
 
-	future = new Date();
-	future.setDate(future.getDate() + parseInt(days));
-	future.setMonth(future.getMonth() +  parseInt(month));
-	future.setYear(future.getFullYear() +  parseInt(years));
+function replaceDate(value){
+	var pDate = /%DATE(\+(\d*d)?(\d*m)?(\d*y)?)?%/;
+	pDate.exec(value);
+
+	findDMY(RegExp.$1);
+	findDMY(RegExp.$2);
+	findDMY(RegExp.$3);
 	
-	value = value.replace(pDate , future.getDate() + "." + future.getMonth() + "." + future.getFullYear());
+	future = new Date();
+	if (days.length > 0)
+		future.setDate(future.getDate() + parseInt(days));
+	if (month.length > 0)
+		future.setMonth(future.getMonth() +  parseInt(month));
+	if (years.length > 0)
+		future.setYear(future.getFullYear() +  parseInt(years));
+	
+	value = value.replace(pDate , future.getDate() + "." + (future.getMonth()+1) + "." + future.getFullYear());
 	
 	return value;
+}
+
+
+function findDMY(regexp) {
+	if (regexp.search("d") != -1) {
+		days = days.replace("d","");
+	} else if (regexp.search("m") != -1) {
+		months = months.replace("m","");
+	} else if (regexp.search("y") != -1) {
+		years = years.replace("y","");
+	}
 }
 
 function getAddOn(pattern, value) {
