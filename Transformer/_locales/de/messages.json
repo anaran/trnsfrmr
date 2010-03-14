@@ -59,6 +59,10 @@
     "message": "Changelog",
     "description": ""
   },
+  "hideicon": {
+    "message": "Icon in der Omnibar ausblenden",
+    "description": ""
+  },
   "anim": {
     "message": "Animiere Icon?",
     "description": ""

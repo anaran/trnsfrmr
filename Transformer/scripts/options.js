@@ -32,6 +32,8 @@
 		localize("settingstab", "settingstab");
 		localize("helptab", "helptab");
 		localize("changelogtab", "changelogtab");
+		
+		localize("hideicon", "hideicon");
 		localize("anim", "anim");
 		localize("sound", "sound");
 		
@@ -86,11 +88,11 @@
 		
 		$.Watermark.ShowAll();
 
+		localStorage["hideicon"] = $("#checkbox_hideicon").attr('checked');
 		localStorage["animate"] = $("#checkbox_animate").attr('checked');
 		localStorage["sound"] = $("#checkbox_sound").attr('checked');
 		
 		chrome.windows.getAll({populate: true}, updateMaps);
-		
 		
 		setTimeout(function(){ $("#saving").html("") }, 750);
 		restore_options();
@@ -110,10 +112,27 @@
 		}
 	}
 	
+	
+	function save_default()
+	{
+		localStorage["hideicon"] = "false";
+		localStorage["animate"] = "true";
+		localStorage["sound"] = "true";
+		
+		a=new Array("mfg","Mit freundlichen Grüßen");
+		localStorage["map"] = JSON.stringify(a);
+		
+	}
+	
 	// Restores select box state to saved value from localStorage.
 	function restore_options()
 	{
-	
+		if( localStorage["used_before"] != "true")
+		{
+			save_default();
+		}
+		localStorage["used_before"] = "true";
+		
 		$("#subs .sub_line").remove();
 		
 		var map = chrome.extension.getBackgroundPage().getHashMap();
@@ -132,6 +151,7 @@
 			subs.append(line);		
 		}
 		
+		document.getElementById("checkbox_hideicon").checked = localStorage["hideicon"] == "true";
 		document.getElementById("checkbox_animate").checked = localStorage["animate"] == "true";
 		document.getElementById("checkbox_sound").checked = localStorage["sound"] == "true";
 	}
