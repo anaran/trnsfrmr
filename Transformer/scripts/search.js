@@ -12,11 +12,13 @@ var INPUT_TYPE_PASSWORD = "password";
 var INPUT_TYPE_TEXTAREA = "textarea";
 var map;
 
+setTimeout("init()", 0);
+
 // init extension
 function init()
 {
 
-	addEventListenerToIframes(document.getElementsByTagName("iframe"));
+	addEventListenerToIframes();
 	
 	document.addEventListener("keydown", findAndReplace, false); 
 	
@@ -38,18 +40,20 @@ function onRequest(request, sender, sendResponse)
 	}
 }
 
-function addEventListenerToIframes(iframes) 
+function addEventListenerToIframes() 
 {
+	iframes = document.getElementsByTagName("iframe");
+	
 	for ( var i = 0; i < iframes.length; i++) 
 	{
 		var iframe = iframes[i];
-//		(iframe.contentWindow || iframe.contentDocument).addEventListener("keydown", findAndReplace, false);
 
 		if(iframe.contentDocument)
 			iframe.contentDocument.addEventListener("keydown", findAndReplace, false);
 		else if (iframe.contentWindow)
 			iframe.contentWindow.addEventListener("keydown", findAndReplace, false);
 	}
+	setTimeout("addEventListenerToIframes()", 500);
 }
 
 function pageHasEditableElements() {
@@ -138,5 +142,3 @@ function refreshMap(response)
 		map.put(a[i], a[i+1]);
 	}
 }
-
- setTimeout("init()", 1000);
