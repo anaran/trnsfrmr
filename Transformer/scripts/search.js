@@ -76,10 +76,8 @@ function checkElements(elem) {
 }
 
 // trigger replaceKeysWithValues method on key event space or enter
-function findAndReplace()
+function findAndReplace(e)
 {
-	console.warn("key event");
- 	var e = window.event;		
 	var element = e.srcElement;
 	
  	if (e.ctrlKey && (e.keyCode == KEYCODE_SPACE)) {
