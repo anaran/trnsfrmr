@@ -97,7 +97,7 @@ function checkElements(element)
 	{
 		var type = element.type;
 
-		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) ) {
+		if ((type == "text") || (type == "password") ) {
 			element.value = replacer(element.value);
 		}
 	}
