@@ -42,7 +42,7 @@
   "guide": {
     "message": "To expande the abbreviation, just hit 'Ctrl + Space'.
 
-The are some parameters to enter dates easier:
+The are parameters to enter dates easier:
 Current day:	%DAY%
 Current month:	%MONTH%
 Current year:	%YEAR%
@@ -54,7 +54,7 @@ days:		%DATE+*d%
 month:		%DATE+*m%
 years:		%DATE+*y%
 
-You have to replace the * by an your number.",
+You have to replace the * by your number.",
     "description": ""
   },
   "texttab": {
