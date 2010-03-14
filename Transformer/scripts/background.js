@@ -4,12 +4,12 @@ var notifyImages = new Array(
 	chrome.extension.getURL("icons/anim/notify0.png"),
 	chrome.extension.getURL("icons/anim/notify1.png"),
 	chrome.extension.getURL("icons/anim/notify2.png"),
-	chrome.extension.getURL("icons/anim/notify3.png")
-	chrome.extension.getURL("icons/anim/notify4.png")
-	chrome.extension.getURL("icons/anim/notify5.png")
-	chrome.extension.getURL("icons/anim/notify6.png")
-	chrome.extension.getURL("icons/anim/notify7.png")
-	chrome.extension.getURL("icons/anim/notify8.png")
+	chrome.extension.getURL("icons/anim/notify3.png"),
+	chrome.extension.getURL("icons/anim/notify4.png"),
+	chrome.extension.getURL("icons/anim/notify5.png"),
+	chrome.extension.getURL("icons/anim/notify6.png"),
+	chrome.extension.getURL("icons/anim/notify7.png"),
+	chrome.extension.getURL("icons/anim/notify8.png"),
 	chrome.extension.getURL("icons/anim/notify9.png"));
 
 var notifyDelay = 200;

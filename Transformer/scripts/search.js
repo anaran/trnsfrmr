@@ -7,9 +7,6 @@
 var DELIMITER = '!';
 var KEYCODE_SPACE = 32;
 var KEYCODE_ENTER = 13;
-var INPUT_TYPE_TEXT = "text";
-var INPUT_TYPE_PASSWORD = "password";
-var INPUT_TYPE_TEXTAREA = "textarea";
 var map;
 
 setTimeout("init()", 0);
@@ -43,7 +40,6 @@ function addEventListenerToIframes()
 	for ( var i = 0; i < iframes.length; i++) 
 	{
 		var iframe = iframes[i];
-
 		if(iframe.contentDocument)
 			iframe.contentDocument.addEventListener("keydown", findAndReplace, false);
 		else if (iframe.contentWindow)
@@ -71,7 +67,8 @@ function pageHasEditableElements() {
 function checkElements(elem) {
 	for(var i = 0; i < elem.length; i++) {
 		var type = elem[i].type;
-		if ((type == INPUT_TYPE_TEXT) || (type == INPUT_TYPE_PASSWORD) || (type == INPUT_TYPE_TEXTAREA)) {
+		type.toLocaleLowerCase();
+		if ((type == "text") || (type == "password") || (type == "textarea")) {
 			return true;
 		}
 	}
@@ -116,11 +113,6 @@ function checkElements(element)
 	{	
 		var body = element.getElementsByTagName("body")[0];
 		body.innerHTML = replacer(body.innerHTML);		body.focus();		
-	}
-	else 
-	{
-		console.warn("nothing replaced ");
-		console.warn(element);
 	}
 }
 
