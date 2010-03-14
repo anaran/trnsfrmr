@@ -1,14 +1,27 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="stylesheets/style.css" type="text/css" />
-		<script type="text/javascript">
-			chrome.tabs.create({url: "options.html"}); 
-			window.close(); 
+		<script type="text/javascript">		
+			function findTab(tabs)
+			{
+				var url=chrome.extension.getURL("options.html");
+
+				for(i in tabs)
+				{
+					var tab=tabs[i];
+					if(tab.url == url)
+					{
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					}
+				}
+				
+				chrome.tabs.create({url: url}); 
+			}
+			
+			chrome.tabs.getAllInWindow(null, findTab);						
 		</script> 
 	</head>
 	<body>
-		<p class="item_title">
-			<nobr>key values</nobr>
-		</p>
 	</body>
 </html>
