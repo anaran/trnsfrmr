@@ -25,10 +25,6 @@ function init()
  	chrome.extension.sendRequest({read: "map"}, refreshMap);
 	chrome.extension.onRequest.addListener(onRequest);
 	
-	if (pageHasEditableElements()) 
-	{
-		chrome.extension.sendRequest({pageaction: "show"}, function(response) {});
-	}
 }
 
 function onRequest(request, sender, sendResponse)
@@ -53,6 +49,12 @@ function addEventListenerToIframes()
 		else if (iframe.contentWindow)
 			iframe.contentWindow.addEventListener("keydown", findAndReplace, false);
 	}
+	
+	if (pageHasEditableElements()) 
+	{
+		chrome.extension.sendRequest({pageaction: "show"}, function(response) {});
+	}
+	
 	setTimeout("addEventListenerToIframes()", 500);
 }
 
