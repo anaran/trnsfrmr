@@ -40,7 +40,21 @@
     "description": ""
   },
   "guide": {
-    "message": "Um die Abkürzung in die Erweiterung umzuwandeln, einfach 'Strg + Leertaste' drücken.",
+    "message": "Um die Abkürzung in Erweiterung umzuwandeln einfach 'Strg + Leertaste' drücken.
+
+Es gibt ein paar Parameter, um das eingeben von Daten zu erleichetern:
+Der aktuelle Tag:	%DAY%
+Der aktuelle Monat:	%MONTH%
+Das aktuelle Jahr:	%YEAR%
+
+Der heutige Datum:	%DATE%
+
+Um zum heutigen Datum Tage, Monate oder Jahre draufzurechnen:
+Tage:		%DATE+*d%
+Monate:		%DATE+*m%
+Jahre:		%DATE+*y%
+
+Wobei * durch eine entsprechende Zahl ersetz werden muss.",
     "description": ""
   },
   "texttab": {
