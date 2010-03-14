@@ -34,6 +34,7 @@ body {
 	height: 0px;
 	left: 90%;
 	bottom: 80px;
+	width: 100px;
 }
 .sub_line_template {
 	visibility: hidden;

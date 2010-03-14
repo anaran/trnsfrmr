@@ -12,7 +12,7 @@ var notifyImages = new Array(
 	chrome.extension.getURL("icons/anim/notify8.png"),
 	chrome.extension.getURL("icons/anim/notify9.png"));
 
-var notifyDelay = 200;
+var notifyDelay = 100;
 
 
 function getHashMap()
