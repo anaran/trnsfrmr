@@ -59,16 +59,28 @@
     "message": "Changelog",
     "description": ""
   },
+  "changelog_text": {
+    "message": "Besuchen Sie bitte http://code.google.com/p/trnsfrmr/ um mehr Informationen zu erhalten.",
+    "description": ""
+  },
   "hideicon": {
     "message": "Icon in der Omnibar ausblenden",
     "description": ""
   },
   "anim": {
-    "message": "Animiere Icon?",
+    "message": "Animiere Icon",
     "description": ""
   },
   "sound": {
-    "message": "Spiele Sound?",
+    "message": "Spiele Sound",
     "description": ""
+  },
+  "saving": {
+    "message": "speichern...",
+    "description": ""
+  },
+  "map_template": {
+    "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\"]",
+    "description": "Vorlage fuer die Abbkuerzungen"
   }
 }

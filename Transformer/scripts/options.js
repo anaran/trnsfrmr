@@ -32,6 +32,7 @@
 		localize("settingstab", "settingstab");
 		localize("helptab", "helptab");
 		localize("changelogtab", "changelogtab");
+		localize("changelog", "changelog_text");
 		
 		localize("hideicon", "hideicon");
 		localize("anim", "anim");
@@ -64,7 +65,7 @@
 	// Saves options to localStorage.
 	function save_options()
 	{
-		$("#saving").html("saving... i18n!");
+		$("#saving").html(chrome.i18n.getMessage("saving"));
 		
 		$.Watermark.HideAll();
 				
@@ -119,8 +120,7 @@
 		localStorage["animate"] = "true";
 		localStorage["sound"] = "true";
 		
-		a=new Array("mfg","Mit freundlichen Grüßen");
-		localStorage["map"] = JSON.stringify(a);
+		localStorage["map"] = chrome.i18n.getMessage("map_template");
 		
 	}
 	
