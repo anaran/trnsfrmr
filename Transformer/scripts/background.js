@@ -31,12 +31,12 @@ function getHashMap()
 }
 
 function playSound()
- {	
-  try {
-    document.getElementById('notify_sound').currentTime = 0;
-    document.getElementById('notify_sound').play();
-  }
-  catch(e) { console.error(e); }
+{	
+	try {
+		document.getElementById('notify_sound').currentTime = 0;
+		document.getElementById('notify_sound').play();
+	}
+	catch(e) { console.error(e); }
 }
 
 
@@ -68,7 +68,10 @@ function onRequest(request, sender, sendResponse)
 	}
 	else if(request.pageaction == "show")
 	{
-		chrome.pageAction.show(sender.tab.id);
+		if (localStorage["hideicon"] != "true")
+		{
+			chrome.pageAction.show(sender.tab.id);
+		}
 		sendResponse({});
 	}
 	else if(request.pageaction == "notify")
