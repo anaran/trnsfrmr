@@ -42,12 +42,12 @@
   "guide": {
     "message": "Um die Abkürzung in Erweiterung umzuwandeln einfach 'Strg + Leertaste' drücken.
 
-Es gibt ein paar Parameter, um das eingeben von Daten zu erleichetern:
+Es gibt ein paar Parameter, um das eingeben von Daten zu erleichtern:
 Der aktuelle Tag:	%DAY%
 Der aktuelle Monat:	%MONTH%
 Das aktuelle Jahr:	%YEAR%
 
-Der heutige Datum:	%DATE%
+Das heutige Datum:	%DATE%
 
 Um zum heutigen Datum Tage, Monate oder Jahre draufzurechnen:
 Tage:		%DATE+*d%
