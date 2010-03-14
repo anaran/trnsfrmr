@@ -60,14 +60,13 @@
     "description": ""
   },
   "changelog_text": {
-    "message": "Please visit http://code.google.com/p/trnsfrmr/ for more information.",
+    "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\">http://code.google.com/p/trnsfrmr/</a> for more information.",
     "description": ""
   },
   "hideicon": {
     "message": "Hide icon in omnibar",
     "description": ""
   },
-
   "anim": {
     "message": "Animate icon",
     "description": ""
