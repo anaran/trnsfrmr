@@ -114,25 +114,11 @@
 	}
 	
 	
-	function save_default()
-	{
-		localStorage["hideicon"] = "false";
-		localStorage["animate"] = "true";
-		localStorage["sound"] = "true";
-		
-		localStorage["map"] = chrome.i18n.getMessage("map_template");
-		
-	}
+
 	
 	// Restores select box state to saved value from localStorage.
 	function restore_options()
 	{
-		if( localStorage["used_before"] != "true")
-		{
-			save_default();
-		}
-		localStorage["used_before"] = "true";
-		
 		$("#subs .sub_line").remove();
 		
 		var map = chrome.extension.getBackgroundPage().getHashMap();

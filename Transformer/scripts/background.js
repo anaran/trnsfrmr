@@ -89,4 +89,23 @@ function onRequest(request, sender, sendResponse)
 	
 };
 
+function save_default()
+{
+	localStorage["hideicon"] = "false";
+	localStorage["animate"] = "true";
+	localStorage["sound"] = "true";
+	
+	localStorage["map"] = chrome.i18n.getMessage("map_template");
+}
+
+function init()
+{
+	if( localStorage["used_before"] != "true")
+	{
+		save_default();
+	}
+	localStorage["used_before"] = "true";
+}
+
 chrome.extension.onRequest.addListener(onRequest);
+init();
