@@ -88,39 +88,71 @@ function findAndReplace(e)
  	}
 }
 
+function findKeyWord(element)
+{
+	var result = new Object()
+	result.before = "";
+	result.after  = "";
+	result.key = "";
+	
+	var s = element.selectionStart;
+	var e = element.selectionEnd;
+	var word;
+
+	// find word boundaries
+	if(s==e)
+	{
+		var b = element.value.substring(0,s);
+		var a = element.value.substring(e);
+	
+		var rb = b.match(/\w*$/);
+		var ra = a.match(/^\w*/);
+		
+		s -= rb[0].length;
+		e += ra[0].length;
+	}
+	
+
+	result.before = element.value.substring(0,s);
+	result.key    = element.value.substring(s,e);
+	result.after  = element.value.substring(e);
+	
+	return result;
+}
+
+
 //replaces the keys with the assigned values in the element.
 function checkElements(element)
 {
-	if(element.tagName=="INPUT")
+	if( (element.tagName=="INPUT" && ((element.type == "text") || (element.type == "password"))) || element.tagName=="TEXTAREA")
 	{
-		var type = element.type;
-
-		if ((type == "text") || (type == "password") ) {
-			element.value = replacer(element.value);
-		}
-	}
-	else if (element.tagName=="TEXTAREA")
-	{
-		element.value = replacer(element.value);
+		var r = findKeyWord(element);
+		var value = map.get(r.key);
+		
+		if(value)
+			element.value = r.before + value + r.after;
 	}
 	else if (element.tagName=="BODY" && element.contentEditable)
 	{	
-		element.innerHTML = replacer(element.innerHTML);		
+		element.innerHTML = globalReplacer(element.innerHTML);		
 	}
 	else if (element.tagName=="HTML" && element.isContentEditable)
 	{	
 		var body = element.getElementsByTagName("body")[0];
-		body.innerHTML = replacer(body.innerHTML);		body.focus();		
+		body.innerHTML = globalReplacer(body.innerHTML);		body.focus();		
 	}
 }
 
-function replacer(value) {
+
+// global replacer
+function globalReplacer(value) {
 	for(var j = 0; j++ < map.size; map.next()) { // check all keys
 		value = value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
 		value = replaceDates(value);
 	}
 	return value;
 }
+
 function refreshMap(response)
 {
 	console.log("refreshMap");
