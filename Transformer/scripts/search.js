@@ -99,9 +99,10 @@ function findKeyWord(element)
 	var e = element.selectionEnd;
 	var word;
 
-	// find word boundaries
+	// if nothing is selected find word boundaries
 	if(s==e)
 	{
+		// string b(efore) and a(fter) cursor
 		var b = element.value.substring(0,s);
 		var a = element.value.substring(e);
 	
@@ -130,7 +131,15 @@ function checkElements(element)
 		var value = map.get(r.key);
 		
 		if(value)
-			element.value = r.before + value + r.after;
+		{
+			var tmp = r.before + value;
+			
+			var cursor = tmp.length;
+			element.value = tmp + r.after;
+			
+			element.selectionStart = r.before.length;
+			element.selectionEnd = cursor
+		}
 	}
 	else if (element.tagName=="BODY" && element.contentEditable)
 	{	
