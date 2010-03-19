@@ -93,28 +93,36 @@
 		localStorage["animate"] = $("#checkbox_animate").attr('checked');
 		localStorage["sound"] = $("#checkbox_sound").attr('checked');
 		
-		chrome.windows.getAll({populate: true}, updateMaps);
+		chrome.windows.getAll({populate: true}, updateSettings);
 		
 		setTimeout(function(){ $("#saving").html("") }, 750);
 		restore_options();
 	}
 	
-	// Updates all maps in all tabs
-	function updateMaps(windows)
+	
+	function getSettings()
 	{
+		// TODO pack all settings into response
+		return {cmd: "push", map: localStorage["map"]};
+	}
+	
+	// Updates all settings in all tabs
+	function updateSettings(windows)
+	{
+		// TODO same function in backgroundpage... migrate!
+		var settings = getSettings();
+		
 		for(w in windows)
 		{
 			var tabs = windows[w].tabs;
 			for(t in tabs)
 			{
 				var tab=tabs[t];
-				chrome.tabs.sendRequest(tab.id, {push: "map", map: localStorage["map"] }, function(response) {} );
+				chrome.tabs.sendRequest(tab.id, settings, function(response) {} );
 			}
 		}
 	}
 	
-	
-
 	
 	// Restores select box state to saved value from localStorage.
 	function restore_options()

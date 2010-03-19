@@ -59,35 +59,61 @@ function notify(tabId)
 	if (localStorage["sound"] == "true") playSound();
 }
 
-function onRequest(request, sender, sendResponse)
+function onRequest(request,sender,sendResponse)
 {
-
-	if (request.read == "map")
+	console.log("request incomming");
+	console.log(request);
+	switch(request.cmd)
 	{
-		sendResponse( localStorage["map"] );
-	}
-	else if(request.pageaction == "show")
-	{
-		if (localStorage["hideicon"] != "true")
-		{
-			chrome.pageAction.show(sender.tab.id);
-		}
-		sendResponse({});
-	}
-	else if(request.pageaction == "notify")
-	{
-		console.log("pageaction notify");
-		notify(sender.tab.id);
-				
-		sendResponse({});
-	}
-	else
-	{
-		sendResponse({}); // snub them.
-	}
-
-	
+		case "read":
+		  onReadRequest(request,sender,sendResponse);
+		  break;
+		  
+		case "pageaction":
+		  onPageActionRequest(request,sender,sendResponse);
+		  break;
+		  
+		default:
+		  console.warn("unknown request");
+		  console.warn(request);
+		  sendResponse({}); // snub them.
+	}	
 };
+
+
+function getSettings()
+{
+	return {map: localStorage["map"]};
+}
+
+function onReadRequest(request,sender, sendResponse)
+{
+	console.log("read settings request");
+	sendResponse( getSettings() );
+}
+
+function onPageActionRequest(request,sender, sendResponse)
+{
+	switch(request.action)
+	{
+		case "show":
+		  if (localStorage["hideicon"] != "true")
+		  {
+			chrome.pageAction.show(sender.tab.id);
+		  }
+		  break;
+		case "hide":
+		  chrome.pageAction.hide(sender.tab.id);
+		  break;
+		case "notify":
+		  notify(sender.tab.id);
+		  break;
+		default:
+		  console.warn("unknown pageaction request");
+		  console.warn(request);
+	}	
+	sendResponse({}); // snub them.
+}
 
 function save_default()
 {

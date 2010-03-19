@@ -1,63 +1,23 @@
-
-
-// run findAndRepleacer method on key up event
-// document.onkeyup = findAndReplace; 
-
-
-// class for shorcut keys
-function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph)
-{
-	this.keyCode  = keyCode;
-	this.ctrlKey  = ctrl;
-	this.altKey   = alt;
-	this.shiftKey = shift;
-	this.metaKey  = meta;
-	this.altGraphKey = altGraph;
-	
-	this.equals = function (event)
-	{
-		return ((this.keyCode  == event.keyCode) &&
-				(this.ctrlKey  == event.ctrlKey) &&
-				(this.altKey   == event.altKey)  &&
-				(this.shiftKey == event.shiftKey)  &&
-				(this.metaKey  == event.metaKey)  &&
-				(this.altGraphKey == event.altGraphKey) );		
-	}
-}
-
-
-// constants
-
-var KEYCODE_SPACE = 32;
-var KEYCODE_ENTER = 13;
-
-var map;
-
-var replaceKey = new KeyInfo(KEYCODE_SPACE, true, false, false, false, false);
-var replaceGlobalKey = new KeyInfo(KEYCODE_SPACE, true, false, true, false, false);
-
+var settings;
+var pageaction;
 
 setTimeout("init()", 0);
 
 // init extension
 function init()
 {
-	addEventListenerToIframes();
+	settings = new Settings();
+	pageaction = new PageAction();
+	
+	settings.readRequest();
+	settings.enableListener();
+	
+	// TODO uncomment for iframe support
+//	addEventListenerToIframes();
 	
 	document.addEventListener("keydown", onKeyEvent, false); 
+	pageaction.show();
 	
- 	chrome.extension.sendRequest({read: "map"}, refreshMap);
-	chrome.extension.onRequest.addListener(onMessage);
-	
-}
-
-function onMessage(msg, sender, sendResponse)
-{
-	if (msg.push == "map")
-	{
-		refreshMap(msg.map);
-		sendResponse({}); // snub them.
-	}
 }
 
 function addEventListenerToIframes() 
@@ -75,7 +35,7 @@ function addEventListenerToIframes()
 	
 	if (pageHasEditableElements()) 
 	{
-		chrome.extension.sendRequest({pageaction: "show"}, function(response) {});
+		pageaction.show();
 	}
 	
 	setTimeout("addEventListenerToIframes()", 500);
@@ -91,7 +51,8 @@ function pageHasEditableElements() {
 	}
 }
 
-function checkElements(elem) {
+function checkElements(elem)
+ {
 	for(var i = 0; i < elem.length; i++) {
 		var type = elem[i].type;
 		type.toLocaleLowerCase();
@@ -105,8 +66,9 @@ function checkElements(elem) {
 // trigger replaceKeysWithValues method on key event space or enter
 function onKeyEvent(e)
 {
- 	if ( replaceKey.equals(e) )
+ 	if ( settings.replaceKey.equals(e) )
 	{
+		console.log("onKeyEvent: replace shortcut");
 		var element = e.srcElement;
 
 		checkElements(element);
@@ -115,7 +77,7 @@ function onKeyEvent(e)
 		e.returnValue=false;
 		
 		// TODO only if something was replaced
-		chrome.extension.sendRequest({pageaction: "notify"}, function(response) {});
+		pageaction.notify();
  	}
 }
 
@@ -159,7 +121,7 @@ function checkElements(element)
 	if( (element.tagName=="INPUT" && ((element.type == "text") || (element.type == "password"))) || element.tagName=="TEXTAREA")
 	{
 		var r = extractKeyWord(element);
-		var value = map.get(r.key);
+		var value = settings.map.get(r.key);
 		
 		if(value)
 		{
@@ -188,24 +150,15 @@ function checkElements(element)
 
 
 // global replacer
-function globalReplacer(value) {
-	for(var j = 0; j++ < map.size; map.next()) { // check all keys
-		value = value.replace(new RegExp("\\b"+map.key()+"\\b", "g"),  map.value());
+function globalReplacer(value)
+{
+	var m = settings.map;
+	// check all keys
+	for(var j = 0; j++ < m.size; m.next())
+	{ 
+		value = value.replace(new RegExp("\\b" + m.key() + "\\b", "g"),  m.value());
 		value = replaceDates(value);
 	}
 	return value;
 }
 
-function refreshMap(response)
-{
-	console.log("refreshMap");
-	
-	var a = JSON.parse(response);
-	
-	map = new Map;
-	
-	for (var i = 0; (i+1) < a.length; i+=2)
-	{
-		map.put(a[i], a[i+1]);
-	}
-}
