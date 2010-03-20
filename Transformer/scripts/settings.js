@@ -82,7 +82,7 @@ function Settings()
 	{
 		console.log("Settings.processMessage");
 		
-//		var s = this; // this is NOT THIS. causes by asynchronous call...
+//		var s = this; // this is NOT THIS. caused by asynchronous call...
 
 		// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
 		var s = settings;

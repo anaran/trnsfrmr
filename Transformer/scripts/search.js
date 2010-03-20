@@ -16,6 +16,7 @@ function init()
 //	addEventListenerToIframes();
 	
 	document.addEventListener("keydown", onKeyEvent, false); 
+	
 	pageaction.show();
 	
 }
@@ -133,7 +134,7 @@ function checkElements(element)
 			var cursor = tmp.length;
 			element.value = tmp + r.after;
 			
-			element.selectionStart = r.before.length;
+			element.selectionStart = settings.selectPhrase? r.before.length : cursor;
 			element.selectionEnd = cursor
 		}
 	}

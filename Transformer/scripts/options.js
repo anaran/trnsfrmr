@@ -92,9 +92,10 @@
 		localStorage["hideicon"] = $("#checkbox_hideicon").attr('checked');
 		localStorage["animate"] = $("#checkbox_animate").attr('checked');
 		localStorage["sound"] = $("#checkbox_sound").attr('checked');
-		
+		localStorage["selectphrase"] = $("#checkbox_selectphrase").attr('checked');
+	
 		chrome.windows.getAll({populate: true}, updateSettings);
-		
+				
 		setTimeout(function(){ $("#saving").html("") }, 750);
 		restore_options();
 	}
@@ -103,7 +104,11 @@
 	function getSettings()
 	{
 		// TODO pack all settings into response
-		return {cmd: "push", map: localStorage["map"]};
+		return {
+			cmd: "push",
+			map: localStorage["map"],
+			selectPhrase: localStorage["selectphrase"]
+			};
 	}
 	
 	// Updates all settings in all tabs
@@ -148,10 +153,12 @@
 		document.getElementById("checkbox_hideicon").checked = localStorage["hideicon"] == "true";
 		document.getElementById("checkbox_animate").checked = localStorage["animate"] == "true";
 		document.getElementById("checkbox_sound").checked = localStorage["sound"] == "true";
+		document.getElementById("checkbox_selectphrase").checked = localStorage["selectphrase"] == "true";
 	}
 	
 function onKeyDown(e)
 {
+	// ctrl-s
 	if(e.ctrlKey && e.keyCode == 83)
 	{
 		save_options();

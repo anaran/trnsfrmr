@@ -83,7 +83,10 @@ function onRequest(request,sender,sendResponse)
 
 function getSettings()
 {
-	return {map: localStorage["map"]};
+	return {
+		map: localStorage["map"],
+		selectPhrase: localStorage["selectphrase"]
+		};
 }
 
 function onReadRequest(request,sender, sendResponse)
@@ -120,6 +123,7 @@ function save_default()
 	localStorage["hideicon"] = "false";
 	localStorage["animate"] = "true";
 	localStorage["sound"] = "true";
+	localStorage["selectphrase"] = "true";
 	
 	localStorage["map"] = chrome.i18n.getMessage("map_template");
 }
