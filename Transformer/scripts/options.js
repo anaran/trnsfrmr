@@ -116,7 +116,7 @@
 			restore_options();
 		} else {
 			setKeyErrorColors(a);
-			$("#saving").html("");
+			$("#saving").html(chrome.i18n.getMessage("keys_not_unique"));
 		}
 	}
 	

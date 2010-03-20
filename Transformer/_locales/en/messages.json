@@ -95,6 +95,10 @@ You have to replace the * by your number.",
   },
   "map_template": {
     "message": "[\"today\",\"%DATE%\",\"sy\",\"Sincerely yours\"]",
-    "description": "Vorlage fuer die Abbkuerzungen"
+    "description": "Vorlage fuer die Abbkürzungen"
+  },
+  "keys_not_unique": {
+    "message": "The abbreviations have to be unique.",
+    "description": "Fehlermeldung nicht eindeutigen Abkürzungen"
   }
 }
