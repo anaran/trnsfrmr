@@ -12,8 +12,7 @@ function init()
 	settings.readRequest();
 	settings.enableListener();
 	
-	// TODO uncomment for iframe support
-//	addEventListenerToIframes();
+	addEventListenerToIframes();
 	
 	document.addEventListener("keydown", onKeyEvent, false); 
 	
@@ -82,23 +81,23 @@ function onKeyEvent(e)
  	}
 }
 
-function extractKeyWord(element)
+function extractKeyWord(str, s, e)
 {
 	var result = new Object()
 	result.before = "";
 	result.after  = "";
 	result.key = "";
 	
-	var s = element.selectionStart;
-	var e = element.selectionEnd;
+//	var s = element.selectionStart;
+//	var e = element.selectionEnd;
 	var word;
 
 	// if nothing is selected find word boundaries
 	if(s==e)
 	{
 		// string b(efore) and a(fter) cursor
-		var b = element.value.substring(0,s);
-		var a = element.value.substring(e);
+		var b = str.substring(0,s);
+		var a = str.substring(e);
 	
 		var rb = b.match(/\S*$/);
 		var ra = a.match(/^\S*/);
@@ -108,9 +107,9 @@ function extractKeyWord(element)
 	}
 	
 
-	result.before = element.value.substring(0,s);
-	result.key    = element.value.substring(s,e);
-	result.after  = element.value.substring(e);
+	result.before = str.substring(0,s);
+	result.key    = str.substring(s,e);
+	result.after  = str.substring(e);
 	
 	return result;
 }
@@ -121,7 +120,7 @@ function checkElements(element)
 {
 	if( (element.tagName=="INPUT" && ((element.type == "text") || (element.type == "password"))) || element.tagName=="TEXTAREA")
 	{
-		var r = extractKeyWord(element);
+		var r = extractKeyWord(element.value, element.selectionStart, element.selectionEnd );
 		var value = settings.map.get(r.key);
 		
 		if(value)
@@ -138,14 +137,55 @@ function checkElements(element)
 			element.selectionEnd = cursor
 		}
 	}
-	else if (element.tagName=="BODY" && element.contentEditable)
+	else if ( (element.tagName=="HTML" && element.isContentEditable) || (element.tagName=="BODY" && element.contentEditable) )
 	{	
-		element.innerHTML = globalReplacer(element.innerHTML);		
-	}
-	else if (element.tagName=="HTML" && element.isContentEditable)
-	{	
-		var body = element.getElementsByTagName("body")[0];
-		body.innerHTML = globalReplacer(body.innerHTML);		body.focus();		
+//		console.log(element);
+//		console.log(  );
+		var doc = element.ownerDocument;
+		var selection = doc.getSelection();
+//		var range = selection.getRangeAt(0);
+		console.log( selection );
+//		console.log( range );
+		
+		if(selection.isCollapsed)
+		{
+			var element = selection.anchorNode;
+			var s = selection.anchorOffset;
+
+			var r = extractKeyWord(element.textContent, s, s);
+			
+			var value = settings.map.get(r.key);
+		
+			if(value)
+			{
+				value = replaceDates(value);
+				var tmp = r.before + value;
+			
+				var cursor = tmp.length;
+				var beforepos = r.before.length;
+				
+				element.textContent = tmp + r.after;
+
+				// TODO set selection/cursor
+				
+				selection.removeAllRanges();
+			
+				var r = doc.createRange();
+				r.setStart(element, settings.selectPhrase? beforepos: cursor);
+				r.setEnd(element, cursor);
+				selection.addRange(r);
+			}
+		}
+		else
+		{
+			// replace selection
+			var value = settings.map.get( selection.toString() );
+			console.log(value);
+			// TODO
+		}
+		
+//		var body = element.getElementsByTagName("body")[0];
+//		body.innerHTML = globalReplacer(body.innerHTML);		body.focus();		
 	}
 }
 
