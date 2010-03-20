@@ -63,7 +63,9 @@ pre {
 	position: relative;
 }
 
-
+.bg_key_error {
+	background-color: #D90000;
+}
 
 #main {
 	font-family:Arial, Helvetica, sans-serif;

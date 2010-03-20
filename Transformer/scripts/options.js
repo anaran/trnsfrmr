@@ -99,22 +99,58 @@
 				a.push(value);
 			}
 		}
+		if (keysUnique(a)) {
+			
+			localStorage["map"] = JSON.stringify(a);
+			
+			$.Watermark.ShowAll();
 	
-		localStorage["map"] = JSON.stringify(a);
+			localStorage["hideicon"] = $("#checkbox_hideicon").attr('checked');
+			localStorage["animate"] = $("#checkbox_animate").attr('checked');
+			localStorage["sound"] = $("#checkbox_sound").attr('checked');
+			localStorage["selectphrase"] = $("#checkbox_selectphrase").attr('checked');
 		
-		$.Watermark.ShowAll();
-
-		localStorage["hideicon"] = $("#checkbox_hideicon").attr('checked');
-		localStorage["animate"] = $("#checkbox_animate").attr('checked');
-		localStorage["sound"] = $("#checkbox_sound").attr('checked');
-		localStorage["selectphrase"] = $("#checkbox_selectphrase").attr('checked');
-	
-		chrome.windows.getAll({populate: true}, updateSettings);
-				
-		setTimeout(function(){ $("#saving").html("") }, 750);
-		restore_options();
+			chrome.windows.getAll({populate: true}, updateSettings);
+					
+			setTimeout(function(){ $("#saving").html("") }, 750);
+			restore_options();
+		} else {
+			setKeyErrorColors(a);
+			$("#saving").html("");
+		}
 	}
 	
+	function keysUnique(a) {
+		for ( var i = 0; i < a.length; i += 2) {
+			for ( var j = 0; j < a.length; j += 2) {
+				if (i != j && a[i] == a[j])
+					return false;
+			}
+		}
+		return true;
+	}
+	
+	function setKeyErrorColors(a) {
+		var lines = $("#subs .sub_line");
+		for ( var i = 0; i < lines.length; i++) {
+			var key = $(".sub_key", lines[i])[0].value;
+			if (!isKeyUnique(a, key)) {
+				$(".sub_key", lines[i]).addClass("bg_key_error");
+			} else {
+				$(".sub_key", lines[i]).removeClass("bg_key_error");
+			}
+		}
+	}
+	
+	function isKeyUnique(a, key) {
+		var counter = 0;
+		for ( var i = 0; i < a.length; i += 2) {
+			if (a[i] == key) {
+				counter++;
+			}
+		}
+		return (counter<=1)?true:false;
+	}
 	
 	function getSettings()
 	{
