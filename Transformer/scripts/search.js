@@ -120,6 +120,14 @@ function checkElements(element)
 {
 	if( (element.tagName=="INPUT" && ((element.type == "text") || (element.type == "password"))) || element.tagName=="TEXTAREA")
 	{
+	
+		// if text is selected abort... see wysiwyg-editor
+		if (element.selectionStart != element.selectionEnd)
+		{
+			// TODO reenable if selection in  wysiwyg-editor works
+			return;
+		}
+		
 		var r = extractKeyWord(element.value, element.selectionStart, element.selectionEnd );
 		var value = settings.map.get(r.key);
 		
@@ -159,6 +167,7 @@ function checkElements(element)
 			if(value)
 			{
 				value = replaceDates(value);
+				
 				var tmp = r.before + value;
 			
 				var cursor = tmp.length;
@@ -183,9 +192,6 @@ function checkElements(element)
 			console.log(value);
 			// TODO
 		}
-		
-//		var body = element.getElementsByTagName("body")[0];
-//		body.innerHTML = globalReplacer(body.innerHTML);		body.focus();		
 	}
 }
 
@@ -202,4 +208,3 @@ function globalReplacer(value)
 	}
 	return value;
 }
-
