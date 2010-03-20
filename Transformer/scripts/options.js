@@ -41,17 +41,30 @@
 		
 		restore_options();
 	}
+
+	
+	function onKeyDownEvent(event)
+	{
+		// prevent spaces
+		if(event.keyCode==32) event.preventDefault();
+	}
+	
+	function removeWhitespaces(str)
+	{
+		str = str.replace(/\s/g, "");
+	}
+	
+	function onInputChange(event)
+	{
+		event.srcElement.value = event.srcElement.value.replace(/\s/g, "");
+		// removeWhitespaces( event.srcElement.value );
+	}
 	
 	function add()
 	{
 		var subs = $("#subs");
-		var line = $("#subs .sub_line_template").clone();
-		line.removeClass("sub_line_template").addClass("sub_line");	
+		var line = createSubLine("","");
 		subs.prepend(line);
-		
-		$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr"));
-		$(".sub_value", line).Watermark(chrome.i18n.getMessage("long"));
-		
 	}
 		
 	function del(button)
@@ -60,6 +73,8 @@
 		
 		row.outerHTML="";
 	}
+	
+
 
 	
 	// Saves options to localStorage.
@@ -127,7 +142,23 @@
 			}
 		}
 	}
-	
+		
+	function createSubLine(key, value)
+	{
+		var line = $("#subs .sub_line_template").clone();
+		line.removeClass("sub_line_template").addClass("sub_line");	
+		
+		$(".sub_key", line)[0].value = key;
+		$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr"));
+		$(".sub_key", line).keydown( onKeyDownEvent );
+		$(".sub_key", line).change( onInputChange );
+
+		$(".sub_value", line)[0].value = value;
+		$(".sub_value", line).Watermark(chrome.i18n.getMessage("long"));
+		
+		return line;
+		
+	}
 	
 	// Restores select box state to saved value from localStorage.
 	function restore_options()
@@ -140,13 +171,8 @@
 		
 		for(var j = 0; j++ < map.size; map.next())
 		{		
-			var line = $("#subs .sub_line_template").clone();
-			line.removeClass("sub_line_template").addClass("sub_line");	
-			
-			$(".sub_key", line)[0].value = map.key();
-			
-			$(".sub_value", line)[0].value = map.value();
-	
+		
+			var line = createSubLine(map.key(), map.value());
 			subs.append(line);		
 		}
 		
