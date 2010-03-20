@@ -148,16 +148,15 @@
 		var line = $("#subs .sub_line_template").clone();
 		line.removeClass("sub_line_template").addClass("sub_line");	
 		
-		$(".sub_key", line)[0].value = key;
+		$(".sub_key", line).val(key);
 		$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr"));
 		$(".sub_key", line).keydown( onKeyDownEvent );
 		$(".sub_key", line).change( onInputChange );
 
-		$(".sub_value", line)[0].value = value;
+		$(".sub_value", line).val(value);
 		$(".sub_value", line).Watermark(chrome.i18n.getMessage("long"));
 		
-		return line;
-		
+		return line;	
 	}
 	
 	// Restores select box state to saved value from localStorage.
@@ -176,10 +175,11 @@
 			subs.append(line);		
 		}
 		
-		document.getElementById("checkbox_hideicon").checked = localStorage["hideicon"] == "true";
-		document.getElementById("checkbox_animate").checked = localStorage["animate"] == "true";
-		document.getElementById("checkbox_sound").checked = localStorage["sound"] == "true";
-		document.getElementById("checkbox_selectphrase").checked = localStorage["selectphrase"] == "true";
+		$("#checkbox_hideicon").attr('checked', localStorage["hideicon"] == "true");
+		$("#checkbox_animate").attr('checked', localStorage["animate"] == "true");
+		$("#checkbox_sound").attr('checked', localStorage["sound"] == "true");
+		$("#checkbox_selectphrase").attr('checked', localStorage["selectphrase"] == "true");
+
 	}
 	
 function onKeyDown(e)
