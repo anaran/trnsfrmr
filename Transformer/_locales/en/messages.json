@@ -95,6 +95,10 @@ You have to replace the * by a number of your choice.",
     "message": "Play sound",
     "description": ""
   },
+  "selectphrase": {
+    "message": "Select after replace",
+    "description": ""
+  },
   "saving": {
     "message": "saving...",
     "description": ""

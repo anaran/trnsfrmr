@@ -37,7 +37,7 @@
 		localize("hideicon", "hideicon");
 		localize("anim", "anim");
 		localize("sound", "sound");
-		
+		localize("selectphrase","selectphrase");
 		
 		restore_options();
 	}

@@ -92,6 +92,10 @@ Wobei * durch eine beliebige natürliche Zahl ersetz werden kann.",
     "message": "Animiere Icon",
     "description": ""
   },
+  "selectphrase": {
+    "message": "Markiere Text nach dem Ersetzen",
+    "description": ""
+  },  
   "sound": {
     "message": "Spiele Sound",
     "description": ""

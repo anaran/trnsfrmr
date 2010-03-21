@@ -123,7 +123,7 @@ function save_default()
 	localStorage["hideicon"] = "false";
 	localStorage["animate"] = "true";
 	localStorage["sound"] = "true";
-	localStorage["selectphrase"] = "true";
+	localStorage["selectphrase"] = "false";
 	
 	localStorage["map"] = chrome.i18n.getMessage("map_template");
 }
