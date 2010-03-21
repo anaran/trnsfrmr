@@ -42,15 +42,12 @@ function addEventListenerToIframes()
 function pageHasEditableElements() {
 	var elemInput = document.getElementsByTagName("input");
 	var elemTextarea = document.getElementsByTagName("textarea");
-	if (checkElements(elemInput) || elemTextarea.length > 0 ) {
-		return true;
-	} else {
-		return false;
-	}
+	
+	return ( elemTextarea.length > 0 || findInputElements(elemInput) ); 
 }
 
-function checkElements(elem)
- {
+function findInputElements(elem)
+{
 	for(var i = 0; i < elem.length; i++) {
 		var type = elem[i].type;
 		type.toLocaleLowerCase();
