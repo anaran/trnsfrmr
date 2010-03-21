@@ -42,6 +42,8 @@
   "guide": {
     "message": "Place the cursor before, in or after your abbreviations and hit 'Ctrl + Space' to expand them.
 
+You could save your new keys with 'Ctrl + s' or by hitting the save button.
+
 There are some additional parameters, which could be included in your own abbreviations:
 
 Current day:	%DAY%

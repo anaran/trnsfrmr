@@ -44,6 +44,8 @@
     
 Drücken Sie dann einfach 'Strg + Leertaste' um die Abkürzung zu ersetzen.
 
+Um neuen Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s' oder den speichern Button.
+ 
 Es gibt einige besondere Parameter, die Sie in Ihre Abkürzungen integrieren können:
 
 Der aktuelle Tag:	%DAY%
