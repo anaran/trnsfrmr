@@ -79,10 +79,12 @@ pre {
 	padding: 5px;
 	height: inherit;
 }
-#save {
+
+.buttons_align_right {
 	position: absolute;
 	right: 10px;
 }
+
 #head {
 	font-size: 24pt;
 

@@ -114,6 +114,7 @@
 					
 			setTimeout(function(){ $("#saving").html("") }, 750);
 			restore_options();
+			
 		} else {
 			setKeyErrorColors(a);
 			$("#saving").html(chrome.i18n.getMessage("keys_not_unique"));
@@ -215,7 +216,8 @@
 		$("#checkbox_animate").attr('checked', localStorage["animate"] == "true");
 		$("#checkbox_sound").attr('checked', localStorage["sound"] == "true");
 		$("#checkbox_selectphrase").attr('checked', localStorage["selectphrase"] == "true");
-
+		
+		add();
 	}
 	
 function onKeyDown(e)
