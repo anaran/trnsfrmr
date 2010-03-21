@@ -54,14 +54,14 @@ The complete date (today):	%DATE%
 
 To add days, months or years to the current date:
 
-days:		%DATE+*d%
-month:		%DATE+*m%
-years:		%DATE+*y%
-or:			%DATE+*d*m*y%
+days:		%DATE+<i>&lt;n&gt;</i>d%
+month:		%DATE+<i>&lt;n&gt;</i>m%
+years:		%DATE+<i>&lt;n&gt;</i>y%
+or:			%DATE+<i>&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
 
-You have to replace the * by a number of your choice.",
+You have to replace <i>&lt;n&gt;</i> by a number of your choice.",
 
-    "description": "Hilfe Text"
+    "description": "Helptext"
   },
   "texttab": {
     "message": "Text",

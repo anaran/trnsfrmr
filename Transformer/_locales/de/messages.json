@@ -40,11 +40,11 @@
     "description": ""
   },
   "guide": {
-    "message": "Um eine Abkürzung zu ersetzen muss sich der Cursor vor, auf oder nach ihr befinden. 
+    "message": "Um eine Abkürzung zu ersetzen muss sich der Cursor in einem beliebigen Eingabefeld vor, auf oder nach ihr befinden. 
     
 Drücken Sie dann einfach 'Strg + Leertaste' um die Abkürzung zu ersetzen.
 
-Um neuen Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s' oder den speichern Button.
+Um neue Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s' oder den Speichern Button.
  
 Es gibt einige besondere Parameter, die Sie in Ihre Abkürzungen integrieren können:
 
@@ -54,14 +54,14 @@ Das aktuelle Jahr:	%YEAR%
 
 Das heutige Datum:	%DATE%
 
-Um zum heutigen Datum Tage, Monate oder Jahre hinzufügen können Sie folgende Syntax verwenden:
+Um zum heutigen Datum Tage, Monate oder Jahre hinzuzufügen, können Sie folgende Syntax verwenden:
 
-Tage:		%DATE+*d%
-Monate:		%DATE+*m%
-Jahre:		%DATE+*y%
-oder:		%DATE+*d*m*y%
+Tage:		%DATE+<i>&lt;n&gt;</i>d%
+Monate:		%DATE+<i>&lt;n&gt;</i>m%
+Jahre:		%DATE+<i>&lt;n&gt;</i>y%
+oder:		%DATE+<i>&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
 
-Wobei * durch eine beliebige natürliche Zahl ersetz werden kann.",
+Wobei <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetz werden kann.",
     "description": "Hilfe text"
   },
   "texttab": {
