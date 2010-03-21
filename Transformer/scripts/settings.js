@@ -39,11 +39,9 @@ function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph)
 	}
 }
 
-
 // Settings class
 function Settings()
 {
-	console.log("Create Settings object");
 	this.map = new Map();
 	
 	this.replaceKey = new KeyInfo(32,true,false,false,false,false);
@@ -54,8 +52,6 @@ function Settings()
 		
 	this.onMessage = function (msg, sender, sendResponse)
 	{
-		console.log("Settings.onMessage");
-		console.log(msg);
 		if (msg.cmd == "push")
 		{
 			// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
@@ -79,9 +75,7 @@ function Settings()
 	}
 	
 	this.processMessage = function (msg)
-	{
-		console.log("Settings.processMessage");
-		
+	{		
 //		var s = this; // this is NOT THIS. caused by asynchronous call...
 
 		// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
@@ -97,8 +91,6 @@ function Settings()
 	
 	this.refreshMap = function (mapdata)
 	{
-		console.log("Settings.refreshMap");
-		
 		var a = JSON.parse(mapdata);
 		
 		this.map = new Map;

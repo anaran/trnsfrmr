@@ -61,8 +61,6 @@ function notify(tabId)
 
 function onRequest(request,sender,sendResponse)
 {
-	console.log("request incomming");
-	console.log(request);
 	switch(request.cmd)
 	{
 		case "read":
@@ -91,7 +89,6 @@ function getSettings()
 
 function onReadRequest(request,sender, sendResponse)
 {
-	console.log("read settings request");
 	sendResponse( getSettings() );
 }
 

@@ -16,8 +16,6 @@ function init()
 	
 	document.addEventListener("keydown", onKeyEvent, false); 
 	
-	pageaction.show();
-	
 }
 
 function addEventListenerToIframes() 
@@ -68,7 +66,6 @@ function onKeyEvent(e)
 {
  	if ( settings.replaceKey.equals(e) )
 	{
-		console.log("onKeyEvent: replace shortcut");
 		var element = e.srcElement;
 
 		checkElements(element);
@@ -147,13 +144,9 @@ function checkElements(element)
 	}
 	else if ( (element.tagName=="HTML" && element.isContentEditable) || (element.tagName=="BODY" && element.contentEditable) )
 	{	
-//		console.log(element);
-//		console.log(  );
 		var doc = element.ownerDocument;
 		var selection = doc.getSelection();
-//		var range = selection.getRangeAt(0);
 		console.log( selection );
-//		console.log( range );
 		
 		if(selection.isCollapsed)
 		{
