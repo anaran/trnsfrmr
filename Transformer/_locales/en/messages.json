@@ -40,9 +40,10 @@
     "description": ""
   },
   "guide": {
-    "message": "To expande the abbreviation, just hit 'Ctrl + Space'.
+    "message": "Place the cursor before, in or after your abbreviations and hit 'Ctrl + Space' to expand them.
 
-There are some parameters to enter dates easier:
+There are some additional parameters, which could be included in your own abbreviations:
+
 Current day:	%DAY%
 Current month:	%MONTH%
 Current year:	%YEAR%
@@ -50,12 +51,15 @@ Current year:	%YEAR%
 The complete date (today):	%DATE%
 
 To add days, months or years to the current date:
+
 days:		%DATE+*d%
 month:		%DATE+*m%
 years:		%DATE+*y%
+or:			%DATE+*d*m*y%
 
-You have to replace the * by your number.",
-    "description": ""
+You have to replace the * by a number of your choice.",
+
+    "description": "Hilfe Text"
   },
   "texttab": {
     "message": "Text",

@@ -40,22 +40,27 @@
     "description": ""
   },
   "guide": {
-    "message": "Um die Abkürzung in Erweiterung umzuwandeln einfach 'Strg + Leertaste' drücken.
+    "message": "Um eine Abkürzung zu ersetzen muss sich der Cursor vor, auf oder nach ihr befinden. 
+    
+Drücken Sie dann einfach 'Strg + Leertaste' um die Abkürzung zu ersetzen.
 
-Es gibt ein paar Parameter, um das eingeben von Daten zu erleichtern:
+Es gibt einige besondere Parameter, die Sie in Ihre Abkürzungen integrieren können:
+
 Der aktuelle Tag:	%DAY%
 Der aktuelle Monat:	%MONTH%
 Das aktuelle Jahr:	%YEAR%
 
 Das heutige Datum:	%DATE%
 
-Um zum heutigen Datum Tage, Monate oder Jahre draufzurechnen:
+Um zum heutigen Datum Tage, Monate oder Jahre hinzufügen können Sie folgende Syntax verwenden:
+
 Tage:		%DATE+*d%
 Monate:		%DATE+*m%
 Jahre:		%DATE+*y%
+oder:		%DATE+*d*m*y%
 
-Wobei * durch eine entsprechende Zahl ersetz werden muss.",
-    "description": ""
+Wobei * durch eine beliebige natürliche Zahl ersetz werden kann.",
+    "description": "Hilfe text"
   },
   "texttab": {
     "message": "Text",
