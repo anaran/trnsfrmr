@@ -80,6 +80,10 @@ pre {
 	height: inherit;
 }
 
+#saving {
+	position: absolute;
+}
+
 .buttons_align_right {
 	position: absolute;
 	right: 10px;
