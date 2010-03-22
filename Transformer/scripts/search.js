@@ -143,7 +143,8 @@ function checkElements(element)
 	{	
 		var doc = element.ownerDocument;
 		var selection = doc.getSelection();
-		console.log( selection );
+		
+//		console.log( selection );
 		
 		if(selection.isCollapsed)
 		{
@@ -157,21 +158,64 @@ function checkElements(element)
 			if(value)
 			{
 				value = replaceDates(value);
-				
-				var tmp = r.before + value;
-			
-				var cursor = tmp.length;
+								
 				var beforepos = r.before.length;
+						
+				// split text into "element" - "keyword" - "aftervalue"
+				var keyword = element.splitText(beforepos);
+				var aftervalue = keyword.splitText(r.key.length);
 				
-				element.textContent = tmp + r.after;
-
-				// TODO set selection/cursor
 				
+				// TODO check for other linebreaks like unix or mac style
+				var lines = value.split("\n");
+				
+				curNode = keyword;
+				
+				// check if multiline
+				if(lines.length > 1)
+				{
+					keyword.textContent="";
+					
+					
+					for(i in lines)
+					{
+						var line = lines[i];
+						
+					
+						var newNode = doc.createElement("p");
+						newNode.innerHTML = line;
+						
+						
+						var range = doc.createRange();
+						
+						range.selectNode(curNode);
+						range.collapse(false);
+						range.insertNode(newNode);
+						curNode=newNode;
+						
+					}
+				}
+				else
+				{
+					keyword.textContent = value;
+				}
+				
+				// set selection/cursor
+		
 				selection.removeAllRanges();
 			
 				var r = doc.createRange();
-				r.setStart(element, settings.selectPhrase? beforepos: cursor);
-				r.setEnd(element, cursor);
+				if(settings.selectPhrase)
+				{
+					r.setStartBefore(keyword);
+					r.setEndAfter(curNode);
+				}
+				else
+				{
+					r.selectNode(curNode);
+					r.collapse(false);
+				}
+				
 				selection.addRange(r);
 			}
 		}
@@ -192,7 +236,7 @@ function globalReplacer(value)
 	var m = settings.map;
 	// check all keys
 	for(var j = 0; j++ < m.size; m.next())
-	{ 
+	{
 		value = value.replace(new RegExp("\\b" + m.key() + "\\b", "g"),  m.value());
 		value = replaceDates(value);
 	}
