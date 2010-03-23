@@ -37,6 +37,16 @@ function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph)
 				(this.metaKey  == event.metaKey)  &&
 				(this.altGraphKey == event.altGraphKey) );		
 	}
+	
+	this.fromEvent = function (event)
+	{
+		this.keyCode  = event.keyCode;
+		this.ctrlKey  = event.ctrlKey;
+		this.altKey   = event.altKey;
+		this.shiftKey = event.shiftKey;
+		this.metaKey  = event.metaKey;
+		this.altGraphKey = event.altGraphKey;
+	}
 }
 
 // Settings class
