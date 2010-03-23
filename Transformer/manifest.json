@@ -1,6 +1,6 @@
 ﻿{
 	"name": "__MSG_extname__",
-	"version": "1.0",
+	"version": "1.1",
 	"permissions": [ "tabs", "http://*/*", "https://*/*" ],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
