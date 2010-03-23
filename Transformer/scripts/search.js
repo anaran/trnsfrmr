@@ -169,35 +169,31 @@ function checkElements(element)
 				// TODO check for other linebreaks like unix or mac style
 				var lines = value.split("\n");
 				
-				curNode = keyword;
 				
 				// check if multiline
 				if(lines.length > 1)
 				{
 					keyword.textContent="";
-					
-					
+					var newNode = doc.createElement();
+								
 					for(i in lines)
 					{
 						var line = lines[i];
 						
+						newNode.appendChild( doc.createTextNode(line) );
+						newNode.appendChild( doc.createElement("br") );
+											
+					}
 					
-						var newNode = doc.createElement("p");
-						newNode.innerHTML = line;
-						
-						
 						var range = doc.createRange();
 						
-						range.selectNode(curNode);
-						range.collapse(false);
+						range.selectNode(keyword);
 						range.insertNode(newNode);
-						curNode=newNode;
-						
-					}
 				}
 				else
 				{
 					keyword.textContent = value;
+					newNode = keyword;
 				}
 				
 				// set selection/cursor
@@ -205,14 +201,9 @@ function checkElements(element)
 				selection.removeAllRanges();
 			
 				var r = doc.createRange();
-				if(settings.selectPhrase)
+				r.selectNode(newNode);
+				if(!settings.selectPhrase)
 				{
-					r.setStartBefore(keyword);
-					r.setEndAfter(curNode);
-				}
-				else
-				{
-					r.selectNode(curNode);
 					r.collapse(false);
 				}
 				
