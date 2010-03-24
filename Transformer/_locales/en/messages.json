@@ -19,6 +19,38 @@
     "message": "Delete",
     "description": ""
   },
+  "option_shortcut_expand": {
+    "message": "Shortcut for text substitution",
+    "description": ""
+  },
+  "option_shortcut_edit": {
+    "message": "edit",
+    "description": ""
+  },
+  "option_shortcut_delete": {
+    "message": "delete",
+    "description": ""
+  },
+  "option_shortcut_press": {
+    "message": "press shortcut keys...",
+    "description": ""
+  },
+  "ctrl": {
+    "message": "CTRL",
+    "description": ""
+  },
+  "shift": {
+    "message": "SHIFT",
+    "description": ""
+  },
+  "alt": {
+    "message": "ALT",
+    "description": ""
+  },
+  "space": {
+    "message": "SPACE",
+    "description": ""
+  },
   "save": {
     "message": "Save",
     "description": ""

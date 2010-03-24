@@ -54,7 +54,7 @@
         </div>
         
       </div>
-      
+ 
       <div  id="tabs-2" class="tab_class">
         <div>
           <input id="checkbox_hideicon" type="checkbox" value="hideicon"/>
@@ -68,7 +68,27 @@
         
         <div>
           <input id="checkbox_selectphrase" type="checkbox" value="selectphrase"/>
-          <span name="selectphrase"></span></div>
+          <span name="selectphrase"></span>
+          </div>
+	
+	  <div class="div-preferences"></div>
+      <table  cellspacing="0" cellpadding="0" style="width:100%;">
+		<tr>
+			<td class="div-preferences" width="30%">
+				 <span name="expandshortcut"></span>
+			</td>
+			<td class="div-preferences" width="70%">
+				<span id="spanExpandShortcut">&nbsp;</span>
+				<input id="hiddenExpandShortcut" type="hidden" />
+			</td>
+			<td class="div-preferences nowrap">
+				<span class="link" onclick="createShortcut('ExpandShortcut');" name="editshortcut"></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<span class="link" onclick="deleteShortcut('ExpandShortcut');" name="deleteshortcut"></span>
+			</td>
+		</tr>
+	  </table>
+	  
       	</div>
       
       <div  id="tabs-3" class="tab_class">

@@ -19,6 +19,38 @@
     "message": "Entfernen",
     "description": ""
   },
+  "option_shortcut_expand": {
+    "message": "Tastenkombination für Textsubstitution",
+    "description": ""
+  },
+  "option_shortcut_edit": {
+    "message": "Bearbeiten",
+    "description": ""
+  },
+  "option_shortcut_delete": {
+    "message": "Entfernen",
+    "description": ""
+  }, 
+  "option_shortcut_press": {
+    "message": "Drücken Sie die gewünschte Tastenkombination...",
+    "description": ""
+  },
+  "ctrl": {
+    "message": "STRG",
+    "description": ""
+  },
+  "shift": {
+    "message": "UMSCHALTTASTE",
+    "description": ""
+  },
+  "alt": {
+    "message": "ALT",
+    "description": ""
+  },
+  "space": {
+    "message": "LEERTASTE",
+    "description": ""
+  },
   "save": {
     "message": "Speichern",
     "description": ""

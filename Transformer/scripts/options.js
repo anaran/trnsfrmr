@@ -39,7 +39,15 @@
 		localize("sound", "sound");
 		localize("selectphrase","selectphrase");
 		
+		localize("editshortcut","option_shortcut_edit");
+		localize("deleteshortcut","option_shortcut_delete");
+		localize("expandshortcut","option_shortcut_expand");
+		
 		restore_options();
+
+		document.getElementById("hiddenExpandShortcut").value = shortcuts.copy;
+		document.getElementById("spanExpandShortcut").innerText = getStringByShortcutCode(shortcuts.copy);
+		
 	}
 
 	
@@ -228,6 +236,61 @@ function onKeyDown(e)
 		save_options();
 		e.returnValue=false;
 	}
+}
+
+function save() {
+	// TODO
+}
+
+function keyUpEventListener(e)
+{
+	var shortcutCode = (+e.ctrlKey) + "" + (+e.shiftKey) + "" + (+e.altKey) + e.which;
+	
+	document.getElementById('hidden' + current_element).value = shortcutCode;
+	document.getElementById('span' + current_element).innerText = getStringByShortcutCode(shortcutCode);
+
+	document.removeEventListener('keyup', keyUpEventListener);
+	
+	save();
+}
+
+var current_element;
+
+function createShortcut(elem)
+{
+	current_element = elem;
+	document.addEventListener('keyup', keyUpEventListener);
+	document.getElementById('span' + elem).innerText = chrome.i18n.getMessage("option_shortcut_press");
+}
+
+function deleteShortcut(elem)
+{
+	document.getElementById('span' + elem).innerText = "";
+	document.getElementById('hidden' + elem).value = "";
+	
+	save();
+}
+
+function getStringByShortcutCode(shortcutCode)
+{
+	var shortcut = "";
+	 
+	if(shortcutCode.length >= 4)
+	{
+		shortcut += shortcutCode.charAt(0) == "1" ? chrome.i18n.getMessage("ctrl")+" + " : ""; 
+		shortcut += shortcutCode.charAt(1) == "1" ? chrome.i18n.getMessage("shift")+" + " : "";
+		shortcut += shortcutCode.charAt(2) == "1" ? chrome.i18n.getMessage("alt")+" + "  : "";
+		
+		var keycode = shortcutCode.substring(3);
+		if (keycode == 32) {
+			shortcut += "SPACE";
+		} else {
+			shortcut += String.fromCharCode(shortcutCode.substring(3));
+		}
+		
+	}
+	
+	return shortcut;
 }
 
 document.addEventListener("keydown", onKeyDown, false); 

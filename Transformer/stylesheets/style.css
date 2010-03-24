@@ -126,3 +126,47 @@ pre {
 #caption {
 	height: 75px;
 }
+
+.link
+{
+	color: #24B; 
+	cursor: pointer; 
+	text-decoration: underline; 
+}
+
+.alert-preferences
+{
+	text-align:center;
+	color: #FF0000;
+	font-weight: bold;
+	margin: 0px 0px 0px 0px;
+	padding: 16px 0px 0px 0px;
+	vertical-align: top;
+}
+
+.div-preferences
+{
+	border-bottom-color: #FC6;
+	border-bottom-style: solid;
+	border-bottom-width: 2px;
+	margin: 0px 0px 0px 0px;
+	padding: 8px 0px 8px 0px;
+	vertical-align: top;
+}
+
+.hidden
+{
+	visibility:hidden;
+	display:none;
+}
+
+.visible
+{
+	visibility: visibile;
+	display: block;		
+}
+
+.nowrap
+{
+	white-space: nowrap;
+}
