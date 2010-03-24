@@ -283,7 +283,7 @@ function getStringByShortcutCode(shortcutCode)
 		
 		var keycode = shortcutCode.substring(3);
 		if (keycode == 32) {
-			shortcut += "SPACE";
+			shortcut += chrome.i18n.getMessage("space");
 		} else {
 			shortcut += String.fromCharCode(shortcutCode.substring(3));
 		}
