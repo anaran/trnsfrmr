@@ -82,7 +82,7 @@
   "guide": {
     "message": "Um eine Abkürzung zu ersetzen muss sich der Cursor in einem beliebigen Eingabefeld vor, auf oder nach ihr befinden. 
     
-Drücken Sie dann einfach 'Strg + Leertaste' um die Abkürzung zu ersetzen.
+Drücken Sie dann einfach Ihre selbst definierte Tastenkombination (voreingestellt ist 'Strg + Leertaste') um die Abkürzung zu ersetzen.
 
 Um neue Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s' oder den Speichern Button.
  
