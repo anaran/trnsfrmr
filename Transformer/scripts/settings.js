@@ -2,19 +2,32 @@
 // class for pageaction commands
 function PageAction()
 {
+	this.visible = false;
+	
 	this.show = function()
 	{
-		chrome.extension.sendRequest({cmd: "pageaction", action: "show"}, function(response) {});
+		if(!this.visible)
+		{
+			chrome.extension.sendRequest({cmd: "pageaction", action: "show"}, this.onResponse);
+			this.visible = true;
+		}
 	}
 	
 	this.hide = function()
 	{
-		chrome.extension.sendRequest({cmd: "pageaction", action: "hide"}, function(response) {});
+		chrome.extension.sendRequest({cmd: "pageaction", action: "hide"}, this.onResponse);
+		this.visible = false;
 	}
 	
 	this.notify = function()
 	{
-		chrome.extension.sendRequest({cmd: "pageaction", action: "notify"}, function(response) {});
+		chrome.extension.sendRequest({cmd: "pageaction", action: "notify"}, this.onResponse);
+	}
+	
+	// wo dont expect response
+	this.onResponse = function(response)
+	{
+		console.log(response);
 	}
 }
 
