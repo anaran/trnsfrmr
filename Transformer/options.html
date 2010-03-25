@@ -10,6 +10,7 @@
 <script type="text/javascript" src="scripts/hashmap.js"></script>
 <script type="text/javascript" src="scripts/settings.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
+
 <script type="text/javascript">
 	$(function() {
 		$("#tabs").tabs();
@@ -17,6 +18,7 @@
 	</script>
 </head>
 <body onLoad="init()">
+
 <div id="main">
   <img src="icons/icon-48x48.png" align="top" class="logo"><span name="caption" id="head"></span>
   <div id="body">
@@ -48,9 +50,16 @@
  -->
         <div class="subs" id="subs">
           <div class="sub_line_template">
-            <div class="key_div">              <input class="sub_key" type="text" value=""/>            </div>
-            <div class="value_div">              <textarea class="sub_value" rows="2" cols="30"  ></textarea>            </div>
-            <div class="del_button">              <button onClick="del(this)" name="delete"></button>            </div>
+            <div class="key_div">              
+            	<input class="sub_key" type="text" value=""/>            
+            </div>
+            <div class="value_div">              
+            	<textarea rows="2" cols="30"  class="expand50-1000"></textarea>            
+				<script type="text/javascript" src="scripts/jquery.textarea-expander.js"></script>
+            </div>
+            <div class="del_button">
+            	<button onClick="del(this)" name="delete"></button>            
+            </div>
           </div>
         </div>
         

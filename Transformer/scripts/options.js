@@ -101,7 +101,7 @@ var replaceKey = new KeyInfo();
 		for(var i=0; i<lines.length; i++)
 		{
 			var key =$(".sub_key", lines[i])[0].value;
-			var value = $(".sub_value", lines[i])[0].value;
+			var value = $(".expand50-1000", lines[i])[0].value;
 			
 			if( key!="" || value!="")
 			{
@@ -176,8 +176,8 @@ var replaceKey = new KeyInfo();
 		$(".sub_key", line).keydown( onKeyDownEvent );
 		$(".sub_key", line).change( onInputChange );
 
-		$(".sub_value", line).val(value);
-		$(".sub_value", line).Watermark(chrome.i18n.getMessage("long"));
+		$(".expand50-1000", line).val(value);
+		$(".expand50-1000", line).Watermark(chrome.i18n.getMessage("long"));
 		
 		return line;	
 	}
