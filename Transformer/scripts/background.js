@@ -15,6 +15,7 @@ var notifyImages = new Array(
 var notifyDelay = 100;
 
 
+
 function getHashMap()
 {
 	var o = localStorage["map"];
@@ -79,11 +80,16 @@ function onRequest(request,sender,sendResponse)
 };
 
 
+
+
 function getSettings()
 {
+	// TODO pack all settings into response
 	return {
+		cmd: "push",
 		map: localStorage["map"],
-		selectPhrase: localStorage["selectphrase"]
+		selectPhrase: localStorage["selectphrase"],
+		replaceKey: localStorage["replacekey"]
 		};
 }
 
@@ -114,6 +120,30 @@ function onPageActionRequest(request,sender, sendResponse)
 	}	
 	sendResponse({}); // snub them.
 }
+
+
+function broadcastSettings()
+{
+	chrome.windows.getAll({populate: true}, updateSettings);
+}
+
+// Updates all settings in all tabs
+function updateSettings(windows)
+{
+	// TODO same function in backgroundpage... migrate!
+	var settings = getSettings();
+	
+	for(w in windows)
+	{
+		var tabs = windows[w].tabs;
+		for(t in tabs)
+		{
+			var tab=tabs[t];
+			chrome.tabs.sendRequest(tab.id, settings, function(response) {} );
+		}
+	}
+}
+
 
 function save_default()
 {

@@ -1,3 +1,5 @@
+//var settings = new Settings();
+var replaceKey = new KeyInfo();
 	
 	function localizeString(elementname, text)
 	{
@@ -45,8 +47,8 @@
 		
 		restore_options();
 
-		document.getElementById("hiddenExpandShortcut").value = shortcuts.copy;
-		document.getElementById("spanExpandShortcut").innerText = getStringByShortcutCode(shortcuts.copy);
+//		document.getElementById("hiddenExpandShortcut").value = shortcuts.copy;
+//		document.getElementById("spanExpandShortcut").innerText = getStringByShortcutCode(shortcuts.copy);
 		
 	}
 
@@ -117,8 +119,11 @@
 			localStorage["animate"] = $("#checkbox_animate").attr('checked');
 			localStorage["sound"] = $("#checkbox_sound").attr('checked');
 			localStorage["selectphrase"] = $("#checkbox_selectphrase").attr('checked');
+			
+			localStorage["replacekey"] = replaceKey.toStore();
 		
-			chrome.windows.getAll({populate: true}, updateSettings);
+		
+			chrome.extension.getBackgroundPage().broadcastSettings();
 					
 			setTimeout(function(){ $("#saving").html("") }, 750);
 			restore_options();
@@ -160,33 +165,6 @@
 		}
 		return (counter<=1)?true:false;
 	}
-	
-	function getSettings()
-	{
-		// TODO pack all settings into response
-		return {
-			cmd: "push",
-			map: localStorage["map"],
-			selectPhrase: localStorage["selectphrase"]
-			};
-	}
-	
-	// Updates all settings in all tabs
-	function updateSettings(windows)
-	{
-		// TODO same function in backgroundpage... migrate!
-		var settings = getSettings();
-		
-		for(w in windows)
-		{
-			var tabs = windows[w].tabs;
-			for(t in tabs)
-			{
-				var tab=tabs[t];
-				chrome.tabs.sendRequest(tab.id, settings, function(response) {} );
-			}
-		}
-	}
 		
 	function createSubLine(key, value)
 	{
@@ -225,6 +203,18 @@
 		$("#checkbox_sound").attr('checked', localStorage["sound"] == "true");
 		$("#checkbox_selectphrase").attr('checked', localStorage["selectphrase"] == "true");
 		
+		if( localStorage["replacekey"] )
+		{
+			replaceKey.fromStore( localStorage["replacekey"] );
+		}
+		else
+		{
+			replaceKey = new KeyInfo(32,true, false, false, false, false);
+		}
+		
+		document.getElementById('spanExpandShortcut').innerText = replaceKey.toString();
+	
+		
 		add();
 	}
 	
@@ -238,27 +228,23 @@ function onKeyDown(e)
 	}
 }
 
-function save() {
-	// TODO
-}
+var current_keylearner;
 
 function keyUpEventListener(e)
 {
-	var shortcutCode = (+e.ctrlKey) + "" + (+e.shiftKey) + "" + (+e.altKey) + e.which;
+	replaceKey.fromEvent(e);
+		
+	document.getElementById('span' + current_keylearner).innerText = replaceKey.toString();
 	
-	document.getElementById('hidden' + current_element).value = shortcutCode;
-	document.getElementById('span' + current_element).innerText = getStringByShortcutCode(shortcutCode);
-
 	document.removeEventListener('keyup', keyUpEventListener);
-	
-	save();
+		
+	//save();
 }
-
-var current_element;
 
 function createShortcut(elem)
 {
-	current_element = elem;
+	current_keylearner = elem;
+	
 	document.addEventListener('keyup', keyUpEventListener);
 	document.getElementById('span' + elem).innerText = chrome.i18n.getMessage("option_shortcut_press");
 }
@@ -266,31 +252,10 @@ function createShortcut(elem)
 function deleteShortcut(elem)
 {
 	document.getElementById('span' + elem).innerText = "";
-	document.getElementById('hidden' + elem).value = "";
 	
-	save();
+	replaceKey = null;
+	
 }
 
-function getStringByShortcutCode(shortcutCode)
-{
-	var shortcut = "";
-	 
-	if(shortcutCode.length >= 4)
-	{
-		shortcut += shortcutCode.charAt(0) == "1" ? chrome.i18n.getMessage("ctrl")+" + " : ""; 
-		shortcut += shortcutCode.charAt(1) == "1" ? chrome.i18n.getMessage("shift")+" + " : "";
-		shortcut += shortcutCode.charAt(2) == "1" ? chrome.i18n.getMessage("alt")+" + "  : "";
-		
-		var keycode = shortcutCode.substring(3);
-		if (keycode == 32) {
-			shortcut += chrome.i18n.getMessage("space");
-		} else {
-			shortcut += String.fromCharCode(shortcutCode.substring(3));
-		}
-		
-	}
-	
-	return shortcut;
-}
 
 document.addEventListener("keydown", onKeyDown, false); 

@@ -47,6 +47,14 @@
     "message": "ALT",
     "description": ""
   },
+  "altgr": {
+    "message": "ALTGR",
+    "description": ""
+  },
+  "meta": {
+    "message": "META",
+    "description": ""
+  },  
   "space": {
     "message": "SPACE",
     "description": ""

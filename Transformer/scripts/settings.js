@@ -27,38 +27,77 @@ function PageAction()
 	// wo dont expect response
 	this.onResponse = function(response)
 	{
-		console.log(response);
+			// console.log(response);
 	}
 }
 
 // class for shorcut keys
 function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph)
 {
-	this.keyCode  = keyCode;
-	this.ctrlKey  = ctrl;
-	this.altKey   = alt;
-	this.shiftKey = shift;
-	this.metaKey  = meta;
-	this.altGraphKey = altGraph;
+	function KeyData()
+	{
+		this.keyCode  = keyCode;
+		this.ctrlKey  = ctrl;
+		this.altKey   = alt;
+		this.shiftKey = shift;
+		this.metaKey  = meta;
+		this.altGraphKey = altGraph;
+	}
+	
+	this.D = new KeyData();
 	
 	this.equals = function (event)
 	{
-		return ((this.keyCode  == event.keyCode) &&
-				(this.ctrlKey  == event.ctrlKey) &&
-				(this.altKey   == event.altKey)  &&
-				(this.shiftKey == event.shiftKey)  &&
-				(this.metaKey  == event.metaKey)  &&
-				(this.altGraphKey == event.altGraphKey) );		
+		return ((this.D.keyCode  == event.keyCode) &&
+				(this.D.ctrlKey  == event.ctrlKey) &&
+				(this.D.altKey   == event.altKey)  &&
+				(this.D.shiftKey == event.shiftKey)  &&
+				(this.D.metaKey  == event.metaKey)  &&
+				(this.D.altGraphKey == event.altGraphKey) );		
 	}
 	
 	this.fromEvent = function (event)
 	{
-		this.keyCode  = event.keyCode;
-		this.ctrlKey  = event.ctrlKey;
-		this.altKey   = event.altKey;
-		this.shiftKey = event.shiftKey;
-		this.metaKey  = event.metaKey;
-		this.altGraphKey = event.altGraphKey;
+		this.D.keyCode  = event.keyCode;
+		this.D.ctrlKey  = event.ctrlKey;
+		this.D.altKey   = event.altKey;
+		this.D.shiftKey = event.shiftKey;
+		this.D.metaKey  = event.metaKey;
+		this.D.altGraphKey = event.altGraphKey;
+	}
+	
+	
+	this.toString = function ()
+	{
+		var result = "";
+		 
+		result += this.D.ctrlKey == true ? chrome.i18n.getMessage("ctrl")+" + " : ""; 
+		result += this.D.altKey == true ? chrome.i18n.getMessage("alt")+" + " : ""; 
+		result += this.D.shiftKey == true ? chrome.i18n.getMessage("shift")+" + " : ""; 
+		result += this.D.metaKey == true ? chrome.i18n.getMessage("meta")+" + " : ""; 
+		result += this.D.altGrKey == true ? chrome.i18n.getMessage("altgr")+" + " : ""; 
+		
+			
+		if (this.D.keyCode == 32)
+		{
+			result += chrome.i18n.getMessage("space");
+		}
+		else
+		{
+			result += String.fromCharCode(this.D.keyCode);
+		}
+		
+		return result;
+	}
+	
+	this.fromStore = function(jsonString)
+	{
+		this.D = JSON.parse(jsonString);
+	}
+	
+	this.toStore = function()
+	{
+		return JSON.stringify( this.D );
 	}
 }
 
@@ -107,8 +146,8 @@ function Settings()
 
 		
 		if (msg.map) s.refreshMap(msg.map);
-		if (msg.replaceKey) s.replaceKey = JSON.parse(msg.replaceKey);
-		if (msg.globalReplaceKey) s.globalReplaceKey = JSON.parse(msg.globalReplaceKey);
+		if (msg.replaceKey) s.replaceKey.fromStore(msg.replaceKey);
+		if (msg.globalReplaceKey) s.globalReplaceKey.fromStore(msg.globalReplaceKey);
 		if (msg.selectPhrase) s.selectPhrase = JSON.parse(msg.selectPhrase);
 	}
 	
