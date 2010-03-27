@@ -99,7 +99,7 @@ month:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
 years:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
 or:			%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
 
-You have to replace <operator> with + or - and <i>&lt;n&gt;</i> by a number of your choice.",
+You have to replace &lt;operator&lt; with + or - and <i>&lt;n&gt;</i> by a number of your choice.",
 
     "description": "Helptext"
   },
