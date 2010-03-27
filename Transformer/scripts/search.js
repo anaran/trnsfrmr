@@ -65,13 +65,13 @@ function onKeyEvent(e)
 	{
 		var element = e.srcElement;
 
-		checkElements(element);
+		if( checkElements(element) )
+		{
+			pageaction.notify();
+		}
 		
 		// consume event
-		e.returnValue=false;
-		
-		// TODO only if something was replaced
-		pageaction.notify();
+		e.returnValue=false;		
  	}
 }
 
@@ -112,6 +112,8 @@ function extractKeyWord(str, s, e)
 //replaces the keys with the assigned values in the element.
 function checkElements(element)
 {
+	var substituted = false;
+	
 	if( (element.tagName=="INPUT" && ((element.type == "text") || (element.type == "password"))) || element.tagName=="TEXTAREA")
 	{
 	
@@ -127,6 +129,8 @@ function checkElements(element)
 		
 		if(value)
 		{
+			substituted = true;
+			
 			// date subsitution
 			value = replaceDates(value);
 			
@@ -157,6 +161,7 @@ function checkElements(element)
 		
 			if(value)
 			{
+				substituted = true;
 				value = replaceDates(value);
 								
 				var beforepos = r.before.length;
@@ -218,6 +223,9 @@ function checkElements(element)
 			// TODO
 		}
 	}
+	
+	return substituted;
+	
 }
 
 
