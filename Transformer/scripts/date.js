@@ -21,7 +21,7 @@ function replaceDates(value) {
 
 
 function replaceDate(value){
-	var pDate = /%DATE(\+(\d*d)?(\d*m)?(\d*y)?)?%/;
+	var pDate = /%DATE([\+-](\d*d)?(\d*m)?(\d*y)?)?%/;
 	pDate.exec(value);
 
 	var days = "";
@@ -44,21 +44,43 @@ function replaceDate(value){
 	pattern.exec(regexp);
 	match = RegExp.$1;
 	years = match.replace("y","");
-	
+
+	operator = getOperator(value);
 	future = new Date();
-	if (isNumeric(days)) {
-		future.setDate(future.getDate() + parseInt(days));
-	}
-	if (isNumeric(months)) {
-		future.setMonth(future.getMonth() +  parseInt(months));
-	}
-	if (isNumeric(years)) {
-		future.setYear(future.getFullYear() +  parseInt(years));
+	if (operator == "+") {
+		if (isNumeric(days)) {
+			future.setDate(future.getDate() + parseInt(days));
+		}
+		if (isNumeric(months)) {
+			future.setMonth(future.getMonth() +  parseInt(months));
+		}
+		if (isNumeric(years)) {
+			future.setYear(future.getFullYear() +  parseInt(years));
+		}
+	} else if (operator == "-") {
+		if (isNumeric(days)) {
+			future.setDate(future.getDate() - parseInt(days));
+		}
+		if (isNumeric(months)) {
+			future.setMonth(future.getMonth() -  parseInt(months));
+		}
+		if (isNumeric(years)) {
+			future.setYear(future.getFullYear() -  parseInt(years));
+		}
 	}
 	
 	value = value.replace(pDate , future.getDate() + "." + (future.getMonth()+1) + "." + future.getFullYear());
 	
 	return value;
+}
+
+function getOperator(value) {
+	var operator = "+";
+	pattern = /-/;
+	if (pattern.exec(value)) {
+		operator = "-";
+	} 
+	return operator;
 }
 
 function getAddOn(pattern, value) {
