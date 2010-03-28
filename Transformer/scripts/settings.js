@@ -1,4 +1,3 @@
-
 // class for pageaction commands
 function PageAction()
 {
@@ -27,7 +26,7 @@ function PageAction()
 	// wo dont expect response
 	this.onResponse = function(response)
 	{
-			// console.log(response);
+		// console.log(response);
 	}
 }
 
@@ -66,7 +65,6 @@ function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph)
 		this.D.altGraphKey = event.altGraphKey;
 	}
 	
-	
 	this.toString = function ()
 	{
 		var result = "";
@@ -76,7 +74,6 @@ function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph)
 		result += this.D.shiftKey == true ? chrome.i18n.getMessage("shift")+" + " : ""; 
 		result += this.D.metaKey == true ? chrome.i18n.getMessage("meta")+" + " : ""; 
 		result += this.D.altGrKey == true ? chrome.i18n.getMessage("altgr")+" + " : ""; 
-		
 			
 		if (this.D.keyCode == 32)
 		{
@@ -111,44 +108,41 @@ function Settings()
 	
 	this.selectPhrase = true;
 	
+	// workaround for callbacks.
+	var S = this;
 		
-	this.onMessage = function (msg, sender, sendResponse)
-	{
-		if (msg.cmd == "push")
-		{
-			// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
-			var s = settings;
-			// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
-
-			s.processMessage(msg);
-			sendResponse({}); // snub them.
-		}
-	}
-	
-
 	this.readRequest = function()
-	{
+	{		
 		chrome.extension.sendRequest({cmd: "read"}, this.processMessage);
 	}
 	
 	this.enableListener = function()
 	{
-		chrome.extension.onRequest.addListener(this.onMessage);
+		chrome.extension.onRequest.addListener( this.onMessage);
 	}
 	
+	this.onMessage = function (msg, sender, sendResponse)
+	{
+		if (msg.cmd == "push")
+		{
+			// "this" does not work.
+			S.processMessage(msg);
+		}
+		else
+		{
+			console.warn("unknown command message");
+		}
+		
+		sendResponse({}); // snub them.
+	}
+		
 	this.processMessage = function (msg)
 	{		
-//		var s = this; // this is NOT THIS. caused by asynchronous call...
-
-		// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
-		var s = settings;
-		// *** UGLY HACK *** UGLY HACK *** UGLY HACK *** UGLY HACK 
-
-		
-		if (msg.map) s.refreshMap(msg.map);
-		if (msg.replaceKey) s.replaceKey.fromStore(msg.replaceKey);
-		if (msg.globalReplaceKey) s.globalReplaceKey.fromStore(msg.globalReplaceKey);
-		if (msg.selectPhrase) s.selectPhrase = JSON.parse(msg.selectPhrase);
+		// "this" does not work.
+		if (msg.map) S.refreshMap(msg.map);
+		if (msg.replaceKey) S.replaceKey.fromStore(msg.replaceKey);
+		if (msg.globalReplaceKey) S.globalReplaceKey.fromStore(msg.globalReplaceKey);
+		if (msg.selectPhrase) S.selectPhrase = JSON.parse(msg.selectPhrase);
 	}
 	
 	this.refreshMap = function (mapdata)
