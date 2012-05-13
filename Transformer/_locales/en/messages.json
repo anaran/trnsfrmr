@@ -1,0 +1,186 @@
+﻿{
+  "extname": {
+    "message": "Popchrom",
+    "description": "Extensionname"
+  },
+  "extdescription": {
+    "message": "Save time and effort with Popchrom by creating your own shortcuts for text phrases! Whether it's a simple email signature or several paragraphs of a standard response, you'll love how easy it is to use Popchrom to avoid typing the same thing over and over.",
+    "description": "Long extension description"
+  },
+  "options": {
+    "message": "Options",
+    "description": "The word options for the optionpage"
+  },
+  "option_add": {
+    "message": "Add",
+    "description": ""
+  },
+  "option_del": {
+    "message": "Delete",
+    "description": ""
+  },
+  "option_shortcut_expand": {
+    "message": "Shortcut for text substitution",
+    "description": ""
+  },
+  "option_shortcut_edit": {
+    "message": "edit",
+    "description": ""
+  },
+  "option_shortcut_delete": {
+    "message": "delete",
+    "description": ""
+  },
+  "option_shortcut_press": {
+    "message": "press shortcut keys...",
+    "description": ""
+  },
+  "ctrl": {
+    "message": "CTRL",
+    "description": ""
+  },
+  "shift": {
+    "message": "SHIFT",
+    "description": ""
+  },
+  "alt": {
+    "message": "ALT",
+    "description": ""
+  },
+  "altgr": {
+    "message": "ALTGR",
+    "description": ""
+  },
+  "meta": {
+    "message": "META",
+    "description": ""
+  },  
+  "space": {
+    "message": "SPACE",
+    "description": ""
+  },
+  "save": {
+    "message": "Save",
+    "description": ""
+  },
+  "export": {
+    "message": "Export",
+    "description": "Export your abbreviation definitions for backup and later import with modifications."
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import your modified export data here. Please keep you export data as backup."
+  },
+  "restore": {
+    "message": "Restore",
+    "description": ""
+  },
+  "abbr": {
+    "message": "Abbreviation",
+    "description": ""
+  },
+  "long": {
+    "message": "Expand to...",
+    "description": ""
+  },
+  "and": {
+    "message": "and...",
+    "description": ""
+  },
+  "guide": {
+    "message": "Place the cursor before, in or after your abbreviations and hit your defined shortcut (default 'Ctrl + Space') to expand them.
+
+You could save your new keys with your 'Ctrl + s' or by hitting the save button.
+
+There are some additional parameters, which could be included in your own abbreviations:
+
+Current day:	%DAY%
+Current month:	%MONTH%
+Current year:	%YEAR%
+
+The complete date (today):	%DATE%
+
+To add days, months or years to the current date:
+
+days:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d%
+month:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
+years:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
+or:			%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
+
+You have to replace &lt;operator&gt; with + or - and <i>&lt;n&gt;</i> by a number of your choice.
+
+Abbreviations with arguments:
+
+An expansion may also be an array of two string elements.
+
+They are used as the arguments to String.prototype.replace (searchValue, replaceValue)
+
+and allow searching for arguments after abbreviations and replacing them inside of the replacement value.
+
+e.g.
+Abbreviation tbug
+Expand to... [\"\\s+(\\d+)\\s+(\\w+)\",
+\"Hello $2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\n\"]
+will allow a boilerplate response with two arguments to expand from
+tbug 35 joshuato
+to following personalized reply:
+Hello joshuato!
+Please see http://code.google.com/p/trnsfrmr/issues/detail?id=35 for details.
+
+Undo of abbreviation expansion:
+
+This works by using the shortcut key again, but only when \"Select after replace\" is checked.
+
+",
+
+    "description": "Helptext"
+  },
+  "texttab": {
+    "message": "Text",
+    "description": ""
+  },
+  "settingstab": {
+    "message": "Settings",
+    "description": ""
+  },
+  "helptab": {
+    "message": "Help",
+    "description": ""
+  },
+  "changelogtab": {
+    "message": "Changelog",
+    "description": ""
+  },
+  "changelog_text": {
+    "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\">http://code.google.com/p/trnsfrmr/</a> for more information.",
+    "description": ""
+  },
+  "hideicon": {
+    "message": "Hide icon in omnibar",
+    "description": ""
+  },
+  "anim": {
+    "message": "Animate icon",
+    "description": ""
+  },
+  "sound": {
+    "message": "Play sound",
+    "description": ""
+  },
+  "selectphrase": {
+    "message": "Select after replace (enables undo)",
+    "description": ""
+  },
+  "saving": {
+    "message": "saving...",
+    "description": ""
+  },
+  "map_template": {
+    "message": "[\"today\",\"%DATE%\",\"sy\",\"Sincerely yours\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\\\\n\\\"]\"]",
+    "description": "Vorlage fuer die Abbkürzungen"
+  },
+  "keys_not_unique": {
+    "message": "The abbreviations have to be unique.",
+    "description": "Fehlermeldung nicht eindeutigen Abkürzungen"
+  }
+}
