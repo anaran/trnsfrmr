@@ -1,26 +1,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="stylesheets/style.css" type="text/css" />
-		<script type="text/javascript">		
-			function findTab(tabs)
-			{
-				var url=chrome.extension.getURL("options.html");
-
-				for(i in tabs)
-				{
-					var tab=tabs[i];
-					if(tab.url == url)
-					{
-						chrome.tabs.update(tab.id, {selected:true});
-						return;
-					}
-				}
-				
-				chrome.tabs.create({url: url}); 
-			}
-			
-			chrome.tabs.getAllInWindow(null, findTab);						
-		</script> 
+		<script type="text/javascript" src="scripts/popup.js"></script> 
 	</head>
 	<body>
 	</body>
