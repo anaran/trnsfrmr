@@ -291,12 +291,6 @@ function init() {
 	localize("editshortcut", "option_shortcut_edit"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("deleteshortcut", "option_shortcut_delete"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("expandshortcut", "option_shortcut_expand"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("select_copy_save"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("paste_below"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("will_replace"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("changes_not_imported"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("nothing_to_import"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("invalid_data"); //$NON-NLS-0$ //$NON-NLS-1$
 
 	restore_options();
 
@@ -313,8 +307,9 @@ document.addEventListener("keydown", onKeyDown, false); //$NON-NLS-0$
 document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	init();
 	document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
+	document.querySelector('button[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
-	document.querySelector('button[name=import]').title = chrome.i18n.getMessage("import"); //$NON-NLS-0$ //$NON-NLS-1$
+	document.querySelector('button[name=import]').title = chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
 	//	NOTE: See createSubLine(key, value) for delete button event listener setup. //$NON-NLS-0$ //$NON-NLS-1$
 	//	document.querySelector('button[name=delete]').addEventListener('click', del);

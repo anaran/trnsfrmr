@@ -65,11 +65,19 @@
   },
   "export": {
     "message": "Export",
-    "description": "Export your abbreviation definitions for backup and later import with modifications."
+    "description": "Export button text."
+  },
+  "export_help": {
+    "message": "Export your abbreviation definitions for backup and later import with modifications.",
+    "description": "Help text for Export button."
   },
   "import": {
     "message": "Import",
-    "description": "Import your modified export data here. Please keep you export data as backup."
+    "description": "Import button text."
+  },
+  "import_help": {
+    "message": "Import your modified export data here. Please Export your existing abbreviations first and save this data as backup.",
+    "description": "Help text for Import button."
   },
   "restore": {
     "message": "Restore",

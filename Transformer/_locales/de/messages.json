@@ -65,11 +65,19 @@
   },
   "export": {
     "message": "Exportieren",
-    "description": "Exportieren Sie Ihre Abkürzungen zur Datensicherung und für späteren Import mit Änderungen."
+    "description": "Text der export Schaltfläche."
+  },
+  "export_help": {
+    "message": "Exportieren Sie Ihre Abkürzungen zur Datensicherung und für späteren Import mit Änderungen.",
+    "description": "Hilfetext für Schaltflächte zum Exportieren."
   },
   "import": {
     "message": "Importieren",
-    "description": "Importieren Sie Ihre geänderten Abkürzungen hier. Bitte sichern Sie zuvor Ihre Abkürzungen mit Export."
+    "description": "Text der import Schaltfläche."
+  },
+  "import_help": {
+    "message": "Importieren Sie Ihre geänderten Abkürzungen hier. Bitte exportieren Sie zuvor Ihre Abkürzungen und speichern diese zur Datensicherung.",
+    "description": "Hilfetext für Schaltflächte zum Importieren."
   },
   "restore": {
     "message": "Laden",
@@ -188,15 +196,15 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
     "description": "Fehlermeldung nicht eindeutigen Abkürzungen"
   },
   "select_copy_save": {
-    "message": "Bitte wählen Sie alle (Ctrl+a) exportierten Abkürzungen im nächsten Dialog, kopieren (Ctrl+c) und speichern sie zur Datensicherung und zum späteren Import.",
+    "message": "Bitte wählen Sie alle (Ctrl+a) exportierten Abkürzungen im nächsten Dialog, kopieren (Ctrl+c) und speichern sie diese zur Datensicherung und zum späteren Import.",
     "description": ""
   },
   "paste_below": {
-    "message": "Bitte kopieren Sie ihre Abkürzungen und folgendes Textfeld (siehe Export für Beispiele)",
+    "message": "Bitte kopieren Sie ihre Abkürzungen in folgendes Textfeld (siehe Export für Beispiele)",
     "description": ""
   },
   "will_replace": {
-    "message": "Sollen folgende Abkürzungen durch neue importierte Definition ersetzt werden? (kein undo Möglichkeit):\n",
+    "message": "Sollen folgende Abkürzungen durch neu importierte Definitionen ersetzt werden? (keine Undo Möglichkeit):\n",
     "description": ""
   },
   "changes_not_imported": {
@@ -204,11 +212,11 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
     "description": ""
   },
   "nothing_to_import": {
-    "message": "Import Daten beinhalten keine neuen oder geänderten Abkürzungen.",
+    "message": "Import-Daten beinhalten keine neuen oder geänderten Abkürzungen.",
     "description": ""
   },
   "invalid_data": {
-    "message": "Import Daten sind ungültig.\nBestehende Abkürzungen bleiben erhalten.\nImport Daten:\n",
+    "message": "Import-Daten sind ungültig.\nBestehende Abkürzungen bleiben unverändert erhalten.\nImport Daten:\n",
     "description": ""
   }
 }
