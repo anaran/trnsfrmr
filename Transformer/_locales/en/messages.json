@@ -186,7 +186,7 @@ This works by using the shortcut key again, but only when \"Select after replace
   "keys_not_unique": {
     "message": "The abbreviations have to be unique.",
     "description": "Error message indicates abbreviation is already used."
-  }
+  },
   "select_copy_save": {
     "message": "Please select all (Ctrl+a) exported abbreviations on next dialog, copy (Ctrl+c) and save them for backup and later import.",
     "description": ""

@@ -186,7 +186,7 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
   "keys_not_unique": {
     "message": "Die Abkürzungen sind nicht eindeutig.",
     "description": "Fehlermeldung nicht eindeutigen Abkürzungen"
-  }
+  },
   "select_copy_save": {
     "message": "Bitte wählen Sie alle (Ctrl+a) exportierten Abkürzungen im nächsten Dialog, kopieren (Ctrl+c) und speichern sie zur Datensicherung und zum späteren Import.",
     "description": ""
