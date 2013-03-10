@@ -1,4 +1,4 @@
-﻿{
+{
   "extname": {
     "message": "Popchrom",
     "description": "Erweiterungsname"
@@ -69,7 +69,7 @@
   },
   "import": {
     "message": "Importieren",
-    "description": "Importieren Sie Ihre geänderten Abkürzungen hier. Bitte sichern sie zuvor Ihre Abkürzungen mit Export."
+    "description": "Importieren Sie Ihre geänderten Abkürzungen hier. Bitte sichern Sie zuvor Ihre Abkürzungen mit Export."
   },
   "restore": {
     "message": "Laden",
@@ -186,5 +186,29 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
   "keys_not_unique": {
     "message": "Die Abkürzungen sind nicht eindeutig.",
     "description": "Fehlermeldung nicht eindeutigen Abkürzungen"
+  }
+  "select_copy_save": {
+    "message": "Bitte wählen Sie alle (Ctrl+a) exportierten Abkürzungen im nächsten Dialog, kopieren (Ctrl+c) und speichern sie zur Datensicherung und zum späteren Import.",
+    "description": ""
+  },
+  "paste_below": {
+    "message": "Bitte kopieren Sie ihre Abkürzungen und folgendes Textfeld (siehe Export für Beispiele)",
+    "description": ""
+  },
+  "will_replace": {
+    "message": "Sollen folgende Abkürzungen durch neue importierte Definition ersetzt werden? (kein undo Möglichkeit):\n",
+    "description": ""
+  },
+  "changes_not_imported": {
+    "message": "Änderungen für folgende bestehende Abkürzungen wurden nicht importiert:\n",
+    "description": ""
+  },
+  "nothing_to_import": {
+    "message": "Import Daten beinhalten keine neuen oder geänderten Abkürzungen.",
+    "description": ""
+  },
+  "invalid_data": {
+    "message": "Import Daten sind ungültig.\nBestehende Abkürzungen bleiben erhalten.\nImport Daten:\n",
+    "description": ""
   }
 }

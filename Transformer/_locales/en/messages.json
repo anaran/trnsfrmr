@@ -1,4 +1,4 @@
-﻿{
+{
   "extname": {
     "message": "Popchrom",
     "description": "Extensionname"
@@ -185,6 +185,30 @@ This works by using the shortcut key again, but only when \"Select after replace
   },
   "keys_not_unique": {
     "message": "The abbreviations have to be unique.",
-    "description": "Fehlermeldung nicht eindeutigen Abkürzungen"
+    "description": "Error message indicates abbreviation is already used."
+  }
+  "select_copy_save": {
+    "message": "Please select all (Ctrl+a) exported abbreviations on next dialog, copy (Ctrl+c) and save them for backup and later import.",
+    "description": ""
+  },
+  "paste_below": {
+    "message": "Please paste your import data below (see export for examples)",
+    "description": ""
+  },
+  "will_replace": {
+    "message": "Should following abbreviations be replaced by newly imported definitions? (no undo):\n\n",
+    "description": ""
+  },
+  "changes_not_imported": {
+    "message": "Changes for following modified abbreviations were not imported:\n\n",
+    "description": ""
+  },
+  "nothing_to_import": {
+    "message": "Import data contains no new or modified abbreviations.",
+    "description": ""
+  },
+  "invalid_data": {
+    "message": "Import data is invalid.\nExisting abbreviations remain unchanged.\nimport data:\n",
+    "description": ""
   }
 }
