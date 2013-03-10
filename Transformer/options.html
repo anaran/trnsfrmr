@@ -11,13 +11,9 @@
 <script type="text/javascript" src="scripts/settings.js"></script>
 <script type="text/javascript" src="scripts/options.js"></script>
 
-<script type="text/javascript">
-	$(function() {
-		$("#tabs").tabs();
-	});
-	</script>
+<script type="text/javascript" src="scripts/tabs.js"></script>
 </head>
-<body onLoad="init()">
+<body>
 
 <div id="main">
   <img src="icons/icon-48x48.png" align="top" class="logo"><span name="caption" id="head"></span>
@@ -33,24 +29,16 @@
 		<span id=saving class="saving"></span>
 		</div>
         <div id="buttons" class="buttons_align_right">
-		<button onClick="add()" name="add" id="add" ></button>
-        <button onClick="save_options()" name="save" id="save" ></button>
-        <button onClick="export_settings()" name="export" id="export" ></button>
-        <button onClick="import_settings()" name="import" id="import" ></button>
+<!--        NOTE: Moved onClick code to event listeners in options.js and replaced all ' onClick="[^\"]+"' in options.html with nothing via Find Replace Regexp in Eclipse Orion. -->
+		<button name="add" id="add" ></button>
+        <button name="save" id="save" ></button>
+        <button name="export" id="export" ></button>
+        <button name="import" id="import" ></button>
         </div>
       </ul>
       
       <div  id="tabs-1"  class="tab_class">
-    
-<!--   
-        <div id="header1">
-          <button onClick="add()" name="add" id="button"></button>
-        </div>
-
-
-        <div id="header2"> <span id="head_abbr" name="abbr" ></span><span id="head_long" name="long" ></span> </div>
- -->
-        <div class="subs" id="subs">
+            <div class="subs" id="subs">
           <div class="sub_line_template">
             <div class="key_div">              
             	<input class="sub_key" type="text" value=""/>            
@@ -60,7 +48,7 @@
 				<script type="text/javascript" src="scripts/jquery.textarea-expander.js"></script>
             </div>
             <div class="del_button">
-            	<button onClick="del(this)" name="delete"></button>            
+            	<button name="delete"></button>            
             </div>
           </div>
         </div>
@@ -93,9 +81,9 @@
 				<span id="spanExpandShortcut">&nbsp;</span>
 			</td>
 			<td class="div-preferences nowrap">
-				<span class="link" onclick="createShortcut('ExpandShortcut');" name="editshortcut"></span>
+				<span class="link" name="editshortcut"></span>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<span class="link" onclick="deleteShortcut('ExpandShortcut');" name="deleteshortcut"></span>
+				<span class="link" name="deleteshortcut"></span>
 			</td>
 		</tr>
 	  </table>
