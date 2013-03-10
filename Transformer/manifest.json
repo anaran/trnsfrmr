@@ -1,8 +1,8 @@
 {
-  "manifest_version": 2,
+	"manifest_version": 2,
 	"name": "__MSG_extname__",
 	"version": "1.5",
-  "permissions": [ "storage", "tabs", "http://*/*", "https://*/*" ],
+	"permissions": [ "storage", "tabs", "http://*/*", "https://*/*" ],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
 	"icons": {
@@ -11,8 +11,8 @@
 	},
 	"options_page": "options.html",
 	"page_action": {
-	    "default_icon": "icons/icon-16x16.png",
-	    "default_title": "__MSG_extname__ - __MSG_options__",
+		"default_icon": "icons/icon-16x16.png",
+		"default_title": "__MSG_extname__ - __MSG_options__",
 		"popup": "popup.html"
 	},
 	"content_scripts": [

@@ -1,5 +1,5 @@
 /*global $: false*/
-    "use strict";
+	"use strict";
 $(function() {
-    $("#tabs").tabs();
+	$("#tabs").tabs();
 });
