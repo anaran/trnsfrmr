@@ -121,11 +121,15 @@ verwendet und erlauben die Suche nach Argumenten die in der Ersetzung benutzt we
 
 z.B.
 Abkürzung tbug
-... [\"\\s+(\\d+)\\s+(\\w+)\",
-\"Hello $2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\n\"]
+Wird erweitert zu... [\"\\s+(\\d+)\\s+(\\w+)\",
+\"Hello $$2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\n\"]
+
 erlaubt es eine Abkürzung \"tbug\" mit zwei Argumenten von
+
 tbug 35 joshuato
+
 in folgende personalisierte Antwort zu erweitern:
+
 Hello joshuato!
 Please see http://code.google.com/p/trnsfrmr/issues/detail?id=35 for details.
 
@@ -176,7 +180,7 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
     "description": ""
   },
   "map_template": {
-    "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\\\\n\\\"]\"]",
+    "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $$2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\\\n\\\"]\"]",
     "description": "Vorlage fuer die Abbkürzungen"
   },
   "keys_not_unique": {

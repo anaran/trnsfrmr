@@ -7,8 +7,9 @@ function Map(linkItems) {
     this.current = undefined;
     this.size = 0;
 
-    if(linkItems === false)
+    if (linkItems === false) {
         this.disableLinking();
+    }
 }
 
 Map.noop = function() {
@@ -21,14 +22,15 @@ Map.illegal = function() {
 
 // map initialisation from existing object
 // doesn't add inherited properties if not explicitly instructed to:
-// omitting foreignKeys means foreignKeys === undefined, i.e. == false
+// omitting foreignKeys means foreignKeys === undefined, i.e. === false
 // --> inherited properties won't be added
 Map.from = function(obj, foreignKeys) {
-    var map = new Map;
+    var map = new Map();
 
-    for(var prop in obj) {
-        if(foreignKeys || obj.hasOwnProperty(prop))
+    for (var prop in obj) {
+        if (foreignKeys || obj.hasOwnProperty(prop)) {
             map.put(prop, obj[prop]);
+        }
     }
 
     return map;
@@ -48,9 +50,7 @@ Map.prototype.disableLinking = function() {
 
 // overwrite in Map instance if necessary
 Map.prototype.hash = function(value) {
-    return (typeof value) + ' ' + (value instanceof Object ?
-        (value.__hash || (value.__hash = ++arguments.callee.current)) :
-        value.toString());
+    return (typeof value) + ' ' + (value instanceof Object ? (value.__hash || (value.__hash = ++arguments.callee.current)) : value.toString());
 };
 
 Map.prototype.hash.current = 0;
@@ -65,14 +65,18 @@ Map.prototype.get = function(key) {
 Map.prototype.put = function(key, value) {
     var hash = this.hash(key);
 
-    if(this[hash] === undefined) {
-        var item = { key : key, value : value };
+    if (this[hash] === undefined) {
+        var item = {
+            key: key,
+            value: value
+        };
         this[hash] = item;
 
         this.link(item);
         ++this.size;
+    } else {
+        this[hash].value = value;
     }
-    else this[hash].value = value;
 
     return this;
 };
@@ -81,7 +85,7 @@ Map.prototype.remove = function(key) {
     var hash = this.hash(key);
     var item = this[hash];
 
-    if(item !== undefined) {
+    if (item !== undefined) {
         --this.size;
         this.unlink(item);
 
@@ -93,21 +97,20 @@ Map.prototype.remove = function(key) {
 
 // only works if linked
 Map.prototype.removeAll = function() {
-    while(this.size)
+    while (this.size) {
         this.remove(this.key());
-
+    }
     return this;
 };
 
 // --- linked list helper functions
 
 Map.prototype.link = function(item) {
-    if(this.size == 0) {
+    if (this.size === 0) {
         item.prev = item;
         item.next = item;
         this.current = item;
-    }
-    else {
+    } else {
         item.prev = this.current.prev;
         item.prev.next = item;
         item.next = this.current;
@@ -116,13 +119,14 @@ Map.prototype.link = function(item) {
 };
 
 Map.prototype.unlink = function(item) {
-    if(this.size == 0)
+    if (this.size === 0) {
         this.current = undefined;
-    else {
+    } else {
         item.prev.next = item.next;
         item.next.prev = item.prev;
-        if(item === this.current)
+        if (item === this.current) {
             this.current = item.next;
+        }
     }
 };
 

@@ -1,3 +1,6 @@
+/*jslint browser: true, devel: true, todo: true */
+/*global GSpreadsheet*/
+    "use strict";
 // includes all necessary java script files for the extension
 function include(file) {
 	 var script  = document.createElement('script');
