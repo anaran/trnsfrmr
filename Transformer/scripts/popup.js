@@ -1,9 +1,9 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global chrome: false*/
-	"use strict";
+"use strict"; //$NON-NLS-0$
 
 function findTab(tabs) {
-	var url = chrome.extension.getURL("options.html"),
+	var url = chrome.extension.getURL("options.html"), //$NON-NLS-0$
 		i, tab;
 
 	for (i = 0; i < tabs.length; i++) {

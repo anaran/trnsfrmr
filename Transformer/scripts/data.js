@@ -1,4 +1,5 @@
-/*global window*/
+/*global window, Map*/
+"use strict"; //$NON-NLS-0$
 // get hash map for key -> value transformation
 function getHashMap() {
 	var o = window.localStorage.map;

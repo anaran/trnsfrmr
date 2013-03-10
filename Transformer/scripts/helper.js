@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: true */
 /*global GSpreadsheet*/
-	"use strict";
+"use strict"; //$NON-NLS-0$
 // includes all necessary java script files for the extension
 function include(file) {
 	var script = document.createElement('script');
