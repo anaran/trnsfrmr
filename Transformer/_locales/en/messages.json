@@ -63,6 +63,14 @@
     "message": "Save",
     "description": ""
   },
+  "export": {
+    "message": "Export",
+    "description": "Export your abbreviation definitions for backup and later import with modifications."
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import your modified export data here. Please keep you export data as backup."
+  },
   "restore": {
     "message": "Restore",
     "description": ""
@@ -99,8 +107,31 @@ month:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
 years:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
 or:			%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
 
-You have to replace &lt;operator&lt; with + or - and <i>&lt;n&gt;</i> by a number of your choice.",
+You have to replace &lt;operator&gt; with + or - and <i>&lt;n&gt;</i> by a number of your choice.
 
+Abbreviations with arguments:
+
+An expansion may also be an array of two string elements.
+
+They are used as the arguments to String.prototype.replace (searchValue, replaceValue)
+
+and allow searching for arguments after abbreviations and replacing them inside of the replacement value.
+
+e.g.
+Abbreviation tbug
+Expand to... [\"\\s+(\\d+)\\s+(\\w+)\",
+\"Hello $2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\n\"]
+will allow a boilerplate response with two arguments to expand from
+tbug 35 joshuato
+to following personalized reply:
+Hello joshuato!
+Please see http://code.google.com/p/trnsfrmr/issues/detail?id=35 for details.
+
+Undo of abbreviation expansion:
+
+This works by using the shortcut key again, but only when \"Select after replace\" is checked.
+
+",
     "description": "Helptext"
   },
   "texttab": {
@@ -136,7 +167,7 @@ You have to replace &lt;operator&lt; with + or - and <i>&lt;n&gt;</i> by a numbe
     "description": ""
   },
   "selectphrase": {
-    "message": "Select after replace",
+    "message": "Select after replace (enables undo)",
     "description": ""
   },
   "saving": {
@@ -144,7 +175,7 @@ You have to replace &lt;operator&lt; with + or - and <i>&lt;n&gt;</i> by a numbe
     "description": ""
   },
   "map_template": {
-    "message": "[\"today\",\"%DATE%\",\"sy\",\"Sincerely yours\"]",
+    "message": "[\"today\",\"%DATE%\",\"sy\",\"Sincerely yours\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\\\\n\\\"]\"]",
     "description": "Vorlage fuer die Abbkürzungen"
   },
   "keys_not_unique": {

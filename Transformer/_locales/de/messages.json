@@ -63,6 +63,14 @@
     "message": "Speichern",
     "description": ""
   },
+  "export": {
+    "message": "Exportieren",
+    "description": "Exportieren Sie Ihre Abkürzungen zur Datensicherung und für späteren Import mit Änderungen."
+  },
+  "import": {
+    "message": "Importieren",
+    "description": "Importieren Sie Ihre geänderten Abkürzungen hier. Bitte sichern sie zuvor Ihre Abkürzungen mit Export."
+  },
   "restore": {
     "message": "Laden",
     "description": ""
@@ -101,7 +109,30 @@ Monate:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
 Jahre:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
 oder:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
 
-Wobei &lt;operator&lt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetz werden kann.",
+Wobei &lt;operator&lt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetzt werden kann.
+
+Abkürzungen mit Argumenten:
+
+Eine Erweiterung kann auch ein Array von zwei String Elementen sein.
+
+Diese werden als Argumente für String.prototype.replace (searchValue, replaceValue)
+
+verwendet und erlauben die Suche nach Argumenten die in der Ersetzung benutzt weren können.
+
+z.B.
+Abkürzung tbug
+... [\"\\s+(\\d+)\\s+(\\w+)\",
+\"Hello $2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\n\"]
+erlaubt es eine Abkürzung \"tbug\" mit zwei Argumenten von
+tbug 35 joshuato
+in folgende personalisierte Antwort zu erweitern:
+Hello joshuato!
+Please see http://code.google.com/p/trnsfrmr/issues/detail?id=35 for details.
+
+Rückgängig machen von Erweiterungen:
+
+Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstitution, aber nur wenn \"Markiere Text nach dem Ersetzen\" ausgewählt ist.
+",
     "description": "Hilfe text"
   },
   "texttab": {
@@ -133,7 +164,7 @@ Wobei &lt;operator&lt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige 
     "description": ""
   },
   "selectphrase": {
-    "message": "Markiere Text nach dem Ersetzen",
+    "message": "Markiere Text nach dem Ersetzen (erlaubt rückgängig machen)",
     "description": ""
   },  
   "sound": {
@@ -145,8 +176,8 @@ Wobei &lt;operator&lt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige 
     "description": ""
   },
   "map_template": {
-    "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\"]",
-    "description": "Vorlage fuer die Abbkuerzungen"
+    "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$1 for details.\\\\n\\\"]\"]",
+    "description": "Vorlage fuer die Abbkürzungen"
   },
   "keys_not_unique": {
     "message": "Die Abkürzungen sind nicht eindeutig.",

@@ -23,6 +23,8 @@ var replaceKey = new KeyInfo();
 		localizeString("caption", document.title);
 		
 		localize("save", "save");
+		localize("export", "export");
+		localize("import", "import");
 		localize("restore", "restore");
 		localize("add", "option_add");
 		localize("delete", "option_del");
@@ -85,6 +87,27 @@ var replaceKey = new KeyInfo();
 	}
 	
 
+	function export_settings()
+	{
+	  window.alert(localStorage["map"].toString());
+	}
+
+	function import_settings()
+	{
+	try {
+	  var importData = window.prompt("paste your data below (see export for examples)");
+	  if (importData.length == 0) {
+	    window.alert("Nothing to import");
+	  } else {
+	    JSON.parse(importData);
+	    localStorage["map"] = importData;
+	    restore_options();
+	  }
+	}
+	catch(e) {
+	    window.alert("Your import data is invalid.\nWe are keeping old abbreviations.\ndata:\n" + importData + "\n" + e);
+	  }
+	}
 
 	
 	// Saves options to localStorage.
@@ -190,12 +213,15 @@ var replaceKey = new KeyInfo();
 		var map = chrome.extension.getBackgroundPage().getHashMap();
 		
 		var subs = $("#subs");
-		
+		var a = new Array();
 		for(var j = 0; j++ < map.size; map.next())
 		{		
-		
-			var line = createSubLine(map.key(), map.value());
-			subs.append(line);		
+		  a.push(map.key());
+		}
+		var keyArray = a.sort();
+		for (var k = 0; k < keyArray.length; k++) {
+		  var line = createSubLine(a[k], map.get(a[k]));
+		  subs.append(line);		
 		}
 		
 		$("#checkbox_hideicon").attr('checked', localStorage["hideicon"] == "true");
