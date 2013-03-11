@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
-<!-- Based on "Embedding a remote URL" at https://code.google.com/p/support/wiki/WorkingWithGoogleGadgets -->
 <Module>
   <ModulePrefs title="remote content example" />
-  <Content type="url" href="https://code.google.com/p/trnsfrmr/wiki/ProjectHome" />
+  <Content type="url" href="https://code.google.com/p/trnsfrmr/wiki/ProjectHome.wiki" />
 </Module>
 
