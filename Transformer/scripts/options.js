@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: false */
-/*global window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-	"use strict"; //$NON-NLS-0$
+/*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
+"use strict"; //$NON-NLS-0$
 //var settings = new Settings();
 var replaceKey = new KeyInfo();
 
@@ -59,33 +59,33 @@ function del(event) {
 }
 
 function createSubLine(key, value) {
-	var line = $("#subs .sub_line_template").clone();
-	line.removeClass("sub_line_template").addClass("sub_line");
+	var line = $("#subs .sub_line_template").clone(); //$NON-NLS-0$
+	line.removeClass("sub_line_template").addClass("sub_line"); //$NON-NLS-0$ //$NON-NLS-1$
 
-	$(".sub_key", line).val(key);
-	$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr"));
-	$(".sub_key", line).keydown(onKeyDownEvent);
-	$(".sub_key", line).change(onInputChange);
+	$(".sub_key", line).val(key); //$NON-NLS-0$
+	$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr")); //$NON-NLS-0$ //$NON-NLS-1$
+	$(".sub_key", line).keydown(onKeyDownEvent); //$NON-NLS-0$
+	$(".sub_key", line).change(onInputChange); //$NON-NLS-0$
 
-	$(".expand50-1000", line).val(value);
-	$(".expand50-1000", line).Watermark(chrome.i18n.getMessage("long"));
-	$(".del_button. button", line).click(del);
+	$(".expand50-1000", line).val(value); //$NON-NLS-0$
+	$(".expand50-1000", line).Watermark(chrome.i18n.getMessage("long")); //$NON-NLS-0$ //$NON-NLS-1$
+	$(".del_button. button", line).click(del); //$NON-NLS-0$
 	return line;
 }
 
 function add(event) {
-	var subs = $("#subs");
-	var line = createSubLine("", "");
+	var subs = $("#subs"); //$NON-NLS-0$
+	var line = createSubLine("", ""); //$NON-NLS-0$
 	subs.prepend(line);
 }
 
 // Restores select box state to saved value from localStorage.
 function restore_options(event) {
-	$("#subs .sub_line").remove();
+	$("#subs .sub_line").remove(); //$NON-NLS-0$
 
 	var map = chrome.extension.getBackgroundPage().getHashMap();
 
-	var subs = $("#subs");
+	var subs = $("#subs"); //$NON-NLS-0$
 	var a = [];
 	for (var j = 0; j++ < map.size; map.next()) {
 		a.push(map.key());
@@ -96,10 +96,10 @@ function restore_options(event) {
 		subs.append(line);
 	}
 
-	$("#checkbox_hideicon").attr('checked', localStorage.hideicon === "true");
-	$("#checkbox_animate").attr('checked', localStorage.animate === "true");
-	$("#checkbox_sound").attr('checked', localStorage.sound === "true");
-	$("#checkbox_selectphrase").attr('checked', localStorage.selectphrase === "true");
+	$("#checkbox_hideicon").attr('checked', localStorage.hideicon === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
+	$("#checkbox_animate").attr('checked', localStorage.animate === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
+	$("#checkbox_sound").attr('checked', localStorage.sound === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
+	$("#checkbox_selectphrase").attr('checked', localStorage.selectphrase === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
 
 	if (localStorage.replacekey) {
 		replaceKey.fromStore(localStorage.replacekey);
@@ -107,7 +107,7 @@ function restore_options(event) {
 		replaceKey = new KeyInfo(32, true, false, false, false, false);
 	}
 
-	document.getElementById('spanExpandShortcut').innerText = replaceKey.toString();
+	document.getElementById('spanExpandShortcut').innerText = replaceKey.toString(); //$NON-NLS-0$
 
 
 	add();
@@ -118,9 +118,9 @@ var current_keylearner;
 function keyUpEventListener(event) {
 	replaceKey.fromEvent(event);
 
-	document.getElementById('spanExpandShortcut').innerText = replaceKey.toString();
+	document.getElementById('spanExpandShortcut').innerText = replaceKey.toString(); //$NON-NLS-0$
 
-	document.removeEventListener('keyup', keyUpEventListener);
+	document.removeEventListener('keyup', keyUpEventListener); //$NON-NLS-0$
 
 	//save();
 }
@@ -128,8 +128,8 @@ function keyUpEventListener(event) {
 function createShortcut(event) {
 	current_keylearner = event.srcElement;
 
-	document.addEventListener('keyup', keyUpEventListener);
-	event.srcElement.innerText = chrome.i18n.getMessage("option_shortcut_press");
+	document.addEventListener('keyup', keyUpEventListener); //$NON-NLS-0$
+	event.srcElement.innerText = chrome.i18n.getMessage("option_shortcut_press"); //$NON-NLS-0$
 }
 
 function deleteShortcut(event) {
@@ -140,9 +140,9 @@ function deleteShortcut(event) {
 }
 
 function setKeyErrorColors(a) {
-	var lines = $("#subs .sub_line");
+	var lines = $("#subs .sub_line"); //$NON-NLS-0$
 	for (var i = 0; i < lines.length; i++) {
-		var key = $(".sub_key", lines[i])[0].value;
+		var key = $(".sub_key", lines[i])[0].value; //$NON-NLS-0$
 		if (!isKeyUnique(a, key)) {
 			$(".sub_key", lines[i]).addClass("bg_key_error"); //$NON-NLS-0$ //$NON-NLS-1$
 		} else {
@@ -152,6 +152,7 @@ function setKeyErrorColors(a) {
 }
 
 function export_settings(event) {
+	window.alert(chrome.i18n.getMessage("select_copy_save")); //$NON-NLS-0$
 	window.alert(localStorage.map.toString());
 }
 
@@ -163,10 +164,9 @@ function import_settings(event) {
 	var changedAbbreviations = [];
 	var mapArray = JSON.parse(localStorage.map);
 	try {
-		importData = window.prompt("paste your data below (see export for examples)");
+		importData = window.prompt(chrome.i18n.getMessage("paste_below")); //$NON-NLS-0$
 		if (importData === null) {} else {
 			if (importData.length === 0) {
-				window.alert("Nothing to import");
 			} else {
 				importArray = JSON.parse(importData);
 				importMap = new Map();
@@ -183,23 +183,27 @@ function import_settings(event) {
 				}
 				if (newAbbreviations.length > 0) {}
 				if (changedAbbreviations.length > 0) {
-					if (!window.confirm("Following abbreviations will be replaced by newly imported definitions (no undo):\n" + changedAbbreviations.toString())) {
+					if (!window.confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
 						changedAbbreviations.forEach(function(value, index, object) {
 							importMap.remove(value);
 						});
-						window.alert("Changes to following abbreviations were not imported:\n" + changedAbbreviations.toString());
+						window.alert(chrome.i18n.getMessage("changes_not_imported") + changedAbbreviations.toString()); //$NON-NLS-0$
 					}
 				}
-				for (var j = 0; j++ < importMap.size; importMap.next()) {
-					mapArray.push(importMap.key());
-					mapArray.push(importMap.value());
+				if (importMap.size === 0) {
+					window.alert(chrome.i18n.getMessage("nothing_to_import")); //$NON-NLS-0$
+				} else {
+					for (var j = 0; j++ < importMap.size; importMap.next()) {
+						mapArray.push(importMap.key());
+						mapArray.push(importMap.value());
+					}
+					localStorage.map = JSON.stringify(mapArray);
+					restore_options();
 				}
-				localStorage.map = JSON.stringify(mapArray);
-				restore_options();
 			}
 		}
 	} catch (e) {
-		window.alert("Your import data is invalid.\nWe are keeping old abbreviations.\ndata:\n" + importData + "\n" + e);
+		window.alert(chrome.i18n.getMessage("invalid_data") + importData + "\n" + e); //$NON-NLS-0$ //$NON-NLS-1$
 	}
 }
 
@@ -303,7 +307,9 @@ document.addEventListener("keydown", onKeyDown, false); //$NON-NLS-0$
 document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	init();
 	document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
+	document.querySelector('button[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
+	document.querySelector('button[name=import]').title = chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
 	//	NOTE: See createSubLine(key, value) for delete button event listener setup. //$NON-NLS-0$ //$NON-NLS-1$
 	//	document.querySelector('button[name=delete]').addEventListener('click', del);

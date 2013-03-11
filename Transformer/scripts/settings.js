@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: true */
 /*global Map, window: false, chrome: false*/
-	"use strict";
+"use strict"; //$NON-NLS-0$
 // class for pageaction commands
 function PageAction() {
 	this.visible = false;
@@ -8,8 +8,8 @@ function PageAction() {
 	this.show = function() {
 		if (!this.visible) {
 			chrome.extension.sendRequest({
-				cmd: "pageaction",
-				action: "show"
+				cmd: "pageaction", //$NON-NLS-0$
+				action: "show" //$NON-NLS-0$
 			}, this.onResponse);
 			this.visible = true;
 		}
@@ -17,16 +17,16 @@ function PageAction() {
 
 	this.hide = function() {
 		chrome.extension.sendRequest({
-			cmd: "pageaction",
-			action: "hide"
+			cmd: "pageaction", //$NON-NLS-0$
+			action: "hide" //$NON-NLS-0$
 		}, this.onResponse);
 		this.visible = false;
 	};
 
 	this.notify = function() {
 		chrome.extension.sendRequest({
-			cmd: "pageaction",
-			action: "notify"
+			cmd: "pageaction", //$NON-NLS-0$
+			action: "notify" //$NON-NLS-0$
 		}, this.onResponse);
 	};
 
@@ -65,14 +65,14 @@ function KeyInfo(keyCode, ctrl, alt, shift, meta, altGraph) {
 	this.toString = function() {
 		var result = "";
 
-		result += this.D.ctrlKey === true ? chrome.i18n.getMessage("ctrl") + " + " : "";
-		result += this.D.altKey === true ? chrome.i18n.getMessage("alt") + " + " : "";
-		result += this.D.shiftKey === true ? chrome.i18n.getMessage("shift") + " + " : "";
-		result += this.D.metaKey === true ? chrome.i18n.getMessage("meta") + " + " : "";
-		result += this.D.altGrKey === true ? chrome.i18n.getMessage("altgr") + " + " : "";
+		result += this.D.ctrlKey === true ? chrome.i18n.getMessage("ctrl") + " + " : ""; //$NON-NLS-0$ //$NON-NLS-1$
+		result += this.D.altKey === true ? chrome.i18n.getMessage("alt") + " + " : ""; //$NON-NLS-0$  //$NON-NLS-1$
+		result += this.D.shiftKey === true ? chrome.i18n.getMessage("shift") + " + " : ""; //$NON-NLS-0$ //$NON-NLS-1$
+		result += this.D.metaKey === true ? chrome.i18n.getMessage("meta") + " + " : ""; //$NON-NLS-0$ //$NON-NLS-1$
+		result += this.D.altGrKey === true ? chrome.i18n.getMessage("altgr") + " + " : ""; //$NON-NLS-0$ //$NON-NLS-1$
 
 		if (this.D.keyCode === 32) {
-			result += chrome.i18n.getMessage("space");
+			result += chrome.i18n.getMessage("space"); //$NON-NLS-0$
 		} else {
 			result += String.fromCharCode(this.D.keyCode);
 		}
@@ -103,7 +103,7 @@ function Settings() {
 
 	this.readRequest = function() {
 		chrome.extension.sendRequest({
-			cmd: "read"
+			cmd: "read" //$NON-NLS-0$
 		}, this.processMessage);
 	};
 
@@ -112,11 +112,11 @@ function Settings() {
 	};
 
 	this.onMessage = function(msg, sender, sendResponse) {
-		if (msg.cmd === "push") {
+		if (msg.cmd === "push") { //$NON-NLS-0$
 			// "this" does not work.
 			S.processMessage(msg);
 		} else {
-			console.warn("unknown command message");
+			console.warn("unknown command message"); //$NON-NLS-0$
 		}
 
 		sendResponse({}); // snub them.

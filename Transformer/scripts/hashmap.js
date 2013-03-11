@@ -17,7 +17,7 @@ Map.noop = function() {
 };
 
 Map.illegal = function() {
-	throw new Error("illegal operation for maps without linking");
+	throw new Error("illegal operation for maps without linking"); //$NON-NLS-0$
 };
 
 // map initialisation from existing object
@@ -50,7 +50,7 @@ Map.prototype.disableLinking = function() {
 
 // overwrite in Map instance if necessary
 Map.prototype.hash = function(value) {
-	return (typeof value) + ' ' + (value instanceof Object ? (value.__hash || (value.__hash = ++arguments.callee.current)) : value.toString());
+	return (typeof value) + ' ' + (value instanceof Object ? (value.__hash || (value.__hash = ++arguments.callee.current)) : value.toString()); //$NON-NLS-0$
 };
 
 Map.prototype.hash.current = 0;
