@@ -164,7 +164,7 @@ This works by using the shortcut key again, but only when \"Select after replace
     "description": ""
   },
   "changelog_text": {
-    "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\">http://code.google.com/p/trnsfrmr/</a> for more information.",
+    "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> for more information.",
     "description": ""
   },
   "hideicon": {

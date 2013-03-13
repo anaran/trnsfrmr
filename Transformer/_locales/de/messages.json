@@ -164,7 +164,7 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
     "description": ""
   },
   "changelog_text": {
-    "message": "Besuchen Sie bitte <a href=\"http://code.google.com/p/trnsfrmr/\">http://code.google.com/p/trnsfrmr/</a> um mehr Informationen zu erhalten.",
+    "message": "Besuchen Sie bitte <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> um mehr Informationen zu erhalten.",
     "description": ""
   },
   "hideicon": {

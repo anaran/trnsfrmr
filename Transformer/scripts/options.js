@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-"use strict"; //$NON-NLS-0$
+	"use strict"; //$NON-NLS-0$
 //var settings = new Settings();
 var replaceKey = new KeyInfo();
 
@@ -157,53 +157,70 @@ function export_settings(event) {
 }
 
 function import_settings(event) {
-	var importData;
 	var importMap;
 	var importArray;
 	var newAbbreviations = [];
 	var changedAbbreviations = [];
 	var mapArray = JSON.parse(localStorage.map);
+	var optionsDocument;
 	try {
-		importData = window.prompt(chrome.i18n.getMessage("paste_below")); //$NON-NLS-0$
-		if (importData === null) {} else {
-			if (importData.length === 0) {
+		if (event.hasOwnProperty("srcElement")) {
+			importArray = JSON.parse(window.prompt(chrome.i18n.getMessage("paste_below"))); //$NON-NLS-0$
+		} else {
+			importArray = event;
+		}
+		if (importArray instanceof Array) {
+			importMap = new Map();
+			var map = chrome.extension.getBackgroundPage().getHashMap();
+			for (var i = 0;
+			(i + 1) < importArray.length; i += 2) {
+				if (map.get(importArray[i]) === undefined) {
+					importMap.put(importArray[i], importArray[i + 1]);
+					newAbbreviations.push(importArray[i]);
+				} else if (map.get(importArray[i]) !== importArray[i + 1]) {
+					importMap.put(importArray[i], importArray[i + 1]);
+					changedAbbreviations.push(importArray[i]);
+				}
+			}
+			if (newAbbreviations.length > 0) {}
+			if (changedAbbreviations.length > 0) {
+				if (!window.confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
+					changedAbbreviations.forEach(function(value, index, object) {
+						importMap.remove(value);
+					});
+					window.alert(chrome.i18n.getMessage("changes_not_imported") + changedAbbreviations.toString()); //$NON-NLS-0$
+				}
+			}
+			if (importMap.size === 0) {
+				window.alert(chrome.i18n.getMessage("nothing_to_import")); //$NON-NLS-0$
 			} else {
-				importArray = JSON.parse(importData);
-				importMap = new Map();
-				var map = chrome.extension.getBackgroundPage().getHashMap();
-				for (var i = 0;
-				(i + 1) < importArray.length; i += 2) {
-					if (map.get(importArray[i]) === undefined) {
-						importMap.put(importArray[i], importArray[i + 1]);
-						newAbbreviations.push(importArray[i]);
-					} else if (map.get(importArray[i]) !== importArray[i + 1]) {
-						importMap.put(importArray[i], importArray[i + 1]);
-						changedAbbreviations.push(importArray[i]);
-					}
+				for (var j = 0; j++ < importMap.size; importMap.next()) {
+					mapArray.push(importMap.key());
+					mapArray.push(importMap.value());
 				}
-				if (newAbbreviations.length > 0) {}
-				if (changedAbbreviations.length > 0) {
-					if (!window.confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
-						changedAbbreviations.forEach(function(value, index, object) {
-							importMap.remove(value);
-						});
-						window.alert(chrome.i18n.getMessage("changes_not_imported") + changedAbbreviations.toString()); //$NON-NLS-0$
-					}
-				}
-				if (importMap.size === 0) {
-					window.alert(chrome.i18n.getMessage("nothing_to_import")); //$NON-NLS-0$
-				} else {
-					for (var j = 0; j++ < importMap.size; importMap.next()) {
-						mapArray.push(importMap.key());
-						mapArray.push(importMap.value());
-					}
-					localStorage.map = JSON.stringify(mapArray);
+				localStorage.map = JSON.stringify(mapArray);
+				if (event.hasOwnProperty("srcElement")) {
 					restore_options();
+				} else {
+					chrome.tabs.query({
+						url: chrome.extension.getURL("options.html")
+					}, function(tabs) {
+						if (tabs.length === 0) {
+							window.open(chrome.extension.getURL("options.html"), "", "");
+						}
+						if (tabs.length === 1) {
+							chrome.tabs.update(tabs[0].id, {
+								highlighted: true
+								//					active: true
+							});
+							chrome.tabs.reload(tabs[0].id);
+						}
+					});
 				}
 			}
 		}
 	} catch (e) {
-		window.alert(chrome.i18n.getMessage("invalid_data") + importData + "\n" + e); //$NON-NLS-0$ //$NON-NLS-1$
+		window.alert(chrome.i18n.getMessage("invalid_data") + importArray + "\n" + e); //$NON-NLS-0$ //$NON-NLS-1$
 	}
 }
 
@@ -316,6 +333,5 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	document.querySelector('span[name=editshortcut]').addEventListener('click', createShortcut); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('span[name=deleteshortcut]').addEventListener('click', deleteShortcut); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=save]').addEventListener('click', save_options); //$NON-NLS-0$ //$NON-NLS-1$
-	//  document.querySelector('button').addEventListener('click', clickHandler);
-	//  main();
+	document.querySelector('button[name=save]').click();
 });

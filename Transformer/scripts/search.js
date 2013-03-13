@@ -3,6 +3,22 @@
 	"use strict";
 var settings;
 var pageaction;
+var abbrevMostRecentlyUsed = window.localStorage.mru ? JSON.parse(window.localStorage.mru) : new Array(10);
+
+function updateMostRecentlyUsedList(key) {
+	var keyOccurence = abbrevMostRecentlyUsed.filter(function(value, index, object) {
+		return value === key;
+	});
+	if (keyOccurence.length === 0) {
+		abbrevMostRecentlyUsed.pop();
+		abbrevMostRecentlyUsed.unshift(key);
+		window.localStorage.mru = JSON.stringify(abbrevMostRecentlyUsed);
+	}
+}
+
+function getMostRecentlyUsedList() {
+	return abbrevMostRecentlyUsed;
+}
 
 function findInputElements(elem) {
 	for (var i = 0; i < elem.length; i++) {
@@ -34,9 +50,9 @@ function extractKeyWord(str, s, e) {
 		// string b(efore) and a(fter) cursor
 		var b = str.substring(0, s);
 		var a = str.substring(e);
-
-		var rb = b.match(/\w*$/);
-		var ra = a.match(/^\w*/);
+		// take care of U+00A0 NO-BREAK SPACE as well
+		var rb = b.match(/[^ \t\u00A0]*$/);
+		var ra = a.match(/^[^ \t\u00A0]*/);
 
 		s -= rb[0].length;
 		e += ra[0].length;
@@ -123,7 +139,7 @@ function checkElements(elem) {
 		value = handleArguments(value, r);
 		if (value) {
 			substituted = true;
-
+			updateMostRecentlyUsedList(r.key);
 			// date substitution
 			value = replaceDates(value);
 			if (element.tagName === "TEXTAREA") {} else {
@@ -162,6 +178,7 @@ function checkElements(elem) {
 			value = handleArguments(value, r);
 			if (value) {
 				substituted = true;
+				updateMostRecentlyUsedList(r.key);
 				value = replaceDates(value);
 
 				var beforepos = r.before.length;
@@ -169,15 +186,8 @@ function checkElements(elem) {
 				// split text into "element" - "keyword" - "aftervalue"
 				var keyword = element.splitText(beforepos);
 				var aftervalue = keyword.splitText(unExpandedValue.length);
-
-
 				// TODO check for other linebreaks like unix or mac style
 				var lines = value.split("\n");
-				if (lines.length > 1) {
-					expandedElementType = "div";
-				} else {
-					expandedElementType = "span";
-				}
 				var afterNode = doc.createElement(expandedElementType);
 				// afterNode.appendChild(doc.createTextNode(lines[lines.length - 1] + aftervalue.textContent));
 				afterNode.appendChild(doc.createTextNode(aftervalue.textContent));
@@ -185,78 +195,36 @@ function checkElements(elem) {
 				afterNode.innerHTML = afterNode.innerHTML.replace(/ /g, "&nbsp;");
 				aftervalue.textContent = "";
 				element.parentNode.insertBefore(afterNode, aftervalue.nextSibling);
-
-				//                keyword.textContent="";
-				//                 var docfrag = doc.createDocumentFragment();               
-				//                 docfrag.appendChild(doc.createElement("div").appendChild(element).parentElement);
-				//                 docfrag.lastChild.appendChild(doc.createTextNode(lines[0]));
-				element.textContent += lines[0];
 				keyword.textContent = "";
-				for (var i = 1; i < lines.length; i++) {
-					//                         docfrag.appendChild(doc.createElement("div").appendChild(doc.createTextNode(lines[i])).parentElement);
-					//                     element.parentNode.insertBefore(doc.createElement("div").appendChild(doc.createElement("br")).parentNode, keyword);
-					// element.parentNode.insertBefore(doc.createElement("br"), keyword);
-					element.parentNode.insertBefore(doc.createElement(expandedElementType).appendChild(doc.createTextNode(lines[i])).parentNode, keyword);
+				for (var i = 0; i < lines.length; i++) {
+					if (lines[i].length > 0) {
+						element.parentNode.insertBefore(doc.createElement("div").appendChild(doc.createTextNode(lines[i])).parentNode, keyword);
+					} else {
+						element.parentNode.insertBefore(doc.createElement("p").appendChild(doc.createTextNode(lines[i])).parentNode, keyword);
+					}
 				}
-				if (lines.length > 1) {
-					// element.parentNode.insertBefore(doc.createElement("br"), keyword);
-				}
-				//                 if (aftervalue.length > 0) {
-				//                     docfrag.lastChild.appendChild(aftervalue);
-				//                 }
-				//                 docfrag.normalize();
 				// set selection/cursor
-
 				selection.removeAllRanges();
 
 				var range = doc.createRange();
 				range.selectNode(afterNode);
-				//                range.insertNode(element);
 				range.setStart(element, r.before.length);
 				// NOTE We keep keyword empty to make it useful for ending the range!
 				range.setEnd(keyword, 0);
-				//                range.selectNode(newNode);
-				//                 range.selectNode(keyword.parentNode);
-				//                 range.insertNode(docfrag);
-				//                 keyword.parentNode.parentNode.removeChild(keyword.parentNode);
 				if (!settings.selectPhrase) {
-					// Parameters
-					//
-					// toStart 
-					// A boolean, true collapses the Range to its start, false to its end.
 					range.collapse(false);
 				} else {
-					//                     if (true || r.before.length > 0) {
-					//                         range.setStart(range.startContainer.childNodes.item(range.startOffset).firstChild, r.before.length);
-					//                     }
-					//                     if (true || r.after.length > 0) {
-					//                         range.setEnd(range.endContainer.childNodes.item(range.endOffset-1).firstChild, range.endContainer.childNodes.item(range.endOffset-1).firstChild .length - r.after.length);
-					//                     }
 					selection.addRange(range);
 					selection.anchorNode.parentNode.normalize();
 				}
 			}
 		} else {
-			// replace selection with unExpandedValue and collapse it.
-			//           console.log(selection);
-			//            selection.deleteFromDocument();
-			//            selection.anchorNode.data = selection.anchorNode.data + " " + unExpandedValue + " ";
-			//           selection.anchorNode.data = unExpandedValue;
-			//          alert(selection.getRangeAt(0).cloneContents().childNodes);
-			//            selection.getRangeAt(0).normalize();
-			//            selection.getRangeAt(0).commonAncestorContainer.normalize();
 			selection.getRangeAt(0).deleteContents();
-			selection.getRangeAt(0).insertNode(doc.createTextNode(unExpandedValue));
-			//          selection.collapse();
-			// NOTE has no effect
-			//          selection.modify("modify", "forward", "word");
-			//            selection.getRangeAt(0).collapse(false);
+			selection.getRangeAt(0).insertNode(doc.createElement("div").appendChild(doc.createTextNode(unExpandedValue)));
 			selection.collapseToStart();
 			// NOTE normalize split or empty text elements.
 			// e.g. "badly " "split" "" "" "" " text" becomes "badly split text"
 			selection.anchorNode.parentNode.normalize();
-			//          selection.extend(selection.anchorNode, selection.anchorOffset);
-
 			substituted = true;
 		}
 	}
@@ -279,6 +247,17 @@ function onKeyEvent(e) {
 
 		if (checkElements(element)) {
 			pageaction.notify();
+		} else {
+			var notification = webkitNotifications.createNotification(
+//			NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
+//				chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
+//			TODO See issue chromium:134315 for possible trouble with this.
+				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT!
+			chrome.i18n.getMessage("extname") + ' - Recent Expansions', // notification title
+			getMostRecentlyUsedList().join("\n") // notification body text
+			);
+			notification.show();
+			//			window.alert("Most recently expanded abbreviations:\n\n" + getMostRecentlyUsedList().join("\n"));
 		}
 		// consume event
 		e.returnValue = false;
