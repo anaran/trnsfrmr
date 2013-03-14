@@ -152,9 +152,10 @@ function save_default() {
 	localStorage.map = chrome.i18n.getMessage("map_template"); //$NON-NLS-0$
 }
 
-	localStorage.used_before = "true"; //$NON-NLS-0$
-}
-
+function init() {
+	if (localStorage.used_before !== "true") { //$NON-NLS-0$
+		save_default();
+	}
 	var onClick = function(info, tab) {
 		console.log("Popchrom contextMenus.onClicked info:" + JSON.stringify(info) + ":tab:" + JSON.stringify(tab) + ":");
 		var parsedText;
