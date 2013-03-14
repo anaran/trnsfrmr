@@ -227,6 +227,5 @@ function init() {
 		});
 	});
 }
->>>>>>> 67aec1abbe44c9777168cd809a67afb677f316ce
 chrome.extension.onRequest.addListener(onRequest);
 init();
