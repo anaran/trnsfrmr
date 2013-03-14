@@ -3,7 +3,6 @@
 	"use strict"; //$NON-NLS-0$
 var default_icon = chrome.extension.getURL("icons/icon-16x16.png"); //$NON-NLS-0$
 
-
 var notifyImages = [
 chrome.extension.getURL("icons/anim/notify0.png"), //$NON-NLS-0$
 chrome.extension.getURL("icons/anim/notify1.png"), //$NON-NLS-0$
@@ -40,7 +39,6 @@ function playSound() {
 		console.error(e);
 	}
 }
-
 
 function animateNotify(tabId, pos) {
 	if (pos < notifyImages.length) {
@@ -190,12 +188,12 @@ function init() {
 		}
 	};
 	localStorage.used_before = "true"; //$NON-NLS-0$
-	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
-	chrome.contextMenus.removeAll(function() {
-		if (chrome.extension.lastError) {
-			console.log("lastError:" + chrome.extension.lastError.message);
-		}
-	});
+//	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
+//	chrome.contextMenus.removeAll(function() {
+//		if (chrome.extension.lastError) {
+//			console.log("lastError:" + chrome.extension.lastError.message);
+//		}
+//	});
 	var addAbbrevId = chrome.contextMenus.create({
 		id: "addAbbrevId",
 		type: "normal",

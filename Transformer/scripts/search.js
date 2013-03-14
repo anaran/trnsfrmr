@@ -6,14 +6,19 @@ var pageaction;
 var abbrevMostRecentlyUsed = window.localStorage.mru ? JSON.parse(window.localStorage.mru) : new Array(10);
 
 function updateMostRecentlyUsedList(key) {
-	var keyOccurence = abbrevMostRecentlyUsed.filter(function(value, index, object) {
-		return value === key;
+	var keyExists = abbrevMostRecentlyUsed.some(function(value, index, object) {
+		if (value === key) {
+			// Delete key from its current location in the array.
+			delete object[index];
+		}
 	});
-	if (keyOccurence.length === 0) {
+	if (!keyExists) {
+		// Make room in the MRU array for a new key (not recently used).
 		abbrevMostRecentlyUsed.pop();
-		abbrevMostRecentlyUsed.unshift(key);
-		window.localStorage.mru = JSON.stringify(abbrevMostRecentlyUsed);
 	}
+	// Place key on top of the array.
+	abbrevMostRecentlyUsed.unshift(key);
+	window.localStorage.mru = JSON.stringify(abbrevMostRecentlyUsed);
 }
 
 function getMostRecentlyUsedList() {
@@ -249,12 +254,18 @@ function onKeyEvent(e) {
 			pageaction.notify();
 		} else {
 			var notification = webkitNotifications.createNotification(
-//			NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
-//				chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
-//			TODO See issue chromium:134315 for possible trouble with this.
-				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT!
+			//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
+			//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
+			//TODO See issue chromium:134315 for possible trouble with this.
+			chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT!
 			chrome.i18n.getMessage("extname") + ' - Recent Expansions', // notification title
-			getMostRecentlyUsedList().join("\n") // notification body text
+			//			HMTL content seems to be only supported by a possible future createHTMLNotification
+			//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+			getMostRecentlyUsedList().filter(function(value, index, object) {
+				return true;
+			}).map(function(value, index, object) {
+				return "\n " + value;
+			}).join("") // notification body text
 			);
 			notification.show();
 			//			window.alert("Most recently expanded abbreviations:\n\n" + getMostRecentlyUsedList().join("\n"));
