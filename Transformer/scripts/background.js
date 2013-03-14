@@ -157,7 +157,7 @@ function init() {
 		save_default();
 	}
 	var onClick = function(info, tab) {
-		console.log("Popchrom contextMenus.onClicked info:" + JSON.stringify(info) + ":tab:" + JSON.stringify(tab) + ":");
+//		console.log("Popchrom contextMenus.onClicked info:" + JSON.stringify(info) + ":tab:" + JSON.stringify(tab) + ":");
 		var parsedText;
 		try {
 			parsedText = JSON.parse(info.selectionText);
