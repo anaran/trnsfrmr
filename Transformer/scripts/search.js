@@ -9,16 +9,18 @@ function updateMostRecentlyUsedList(key) {
 	var keyExists = abbrevMostRecentlyUsed.some(function(value, index, object) {
 		if (value === key) {
 			// Delete key from its current location in the array.
-			delete object[index];
+			object.splice(index, 1);
 		}
 	});
-	if (!keyExists) {
-		// Make room in the MRU array for a new key (not recently used).
+	if (abbrevMostRecentlyUsed.length > 9) {
+		// Make room in the MRU array for a new key by popping off oldest key (not recently used).
 		abbrevMostRecentlyUsed.pop();
 	}
 	// Place key on top of the array.
 	abbrevMostRecentlyUsed.unshift(key);
-	window.localStorage.mru = JSON.stringify(abbrevMostRecentlyUsed);
+	window.localStorage.mru = JSON.stringify(abbrevMostRecentlyUsed.filter(function(value, index, object) {
+		return true;
+	}));
 }
 
 function getMostRecentlyUsedList() {
@@ -56,8 +58,9 @@ function extractKeyWord(str, s, e) {
 		var b = str.substring(0, s);
 		var a = str.substring(e);
 		// take care of U+00A0 NO-BREAK SPACE as well
-		var rb = b.match(/[^ \t\u00A0]*$/);
-		var ra = a.match(/^[^ \t\u00A0]*/);
+		// Fixes issue 70.
+		var rb = b.match(/[^ \t\n\u00A0]*$/);
+		var ra = a.match(/^[^ \t\n\u00A0]*/);
 
 		s -= rb[0].length;
 		e += ra[0].length;
@@ -132,8 +135,9 @@ function checkElements(elem) {
 			var oldSelectionStart = element.selectionStart;
 			element.value = element.value.substring(0, element.selectionStart) + unExpandedValue + element.value.substring(element.selectionEnd, element.value.length);
 			element.selectionStart = element.selectionEnd = oldSelectionStart;
-			// TODO reenable if selection in  wysiwyg-editor works
-			return;
+			substituted = true;
+			// TODO reenable when selection in wysiwyg-editor works
+			return substituted;
 		}
 
 		r = extractKeyWord(element.value, element.selectionStart, element.selectionEnd);
@@ -193,29 +197,25 @@ function checkElements(elem) {
 				var aftervalue = keyword.splitText(unExpandedValue.length);
 				// TODO check for other linebreaks like unix or mac style
 				var lines = value.split("\n");
-				var afterNode = doc.createElement(expandedElementType);
-				// afterNode.appendChild(doc.createTextNode(lines[lines.length - 1] + aftervalue.textContent));
-				afterNode.appendChild(doc.createTextNode(aftervalue.textContent));
-				// FIXME: There must be a better way then this to preserve leading whitespace in text nodes.
-				afterNode.innerHTML = afterNode.innerHTML.replace(/ /g, "&nbsp;");
-				aftervalue.textContent = "";
-				element.parentNode.insertBefore(afterNode, aftervalue.nextSibling);
-				keyword.textContent = "";
-				for (var i = 0; i < lines.length; i++) {
-					if (lines[i].length > 0) {
-						element.parentNode.insertBefore(doc.createElement("div").appendChild(doc.createTextNode(lines[i])).parentNode, keyword);
-					} else {
-						element.parentNode.insertBefore(doc.createElement("p").appendChild(doc.createTextNode(lines[i])).parentNode, keyword);
+				var expansionNode = doc.createElement("div");
+				if (lines.length > 1) {
+					for (var i = 0; i < lines.length; i++) {
+						var div = doc.createElement("div");
+						if (lines[i].length > 0) {
+							expansionNode.appendChild(div.appendChild(doc.createTextNode(lines[i])).parentNode);
+						} else {
+							expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode);
+						}
 					}
+				} else {
+					expansionNode.appendChild(doc.createTextNode(lines[0]));
 				}
+				element.parentNode.replaceChild(expansionNode, keyword);
 				// set selection/cursor
 				selection.removeAllRanges();
 
 				var range = doc.createRange();
-				range.selectNode(afterNode);
-				range.setStart(element, r.before.length);
-				// NOTE We keep keyword empty to make it useful for ending the range!
-				range.setEnd(keyword, 0);
+				range.selectNodeContents(expansionNode);
 				if (!settings.selectPhrase) {
 					range.collapse(false);
 				} else {
@@ -233,9 +233,7 @@ function checkElements(elem) {
 			substituted = true;
 		}
 	}
-
 	return substituted;
-
 }
 
 function pageHasEditableElements() {
