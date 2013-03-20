@@ -325,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	init();
 	document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
+	document.querySelector('span[name=caption]').title = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=import]').title = chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
 	document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
