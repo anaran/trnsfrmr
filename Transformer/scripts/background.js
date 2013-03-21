@@ -156,8 +156,29 @@ function init() {
 	if (localStorage.used_before !== "true") { //$NON-NLS-0$
 		save_default();
 	}
+	var onSubmitPopchromIssue = function(info, tab) {
+		try {
+			chrome.tabs.query({
+				'active': true
+			}, function(tab) {
+				try {
+					console.log(JSON.stringify(tab));
+					chrome.tabs.sendMessage(tab[0].id, {
+						greeting: "hollow"
+						, appDetails: JSON.stringify(chrome.app.getDetails())
+					}, function(response) {
+				chrome.tabs.create({
+					url: response.newIssueQueryUrl
+				}, function(tab) {});
+					});
+				} catch (e) {
+					console.log("tabs.query reports:\n" + JSON.stringify(e));
+				}
+			});
+		} catch (e) {}
+	};
 	var onClick = function(info, tab) {
-//		console.log("Popchrom contextMenus.onClicked info:" + JSON.stringify(info) + ":tab:" + JSON.stringify(tab) + ":");
+		//		console.log("Popchrom contextMenus.onClicked info:" + JSON.stringify(info) + ":tab:" + JSON.stringify(tab) + ":");
 		var parsedText;
 		try {
 			parsedText = JSON.parse(info.selectionText);
@@ -188,18 +209,29 @@ function init() {
 		}
 	};
 	localStorage.used_before = "true"; //$NON-NLS-0$
-//	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
-//	chrome.contextMenus.removeAll(function() {
-//		if (chrome.extension.lastError) {
-//			console.log("lastError:" + chrome.extension.lastError.message);
-//		}
-//	});
+	//	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
+	//	chrome.contextMenus.removeAll(function() {
+	//		if (chrome.extension.lastError) {
+	//			console.log("lastError:" + chrome.extension.lastError.message);
+	//		}
+	//	});
 	var addAbbrevId = chrome.contextMenus.create({
 		id: "addAbbrevId",
 		type: "normal",
 		title: "Add/Import Popchrom abbreviation(s) for '%s'",
 		onclick: onClick,
 		contexts: ["selection"]
+	}, function() {
+		if (chrome.extension.lastError) {
+			console.log("lastError:" + chrome.extension.lastError.message);
+		}
+	});
+	var submitPopchromIssueId = chrome.contextMenus.create({
+		id: "submitPopchromIssueId",
+		type: "normal",
+		title: "Submit New Popchrom Issue for '%s'",
+		onclick: onSubmitPopchromIssue,
+		contexts: ["all"]
 	}, function() {
 		if (chrome.extension.lastError) {
 			console.log("lastError:" + chrome.extension.lastError.message);

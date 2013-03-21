@@ -117,7 +117,7 @@ Monate:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
 Jahre:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
 oder:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
 
-Wobei &lt;operator&lt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetzt werden kann.
+Wobei &lt;operator&gt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetzt werden kann.
 
 Abkürzungen mit Argumenten:
 

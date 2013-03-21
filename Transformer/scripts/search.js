@@ -262,11 +262,10 @@ function onKeyEvent(e) {
 			getMostRecentlyUsedList().filter(function(value, index, object) {
 				return true;
 			}).map(function(value, index, object) {
-				return "\n " + value;
-			}).join("") // notification body text
+				return value;
+			}).join(" ") // notification body text
 			);
 			notification.show();
-			//			window.alert("Most recently expanded abbreviations:\n\n" + getMostRecentlyUsedList().join("\n"));
 		}
 		// consume event
 		e.returnValue = false;
@@ -313,6 +312,65 @@ function init() {
 	addEventListenerToIframes();
 
 	document.addEventListener("keydown", onKeyEvent, false);
+	var cb = function(request, sender, sendResponse) {
+		try {
+			//	console.log(JSON.stringify([request, sender, sendResponse]));
+			//			console.log(sender.tab ?
+			//				"from a content script:" + sender.tab.url :
+			//				"from the extension");
+			var sel = document.getSelection();
+			var additionalInformation = "document.URL = " + document.URL;
+			var rng;
+			var childNodeCount;
+			var rngValue;
+			if (sel.type !== "None") {
+				rng = sel.getRangeAt(0);
+			}
+			var actElem = document.activeElement;
+			additionalInformation += "\n(actElem = document.activeElement).nodeName = " + actElem.nodeName;
+			if (actElem.hasOwnProperty("selectionStart")) {
+				additionalInformation += "\nactElem.selectionStart = " + actElem.selectionStart;
+				additionalInformation += "\nactElem.selectionEnd = " + actElem.selectionEnd;
+				additionalInformation += "\nactElem.value = " + JSON.stringify(actElem.value);
+				additionalInformation += "\nactElem.value.substring(actElem.selectionStart, actElem.selectionEnd) = " + JSON.stringify(actElem.value.substring(actElem.selectionStart, actElem.selectionEnd));
+			} else if (sel) {
+				additionalInformation += "\nrng.commonAncestorContainer.parentNode.outerHTML = " + JSON.stringify(rng.commonAncestorContainer.parentNode.outerHTML);
+				additionalInformation += "\nsel.toString() = " + JSON.stringify(sel.toString());
+			}
+			additionalInformation += "\ndocument.getSelection() = sel = " + JSON.stringify(sel, function(key, value) {
+				if (key.length > 0 && value instanceof Object) {
+					return typeof value;
+				} else {
+					return value;
+				}
+			}).replace(/([{,])("\w+":)/g, "$1\n$2") + "\ndocument.getSelection().getRangeAt(0) = rng = " + JSON.stringify(rng, function(key, value) {
+				if (key.length > 0 && value instanceof Object) {
+					return typeof value;
+				} else {
+					return value;
+				}
+			}).replace(/([{,])("\w+":)/g, "$1\n$2");
+			if (request.greeting === "hollow") {
+				var appDetails = JSON.parse(request.appDetails);
+				var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
+				var queryString = "comment=" + window.encodeURIComponent("What steps will reproduce the problem?\n1. Use testcase below in a" + (actElem.nodeName.match(/^[aeio]/i) ? "n" : "") + " " + actElem.nodeName + ".\n2. What do do now?\n3. What to do next?\n\n" + "What is the expected output? What do you see instead?\n\n\n" + "What version of the product are you using? On what operating system?" + "\n\nPopchrom Version " + appDetails.version + "\nPopchrom ID " + appDetails.id + "\nPopchrom Locale " + appDetails.current_locale + "\nBrowser " + navigator.appVersion + "\n\nPlease review information about your minimal testcase below.\n\n" + additionalInformation) + "&summary=What is the problem?";
+				var newIssueQueryUrl = newIssueUrl + "?" + queryString;
+				console.log("newIssueQueryUrl.length = " + newIssueQueryUrl.length);
+				if (newIssueQueryUrl.length <= 2060) {
+					if (sendResponse) {
+						sendResponse({
+							newIssueQueryUrl: newIssueQueryUrl
+						});
+					}
+				} else {
+					window.alert("Please shorten your testcase (text content, text selection) by ca. " + (newIssueQueryUrl.length - 2060) + " characters");
+				}
+			}
+		} catch (e) {
+			console.log("onMessage callback reports:\n" + e.stack);
+		}
+	};
+	chrome.extension.onMessage.addListener(cb);
 
 }
 
