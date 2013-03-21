@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_extname__",
-	"version": "1.7",
+	"version": "1.8",
 	"permissions": [ "notifications", "contextMenus", "storage", "tabs", "http://*/*", "https://*/*" ],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
