@@ -1,5 +1,5 @@
 /*jslint browser: true, devel: true, todo: true */
-/*global Settings, PageAction, replaceDates, window: false, chrome: false, $: false, KeyInfo: false */
+/*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
 	"use strict";
 var settings;
 var pageaction;
@@ -150,7 +150,7 @@ function checkElements(elem) {
 			substituted = true;
 			updateMostRecentlyUsedList(r.key);
 			// date substitution
-			value = replaceDates(value);
+			value = replaceAllDates(value);
 			if (element.tagName === "TEXTAREA") {} else {
 				value = value.replace(/[\n\r]+/g, " ");
 			}
@@ -188,7 +188,7 @@ function checkElements(elem) {
 			if (value) {
 				substituted = true;
 				updateMostRecentlyUsedList(r.key);
-				value = replaceDates(value);
+				value = replaceAllDates(value);
 
 				var beforepos = r.before.length;
 
@@ -384,7 +384,7 @@ function globalReplacer(value) {
 	// check all keys
 	for (var j = 0; j++ < m.size; m.next()) {
 		value = value.replace(new RegExp("\\b" + m.key() + "\\b", "g"), m.value());
-		value = replaceDates(value);
+		value = replaceAllDates(value);
 	}
 	return value;
 }

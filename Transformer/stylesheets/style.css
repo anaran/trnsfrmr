@@ -124,6 +124,11 @@ pre {
 	font-size: 12pt;
 }
 
+td {
+	font-weight: bold;
+	font-size: 12pt;
+}
+
 #caption {
 	height: 75px;
 }

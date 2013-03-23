@@ -104,18 +104,26 @@ Um neue Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s'
  
 Es gibt einige besondere Parameter, die Sie in Ihre Abkürzungen integrieren können:
 
-Der aktuelle Tag:	%DAY%
-Der aktuelle Monat:	%MONTH%
-Das aktuelle Jahr:	%YEAR%
+<table>
+<tr><td>Aktueller Tag:<td>%d (abgekündigt: %DAY%)
+<tr><td>Aktueller Monat:<td>%m (abgekündigt: %MONTH%)
+<tr><td>Aktuelles Jahr:<td>%Y (abgekündigt: %YEAR%)
+<tr><td>Aktuelle Stunde:<td>%H
+<tr><td>Aktuelle Minute:<td>%M
+<tr><td>Aktuelle Sekunde:<td>%S
+<tr><td>Aktueller Zeitzonen Offset:<td>%z
+</table>
 
 Das heutige Datum:	%DATE%
 
 Um zum heutigen Datum Tage, Monate oder Jahre hinzuzufügen, können Sie folgende Syntax verwenden:
 
-Tage:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d%
-Monate:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
-Jahre:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
-oder:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
+<table>
+<tr><td>Tage:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d%
+<tr><td>Monate:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
+<tr><td>Jahre:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
+<tr><td>oder:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
+</table>
 
 Wobei &lt;operator&gt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetzt werden kann.
 
@@ -129,8 +137,8 @@ verwendet und erlauben die Suche nach Argumenten die in der Ersetzung benutzt we
 
 z.B.
 Abkürzung tbug
-Wird erweitert zu... [\"\\s+(\\d+)\\s+(\\w+)\",
-\"Hello $$2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\n\"]
+Wird erweitert zu... [\"\\\\s+(\\\\d+)\\\\s+(\\\\w+)\",
+\"Hello $$2!\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\n\"]
 
 erlaubt es eine Abkürzung \"tbug\" mit zwei Argumenten von
 

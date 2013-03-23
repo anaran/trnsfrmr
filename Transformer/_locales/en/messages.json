@@ -102,18 +102,26 @@ You could save your new keys with your 'Ctrl + s' or by hitting the save button.
 
 There are some additional parameters, which could be included in your own abbreviations:
 
-Current day:	%DAY%
-Current month:	%MONTH%
-Current year:	%YEAR%
+<table>
+<tr><td>Current day:<td>%d (deprecated: %DAY%)
+<tr><td>Current month:<td>%m (deprecated: %MONTH%)
+<tr><td>Current year:<td>%Y (deprecated: %YEAR%)
+<tr><td>Current hour:<td>%H
+<tr><td>Current minute:<td>%M
+<tr><td>Current second:<td>%S
+<tr><td>Curent timezone offset:<td>%z
+</table>
 
-The complete date (today):	%DATE%
+The complete date (today):<td>%DATE%
 
 To add days, months or years to the current date:
 
-days:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d%
-month:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
-years:		%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
-or:			%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
+<table>
+<tr><td>days:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d%
+<tr><td>month:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>m%
+<tr><td>years:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>y%
+<tr><td>or:<td>%DATE<i>&lt;operator&gt;&lt;n&gt;</i>d<i>&lt;n&gt;</i>m<i>&lt;n&gt;</i>y%
+</table>
 
 You have to replace &lt;operator&gt; with + or - and <i>&lt;n&gt;</i> by a number of your choice.
 
@@ -127,8 +135,8 @@ and allow searching for arguments after abbreviations and replacing them inside 
 
 e.g.
 Abbreviation tbug
-Expand to... [\"\\s+(\\d+)\\s+(\\w+)\",
-\"Hello $$2!\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\n\"]
+Expand to... [\"\\\\s+(\\\\d+)\\\\s+(\\\\w+)\",
+\"Hello $$2!\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\n\"]
 
 will allow a boilerplate response with two arguments to expand from
 
