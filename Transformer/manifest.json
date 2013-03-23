@@ -2,7 +2,16 @@
 	"manifest_version": 2,
 	"name": "__MSG_extname__",
 	"version": "1.8",
-	"permissions": [ "notifications", "contextMenus", "storage", "tabs", "http://*/*", "https://*/*" ],
+	"permissions": [
+		"clipboardRead",
+		"clipboardWrite",
+		"contextMenus",
+		"http://*/*",
+		"https://*/*",
+		"notifications",
+		"storage",
+		"tabs"
+	],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
 	"icons": {
