@@ -186,6 +186,7 @@ function checkElements(elem) {
 			//            unExpandedValue = r.key;
 			value = handleArguments(value, r);
 			if (value) {
+				var actElem = document.activeElement;
 				substituted = true;
 				updateMostRecentlyUsedList(r.key);
 				value = replaceAllDates(value);
@@ -217,11 +218,12 @@ function checkElements(elem) {
 				var range = doc.createRange();
 				range.selectNodeContents(expansionNode);
 				if (!settings.selectPhrase) {
+					// Collapse range to end, i.e. toStart argument is false.
 					range.collapse(false);
-				} else {
-					selection.addRange(range);
-					selection.anchorNode.parentNode.normalize();
 				}
+				// Always add the range to restore focus.
+				selection.addRange(range);
+				selection.anchorNode.parentNode.normalize();
 			}
 		} else {
 			selection.getRangeAt(0).deleteContents();
@@ -388,3 +390,25 @@ function globalReplacer(value) {
 	}
 	return value;
 }
+
+//function replaceClipboard(value) {
+//
+//	var d = new Date();
+//	value = value.replace(/(?:%DAY%|%d)/, (d.getDate() < 10) ? "0" + d.getDate() : d.getDate()); //$NON-NLS-0$
+//	var month = d.getMonth() + 1;
+//	value = value.replace(/(?:%MONTH%|%m)/, (month < 10) ? "0" + month : month); //$NON-NLS-0$
+//	value = value.replace(/(?:%YEAR%|%Y)/, d.getFullYear());
+//	var hours = d.getHours();
+//	value = value.replace(/%H/, (hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
+//	var minutes = d.getMinutes();
+//	value = value.replace(/%M/, (minutes < 10) ? "0" + minutes : minutes);
+//	var seconds = d.getSeconds();
+//	value = value.replace(/%S/, (seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
+//	var timeZoneOffset = -d.getTimezoneOffset();
+//	var offsetMinutes = timeZoneOffset % 60;
+//	var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
+//	value = value.replace(/%z/, (offsetHours > 0 ? "+" : "") + offsetHours + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes)); //$NON-NLS-0$
+//	value = replaceDate(value);
+//
+//	return value;
+//}
