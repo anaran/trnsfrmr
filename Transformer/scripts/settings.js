@@ -7,7 +7,7 @@ function PageAction() {
 
 	this.show = function() {
 		if (!this.visible) {
-			chrome.extension.sendRequest({
+			chrome.extension.sendMessage({
 				cmd: "pageaction", //$NON-NLS-0$
 				action: "show" //$NON-NLS-0$
 			}, this.onResponse);
@@ -16,7 +16,7 @@ function PageAction() {
 	};
 
 	this.hide = function() {
-		chrome.extension.sendRequest({
+		chrome.extension.sendMessage({
 			cmd: "pageaction", //$NON-NLS-0$
 			action: "hide" //$NON-NLS-0$
 		}, this.onResponse);
@@ -24,7 +24,7 @@ function PageAction() {
 	};
 
 	this.notify = function() {
-		chrome.extension.sendRequest({
+		chrome.extension.sendMessage({
 			cmd: "pageaction", //$NON-NLS-0$
 			action: "notify" //$NON-NLS-0$
 		}, this.onResponse);
@@ -102,13 +102,13 @@ function Settings() {
 	var S = this;
 
 	this.readRequest = function() {
-		chrome.extension.sendRequest({
+		chrome.extension.sendMessage({
 			cmd: "read" //$NON-NLS-0$
 		}, this.processMessage);
 	};
 
 	this.enableListener = function() {
-		chrome.extension.onRequest.addListener(this.onMessage);
+		chrome.extension.onMessage.addListener(this.onMessage);
 	};
 
 	this.onMessage = function(msg, sender, sendResponse) {
@@ -118,8 +118,8 @@ function Settings() {
 		} else {
 			console.warn("unknown command message"); //$NON-NLS-0$
 		}
-
-		sendResponse({}); // snub them.
+		// respond respond if you don't understand the message.
+//		sendResponse({}); // snub them.
 	};
 
 	this.processMessage = function(msg) {

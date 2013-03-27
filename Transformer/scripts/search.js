@@ -1,9 +1,31 @@
 /*jslint browser: true, devel: true, todo: true */
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
-	"use strict";
+"use strict";
 var settings;
 var pageaction;
 var abbrevMostRecentlyUsed = window.localStorage.mru ? JSON.parse(window.localStorage.mru) : new Array(10);
+
+function setNonEditableSelectionCursor(start, end, element, settings) {
+	// set selection/cursor
+	element.selectionStart = settings.selectPhrase ? start : end;
+	element.selectionEnd = end;
+}
+
+function setEditableSelectionCursor(selection, doc, expansionNode, settings) {
+	// set selection/cursor
+	selection.removeAllRanges();
+
+	//	expansionNode.normalize();
+	var range = doc.createRange();
+	range.selectNodeContents(expansionNode);
+	if (!settings.selectPhrase) {
+		// Collapse range to end, i.e. toStart argument is false.
+		range.collapse(false);
+	}
+	// Always add the range to restore focus.
+	selection.addRange(range);
+	//	selection.anchorNode.parentNode.normalize();
+}
 
 function updateMostRecentlyUsedList(key) {
 	var keyExists = abbrevMostRecentlyUsed.some(function(value, index, object) {
@@ -158,12 +180,24 @@ function checkElements(elem) {
 
 			//            var cursor = tmp.length;
 			element.value = tmp + r.after;
-
-			//             if (r.after === "" && offsetFromEnd !== null) {
-			//                 cursor = cursor - offsetFromEnd
-			//             }
-			element.selectionStart = settings.selectPhrase ? r.before.length : tmp.length;
-			element.selectionEnd = tmp.length;
+			element.selectionStart = r.before.length;
+			element.selectionEnd = element.selectionStart;
+			var clipParam = "%CLIPBOARD%";
+			if (window.find(clipParam, "aCaseSensitive", !"aBackwards", !"aWrapAround",
+				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) {
+				chrome.extension.sendMessage({
+					cmd: "clipboard", //$NON-NLS-0$
+					action: "paste" //$NON-NLS-0$
+				}, function(response) {
+					if (response.paste) {
+						document.activeElement.setRangeText(response.paste);
+					}
+					setNonEditableSelectionCursor(r.before.length,
+					tmp.length + response.paste.length - clipParam.length, element, settings);
+				});
+			} else {
+				setNonEditableSelectionCursor(r.before.length, tmp.length, element, settings);
+			}
 		}
 	} else if (element.isContentEditable) {
 		// NOTE normalize split or empty text elements.
@@ -186,7 +220,6 @@ function checkElements(elem) {
 			//            unExpandedValue = r.key;
 			value = handleArguments(value, r);
 			if (value) {
-				var actElem = document.activeElement;
 				substituted = true;
 				updateMostRecentlyUsedList(r.key);
 				value = replaceAllDates(value);
@@ -197,41 +230,66 @@ function checkElements(elem) {
 				var keyword = element.splitText(beforepos);
 				var aftervalue = keyword.splitText(unExpandedValue.length);
 				// TODO check for other linebreaks like unix or mac style
-				var lines = value.split("\n");
-				var expansionNode = doc.createElement("div");
+				var lines = value.split("\n"); //$NON-NLS-0$
+				var expansionNode = doc.createElement("div"); //$NON-NLS-0$
 				if (lines.length > 1) {
 					for (var i = 0; i < lines.length; i++) {
-						var div = doc.createElement("div");
+						var div = doc.createElement("div"); //$NON-NLS-0$
 						if (lines[i].length > 0) {
 							expansionNode.appendChild(div.appendChild(doc.createTextNode(lines[i])).parentNode);
 						} else {
-							expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode);
+							expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode); //$NON-NLS-0$
 						}
 					}
 				} else {
-					expansionNode.appendChild(doc.createTextNode(lines[0]));
+					var span = doc.createElement("span"); //$NON-NLS-0$
+					expansionNode.appendChild(span.appendChild(doc.createTextNode(lines[0])).parentNode);
 				}
 				element.parentNode.replaceChild(expansionNode, keyword);
-				// set selection/cursor
-				selection.removeAllRanges();
-
-				var range = doc.createRange();
-				range.selectNodeContents(expansionNode);
-				if (!settings.selectPhrase) {
-					// Collapse range to end, i.e. toStart argument is false.
-					range.collapse(false);
+				if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround",
+					"aWholeWord", !"aSearchInFrames", !"aShowDialog")) {
+					chrome.extension.sendMessage({
+						cmd: "clipboard", //$NON-NLS-0$
+						action: "paste" //$NON-NLS-0$
+					}, function(response) {
+						if (response.paste) {
+							document.getSelection().getRangeAt(0).deleteContents();
+							document.getSelection().getRangeAt(0).insertNode(document.createTextNode(response.paste));
+						}
+						setEditableSelectionCursor(selection, doc, expansionNode, settings);
+					});
+				} else {
+					setEditableSelectionCursor(selection, doc, expansionNode, settings);
 				}
-				// Always add the range to restore focus.
-				selection.addRange(range);
-				selection.anchorNode.parentNode.normalize();
 			}
 		} else {
-			selection.getRangeAt(0).deleteContents();
-			selection.getRangeAt(0).insertNode(doc.createElement("div").appendChild(doc.createTextNode(unExpandedValue)));
-			selection.collapseToStart();
-			// NOTE normalize split or empty text elements.
-			// e.g. "badly " "split" "" "" "" " text" becomes "badly split text"
-			selection.anchorNode.parentNode.normalize();
+			var ancestor = selection.anchorNode.parentNode.parentNode;
+			var unexpandedNode = doc.createTextNode(unExpandedValue);
+//			document.getSelection().getRangeAt(0).deleteContents();
+//			document.getSelection().getRangeAt(0).insertNode(unexpandedNode);
+//			ancestor.parentNode.replaceChild(unexpandedNode, ancestor);
+			// Emulate insertAfter, see https://developer.mozilla.org/en-US/docs/DOM/Node.insertBefore
+			ancestor.parentNode.insertBefore(unexpandedNode, ancestor.nextSibling);
+			ancestor.parentNode.removeChild(ancestor);
+			document.getSelection().removeAllRanges();
+			// Normalization also deactivated a selection.
+			var x = unexpandedNode.parentNode;
+			x.normalize();
+			var range = doc.createRange();
+			range.selectNode(x);
+			document.getSelection().addRange(range);
+			document.getSelection().collapseToStart();
+//			if (doc.getSelection().toString().length) {
+//				doc.getSelection().collapseToStart();
+//			}
+//
+//			if (false) {
+//				// Collapse range to end, i.e. toStart argument is false.
+//				range.collapse(false);
+//			}
+			// Always add the range to restore focus.
+//			doc.getSelection().addRange(range);
+			
 			substituted = true;
 		}
 	}
@@ -315,44 +373,46 @@ function init() {
 
 	document.addEventListener("keydown", onKeyEvent, false);
 	var cb = function(request, sender, sendResponse) {
-		try {
-			//	console.log(JSON.stringify([request, sender, sendResponse]));
-			//			console.log(sender.tab ?
-			//				"from a content script:" + sender.tab.url :
-			//				"from the extension");
-			var sel = document.getSelection();
-			var additionalInformation = "document.URL = " + document.URL;
-			var rng;
-			var childNodeCount;
-			var rngValue;
-			if (sel.type !== "None") {
-				rng = sel.getRangeAt(0);
-			}
-			var actElem = document.activeElement;
-			additionalInformation += "\n(actElem = document.activeElement).nodeName = " + actElem.nodeName;
-			if (actElem.hasOwnProperty("selectionStart")) {
-				additionalInformation += "\nactElem.selectionStart = " + actElem.selectionStart;
-				additionalInformation += "\nactElem.selectionEnd = " + actElem.selectionEnd;
-				additionalInformation += "\nactElem.value = " + JSON.stringify(actElem.value);
-				additionalInformation += "\nactElem.value.substring(actElem.selectionStart, actElem.selectionEnd) = " + JSON.stringify(actElem.value.substring(actElem.selectionStart, actElem.selectionEnd));
-			} else if (sel) {
-				additionalInformation += "\nrng.commonAncestorContainer.parentNode.outerHTML = " + JSON.stringify(rng.commonAncestorContainer.parentNode.outerHTML);
-				additionalInformation += "\nsel.toString() = " + JSON.stringify(sel.toString());
-			}
-			additionalInformation += "\ndocument.getSelection() = sel = " + JSON.stringify(sel, function(key, value) {
-				if (key.length > 0 && value instanceof Object) {
-					return typeof value;
-				} else {
-					return value;
+		if (request.greeting === "hollow") {
+			try {
+				//	console.log(JSON.stringify([request, sender, sendResponse]));
+				//			console.log(sender.tab ?
+				//				"from a content script:" + sender.tab.url :
+				//				"from the extension");
+				var sel = document.getSelection();
+				var additionalInformation = "document.URL = " + document.URL; //$NON-NLS-0$
+				var rng;
+				var childNodeCount;
+				var rngValue;
+				if (sel.type !== "None") { //$NON-NLS-0$
+					rng = sel.getRangeAt(0);
 				}
-			}).replace(/([{,])("\w+":)/g, "$1\n$2") + "\ndocument.getSelection().getRangeAt(0) = rng = " + JSON.stringify(rng, function(key, value) {
-				if (key.length > 0 && value instanceof Object) {
-					return typeof value;
-				} else {
-					return value;
+				var actElem = document.activeElement;
+				additionalInformation += "\n(actElem = document.activeElement).nodeName = " + actElem.nodeName;
+				if (actElem.hasOwnProperty("selectionStart")) {
+					additionalInformation += "\nactElem.selectionStart = " + actElem.selectionStart;
+					additionalInformation += "\nactElem.selectionEnd = " + actElem.selectionEnd;
+					additionalInformation += "\nactElem.value = " + JSON.stringify(actElem.value);
+					additionalInformation += "\nactElem.value.substring(actElem.selectionStart, actElem.selectionEnd) = " + JSON.stringify(actElem.value.substring(actElem.selectionStart, actElem.selectionEnd));
+				} else if (sel) {
+					if (rng) {
+						additionalInformation += "\nrng.commonAncestorContainer.parentNode.outerHTML = " + JSON.stringify(rng.commonAncestorContainer.parentNode.outerHTML);
+					}
+					additionalInformation += "\nsel.toString() = " + JSON.stringify(sel.toString());
 				}
-			}).replace(/([{,])("\w+":)/g, "$1\n$2");
-			if (request.greeting === "hollow") {
+				additionalInformation += "\ndocument.getSelection() = sel = " + JSON.stringify(sel, function(key, value) {
+					if (key.length > 0 && value instanceof Object) {
+						return typeof value;
+					} else {
+						return value;
+					}
+				}).replace(/([{,])("\w+":)/g, "$1\n$2") + "\ndocument.getSelection().getRangeAt(0) = rng = " + JSON.stringify(rng, function(key, value) {
+					if (key.length > 0 && value instanceof Object) {
+						return typeof value;
+					} else {
+						return value;
+					}
+				}).replace(/([{,])("\w+":)/g, "$1\n$2");
 				var appDetails = JSON.parse(request.appDetails);
 				var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
 				var queryString = "comment=" + window.encodeURIComponent("What steps will reproduce the problem?\n1. Use testcase below in a" + (actElem.nodeName.match(/^[aeio]/i) ? "n" : "") + " " + actElem.nodeName + ".\n2. What do do now?\n3. What to do next?\n\n" + "What is the expected output? What do you see instead?\n\n\n" + "What version of the product are you using? On what operating system?" + "\n\nPopchrom Version " + appDetails.version + "\nPopchrom ID " + appDetails.id + "\nPopchrom Locale " + appDetails.current_locale + "\nBrowser " + navigator.appVersion + "\n\nPlease review information about your minimal testcase below.\n\n" + additionalInformation) + "&summary=What is the problem?";
@@ -367,9 +427,9 @@ function init() {
 				} else {
 					window.alert("Please shorten your testcase (text content, text selection) by ca. " + (newIssueQueryUrl.length - 2060) + " characters");
 				}
+			} catch (e) {
+				console.log("onMessage callback reports:\n" + e.stack);
 			}
-		} catch (e) {
-			console.log("onMessage callback reports:\n" + e.stack);
 		}
 	};
 	chrome.extension.onMessage.addListener(cb);
@@ -390,25 +450,3 @@ function globalReplacer(value) {
 	}
 	return value;
 }
-
-//function replaceClipboard(value) {
-//
-//	var d = new Date();
-//	value = value.replace(/(?:%DAY%|%d)/, (d.getDate() < 10) ? "0" + d.getDate() : d.getDate()); //$NON-NLS-0$
-//	var month = d.getMonth() + 1;
-//	value = value.replace(/(?:%MONTH%|%m)/, (month < 10) ? "0" + month : month); //$NON-NLS-0$
-//	value = value.replace(/(?:%YEAR%|%Y)/, d.getFullYear());
-//	var hours = d.getHours();
-//	value = value.replace(/%H/, (hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
-//	var minutes = d.getMinutes();
-//	value = value.replace(/%M/, (minutes < 10) ? "0" + minutes : minutes);
-//	var seconds = d.getSeconds();
-//	value = value.replace(/%S/, (seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
-//	var timeZoneOffset = -d.getTimezoneOffset();
-//	var offsetMinutes = timeZoneOffset % 60;
-//	var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-//	value = value.replace(/%z/, (offsetHours > 0 ? "+" : "") + offsetHours + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes)); //$NON-NLS-0$
-//	value = replaceDate(value);
-//
-//	return value;
-//}

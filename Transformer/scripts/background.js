@@ -1,6 +1,18 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
 	"use strict"; //$NON-NLS-0$
+
+function getClipboard() {
+	var pasteTarget = document.createElement("div");
+	pasteTarget.contentEditable = true;
+	var actElem = document.activeElement.appendChild(pasteTarget).parentNode;
+	pasteTarget.focus();
+	document.execCommand("Paste", null, null);
+	var paste = pasteTarget.innerText;
+	actElem.removeChild(pasteTarget);
+	return paste;
+};
+
 var default_icon = chrome.extension.getURL("icons/icon-16x16.png"); //$NON-NLS-0$
 
 var notifyImages = [
@@ -76,49 +88,63 @@ function getSettings() {
 	};
 }
 
-function onReadRequest(request, sender, sendResponse) {
+function onReadMessage(request, sender, sendResponse) {
 	sendResponse(getSettings());
 }
 
-function onPageActionRequest(request, sender, sendResponse) {
+function onPageActionMessage(request, sender, sendResponse) {
+	// TODO "Format JS" in eclipse orion moves trailing comments on case labels to next line!
+	// Use find regexp replace to fix that for now:
+	// From:\n[ \t]+(//\$NON.+)
+	// To: $1
+	// Options: [v] Regular expression
 	switch (request.action) {
-		case "show":
-			//$NON-NLS-0$
+		case "show"://$NON-NLS-0$
 			if (localStorage.hideicon !== "true") { //$NON-NLS-0$
 				chrome.pageAction.show(sender.tab.id);
 			}
 			break;
-		case "hide":
-			//$NON-NLS-0$
+		case "hide"://$NON-NLS-0$
 			chrome.pageAction.hide(sender.tab.id);
 			break;
-		case "notify":
-			//$NON-NLS-0$
+		case "notify"://$NON-NLS-0$
 			notify(sender.tab.id);
 			break;
 		default:
 			console.warn("unknown pageaction request"); //$NON-NLS-0$
 			console.warn(request);
+			// respond respond if you don't understand the message.
+			return;
 	}
 	sendResponse({}); // snub them.
 }
 
-function onRequest(request, sender, sendResponse) {
+function onClipboardMessage(request, sender, sendResponse) {
+	if (request.action === "paste") { //$NON-NLS-0$
+		sendResponse({
+			paste: getClipboard()
+		});
+	}
+}
+
+function handleMessage(request, sender, sendResponse) {
 	switch (request.cmd) {
-		case "read":
-			//$NON-NLS-0$
-			onReadRequest(request, sender, sendResponse);
+		case "read"://$NON-NLS-0$
+			onReadMessage(request, sender, sendResponse);
 			break;
 
-		case "pageaction":
-			//$NON-NLS-0$
-			onPageActionRequest(request, sender, sendResponse);
+		case "pageaction"://$NON-NLS-0$
+			onPageActionMessage(request, sender, sendResponse);
+			break;
+		case "clipboard"://$NON-NLS-0$
+			onClipboardMessage(request, sender, sendResponse);
 			break;
 
 		default:
 			console.warn("unknown request"); //$NON-NLS-0$
 			console.warn(request);
-			sendResponse({}); // snub them.
+		// respond respond if you don't understand the message.
+//		sendResponse({}); // snub them.
 	}
 }
 
@@ -132,7 +158,7 @@ function updateSettings(windows) {
 		var tabs = windows[w].tabs;
 		for (t in tabs) {
 			var tab = tabs[t];
-			chrome.tabs.sendRequest(tab.id, settings, callback);
+			chrome.tabs.sendMessage(tab.id, settings, callback);
 		}
 	}
 }
@@ -153,6 +179,7 @@ function save_default() {
 }
 
 function init() {
+	chrome.extension.onMessage.addListener(handleMessage);
 	if (localStorage.used_before !== "true") { //$NON-NLS-0$
 		save_default();
 	}
@@ -164,12 +191,12 @@ function init() {
 				try {
 					console.log(JSON.stringify(tab));
 					chrome.tabs.sendMessage(tab[0].id, {
-						greeting: "hollow"
-						, appDetails: JSON.stringify(chrome.app.getDetails())
+						greeting: "hollow",
+						appDetails: JSON.stringify(chrome.app.getDetails())
 					}, function(response) {
-				chrome.tabs.create({
-					url: response.newIssueQueryUrl
-				}, function(tab) {});
+						chrome.tabs.create({
+							url: response.newIssueQueryUrl
+						}, function(tab) {});
 					});
 				} catch (e) {
 					console.log("tabs.query reports:\n" + JSON.stringify(e));
@@ -177,8 +204,7 @@ function init() {
 			});
 		} catch (e) {}
 	};
-	var onClick = function(info, tab) {
-		//		console.log("Popchrom contextMenus.onClicked info:" + JSON.stringify(info) + ":tab:" + JSON.stringify(tab) + ":");
+	var onAddOrImportAbbrevs = function(info, tab) {
 		var parsedText;
 		try {
 			parsedText = JSON.parse(info.selectionText);
@@ -216,10 +242,12 @@ function init() {
 	//		}
 	//	});
 	var addAbbrevId = chrome.contextMenus.create({
+// TODO Causes lastError:Cannot create item with duplicate id addAbbrevId background.js:250
+// but multiple items are crated if id is absent. Live with the error for now.
 		id: "addAbbrevId",
 		type: "normal",
 		title: "Add/Import Popchrom abbreviation(s) for '%s'",
-		onclick: onClick,
+		onclick: onAddOrImportAbbrevs,
 		contexts: ["selection"]
 	}, function() {
 		if (chrome.extension.lastError) {
@@ -227,10 +255,45 @@ function init() {
 		}
 	});
 	var submitPopchromIssueId = chrome.contextMenus.create({
+// TODO Causes lastError:Cannot create item with duplicate id submitPopchromIssueId
+// but multiple items are crated if id is absent. Live with the error for now.
 		id: "submitPopchromIssueId",
 		type: "normal",
 		title: "Submit New Popchrom Issue for '%s'",
 		onclick: onSubmitPopchromIssue,
+		contexts: ["all"]
+	}, function() {
+		if (chrome.extension.lastError) {
+			console.log("lastError:" + chrome.extension.lastError.message);
+		}
+	});
+	var toggleMarkingText = function(info, tab) {
+		localStorage.selectphrase = JSON.stringify(!JSON.parse(localStorage.selectphrase));
+		broadcastSettings();
+		chrome.tabs.query({
+			url: chrome.extension.getURL("options.html")
+		}, function(tabs) {
+//				if (tabs.length === 0) {
+//					window.open(chrome.extension.getURL("options.html"), "", "");
+//				}
+			// Just update an open options page, don't open it.
+			if (tabs.length === 1) {
+				chrome.tabs.update(tabs[0].id, {
+					highlighted: true
+					//					active: true
+				});
+				chrome.tabs.reload(tabs[0].id);
+			}
+		});
+	};
+	var toggleMarkText = chrome.contextMenus.create({
+// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
+// but multiple items are crated if id is absent. Live with the error for now.
+		id: "toggleMarkText",
+		type: "checkbox",
+		checked: JSON.parse(localStorage.selectphrase),
+		title: chrome.i18n.getMessage("selectphrase"),
+		onclick: toggleMarkingText,
 		contexts: ["all"]
 	}, function() {
 		if (chrome.extension.lastError) {
@@ -259,5 +322,5 @@ function init() {
 		});
 	});
 }
-chrome.extension.onRequest.addListener(onRequest);
+
 init();
