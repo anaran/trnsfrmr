@@ -102,6 +102,9 @@ You could save your new keys with your 'Ctrl + s' or by hitting the save button.
 
 There are some additional parameters, which could be included in your own abbreviations:
 
+%CLIPBOARD%
+The contents of the system clipboard at the time of shortcut expansion will replace this parameter in the expansion definition.
+
 <table>
 <tr><td>Current day:<td>%d (deprecated: %DAY%)
 <tr><td>Current month:<td>%m (deprecated: %MONTH%)

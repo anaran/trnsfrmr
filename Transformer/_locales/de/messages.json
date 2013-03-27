@@ -104,6 +104,9 @@ Um neue Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s'
  
 Es gibt einige besondere Parameter, die Sie in Ihre Abkürzungen integrieren können:
 
+%CLIPBOARD%
+Der Inhalt der System Zwischenablage zum Zeitpunkt der Ersetzung wird an der Stelle dieses Parameters eingesetzt.
+
 <table>
 <tr><td>Aktueller Tag:<td>%d (abgekündigt: %DAY%)
 <tr><td>Aktueller Monat:<td>%m (abgekündigt: %MONTH%)
