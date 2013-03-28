@@ -183,7 +183,11 @@ function import_settings(event) {
 					changedAbbreviations.push(importArray[i]);
 				}
 			}
-			if (newAbbreviations.length > 0) {}
+			if (newAbbreviations.length > 0) {
+			if (!window.confirm("Do you want to import "+newAbbreviations.length+" new abbreviations?")) { //$NON-NLS-0$ //$NON-NLS-1$
+				return;
+			}
+			}
 			if (changedAbbreviations.length > 0) {
 				if (!window.confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
 					changedAbbreviations.forEach(function(value, index, object) {
