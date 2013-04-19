@@ -152,61 +152,66 @@ function setKeyErrorColors(a) {
 }
 
 function export_settings(event) {
-	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-	var errorHandler = function (e) {
-//  var msg = '';
-//
-//  switch (e.code) {
-//    case FileError.QUOTA_EXCEEDED_ERR:
-//      msg = 'QUOTA_EXCEEDED_ERR';
-//      break;
-//    case FileError.NOT_FOUND_ERR:
-//      msg = 'NOT_FOUND_ERR';
-//      break;
-//    case FileError.SECURITY_ERR:
-//      msg = 'SECURITY_ERR';
-//      break;
-//    case FileError.INVALID_MODIFICATION_ERR:
-//      msg = 'INVALID_MODIFICATION_ERR';
-//      break;
-//    case FileError.INVALID_STATE_ERR:
-//      msg = 'INVALID_STATE_ERR';
-//      break;
-//    default:
-//      msg = 'Unknown Error';
-//      break;
-//  };
+	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+	var errorHandler = function(e) {
+		//  var msg = '';
+		//
+		//  switch (e.code) {
+		//    case FileError.QUOTA_EXCEEDED_ERR:
+		//      msg = 'QUOTA_EXCEEDED_ERR';
+		//      break;
+		//    case FileError.NOT_FOUND_ERR:
+		//      msg = 'NOT_FOUND_ERR';
+		//      break;
+		//    case FileError.SECURITY_ERR:
+		//      msg = 'SECURITY_ERR';
+		//      break;
+		//    case FileError.INVALID_MODIFICATION_ERR:
+		//      msg = 'INVALID_MODIFICATION_ERR';
+		//      break;
+		//    case FileError.INVALID_STATE_ERR:
+		//      msg = 'INVALID_STATE_ERR';
+		//      break;
+		//    default:
+		//      msg = 'Unknown Error';
+		//      break;
+		//  };
 
-  console.log('Error: ' + e);
-  };
-	var onInitFs = function (fs) {
+		console.log('Error: ' + e);
+	};
+	var onInitFs = function(fs) {
 
-  fs.root.getFile('popchrom.txt', {create: true}, function(fileEntry) {
+		fs.root.getFile('popchrom.txt', {
+			create: true
+		}, function(fileEntry) {
 
-    // Create a FileWriter object for our FileEntry (log.txt).
-    fileEntry.createWriter(function(fileWriter) {
+			// Create a FileWriter object for our FileEntry (log.txt).
+			fileEntry.createWriter(function(fileWriter) {
 
-      fileWriter.onwriteend = function(e) {
-        console.log('Write completed.');
-console.log('See ' + fileEntry.fullPath);
-console.log('fileEntry.toURL() = ' + fileEntry.toURL());
-      };
+				fileWriter.onwriteend = function(e) {
+					console.log('Write completed.');
+					console.log('See ' + fileEntry.fullPath);
+					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
+				};
 
-      fileWriter.onerror = function(e) {
-        console.log('Write failed: ' + e.toString());
-      };
+				fileWriter.onerror = function(e) {
+					console.log('Write failed: ' + e.toString());
+				};
 
-      // Create a new Blob and write it to log.txt.
-      var blob = new Blob([localStorage.map], {type: 'text/plain'});
+				// Create a new Blob and write it to log.txt.
+				var blob = new Blob([localStorage.map], {
+					type: 'text/plain'
+				});
 
-      fileWriter.write(blob);
+				fileWriter.write(blob);
 
-    }, errorHandler);
+			}, errorHandler);
 
-  }, errorHandler);
+		}, errorHandler);
 
-};
-window.requestFileSystem(window.TEMPORARY, 5*1024*1024 /*5MB*/, onInitFs, errorHandler);	if (window.confirm(chrome.i18n.getMessage("select_copy_save"))) { //$NON-NLS-0$
+	};
+	window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ , onInitFs, errorHandler);
+	if (window.confirm(chrome.i18n.getMessage("select_copy_save"))) { //$NON-NLS-0$
 		window.alert(localStorage.map.toString());
 	}
 }
@@ -238,9 +243,9 @@ function import_settings(event) {
 				}
 			}
 			if (newAbbreviations.length > 0) {
-			if (!window.confirm("Do you want to import "+newAbbreviations.length+" new abbreviations?")) { //$NON-NLS-0$ //$NON-NLS-1$
-				return;
-			}
+				if (!window.confirm("Do you want to import " + newAbbreviations.length + " new abbreviations?")) { //$NON-NLS-0$ //$NON-NLS-1$
+					return;
+				}
 			}
 			if (changedAbbreviations.length > 0) {
 				if (!window.confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
