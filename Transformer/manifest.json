@@ -5,12 +5,13 @@
 	"permissions": [
 		"clipboardRead",
 		"contextMenus",
-		"file:///*",
+		"file://*/*",
 		"http://*/*",
 		"https://*/*",
 		"notifications",
 		"storage",
-		"tabs"
+		"tabs",
+		"webNavigation"
 	],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
@@ -20,6 +21,7 @@
 		"128": "icons/icon-128x128.png"
 	},
 	"web_accessible_resources": [
+		"filesystem:chrome-extension://hiefpgnngkikffmhgghabfikbbeilkif/temporary/",
 		"icons/icon-16x16.png",
 		"icons/icon-48x48.png",
 		"icons/icon-128x128.png"

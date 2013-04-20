@@ -13,6 +13,86 @@ function getClipboard() {
 	return paste;
 };
 
+function exportToFileSystem() {
+	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+	var errorHandler = function(e) {
+		//  var msg = '';
+		//
+		//  switch (e.code) {
+		//    case FileError.QUOTA_EXCEEDED_ERR:
+		//      msg = 'QUOTA_EXCEEDED_ERR';
+		//      break;
+		//    case FileError.NOT_FOUND_ERR:
+		//      msg = 'NOT_FOUND_ERR';
+		//      break;
+		//    case FileError.SECURITY_ERR:
+		//      msg = 'SECURITY_ERR';
+		//      break;
+		//    case FileError.INVALID_MODIFICATION_ERR:
+		//      msg = 'INVALID_MODIFICATION_ERR';
+		//      break;
+		//    case FileError.INVALID_STATE_ERR:
+		//      msg = 'INVALID_STATE_ERR';
+		//      break;
+		//    default:
+		//      msg = 'Unknown Error';
+		//      break;
+		//  };
+
+		console.log('Error: ' + e);
+	};
+	var onInitFs = function(fs) {
+
+		fs.root.getFile('popchrom.txt', {
+			create: true
+		}, function(fileEntry) {
+
+			// Create a FileWriter object for our FileEntry (log.txt).
+			fileEntry.createWriter(function(fileWriter) {
+
+				fileWriter.onwriteend = function(e) {
+					console.log('Write completed.');
+					console.log('See ' + fileEntry.fullPath);
+					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
+					chrome.tabs.create({ url: "filesystem.html" },
+							   function(tab) {
+							   });
+// 	chrome.tabs.create({
+// 	  url: fileEntry.filesystem.root.toURL()
+// 	      }, function(tab) {
+// 		if (chrome.extension.lastError) {
+// 			console.log("lastError:" + chrome.extension.lastError.message);
+// 			return;
+// 		}
+// 		chrome.tabs.executeScript(tab.id, { file: "scripts/filesystem.js", runAt: "document_end" }, function callback(arrayOfAny) {});
+// // 			     if (tab.status === "complete") {
+// 		console.log("document.URL = " + document.URL);
+// 		console.log("tab = " + JSON.stringify(tab));
+// 			     document.body.title = "Please drag files to your desktop for backup";
+// 			     tab.title = "Popchrom Exports";
+// // 			     }
+// });
+				};
+
+				fileWriter.onerror = function(e) {
+					console.log('Write failed: ' + e.toString());
+				};
+
+				// Create a new Blob and write it to log.txt.
+				var blob = new window.Blob([localStorage.map], {
+					type: 'text/plain'
+				});
+
+				fileWriter.write(blob);
+
+			}, errorHandler);
+
+		}, errorHandler);
+
+	};
+	window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ , onInitFs, errorHandler);
+}
+
 var default_icon = chrome.extension.getURL("icons/icon-16x16.png"); //$NON-NLS-0$
 
 var notifyImages = [
@@ -113,7 +193,7 @@ function onPageActionMessage(request, sender, sendResponse) {
 		default:
 			console.warn("unknown pageaction request"); //$NON-NLS-0$
 			console.warn(request);
-			// respond respond if you don't understand the message.
+			// don't respond if you don't understand the message.
 			return;
 	}
 	sendResponse({}); // snub them.
@@ -139,11 +219,14 @@ function handleMessage(request, sender, sendResponse) {
 		case "clipboard"://$NON-NLS-0$
 			onClipboardMessage(request, sender, sendResponse);
 			break;
-
+	case "export"://$NON-NLS-0$
+	  exportToFileSystem();
+  	sendResponse({}); // snub them.
+	  break;
 		default:
 			console.warn("unknown request"); //$NON-NLS-0$
 			console.warn(request);
-		// respond respond if you don't understand the message.
+		// don't respond if you don't understand the message.
 //		sendResponse({}); // snub them.
 	}
 }
@@ -202,7 +285,9 @@ function init() {
 					console.log("tabs.query reports:\n" + JSON.stringify(e));
 				}
 			});
-		} catch (e) {}
+		} catch (e) {
+		  console.log("onSubmitPopchromIssue reports " + e);
+		}
 	};
 	var onAddOrImportAbbrevs = function(info, tab) {
 		var parsedText;

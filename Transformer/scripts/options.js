@@ -152,68 +152,44 @@ function setKeyErrorColors(a) {
 }
 
 function export_settings(event) {
-	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-	var errorHandler = function(e) {
-		//  var msg = '';
-		//
-		//  switch (e.code) {
-		//    case FileError.QUOTA_EXCEEDED_ERR:
-		//      msg = 'QUOTA_EXCEEDED_ERR';
-		//      break;
-		//    case FileError.NOT_FOUND_ERR:
-		//      msg = 'NOT_FOUND_ERR';
-		//      break;
-		//    case FileError.SECURITY_ERR:
-		//      msg = 'SECURITY_ERR';
-		//      break;
-		//    case FileError.INVALID_MODIFICATION_ERR:
-		//      msg = 'INVALID_MODIFICATION_ERR';
-		//      break;
-		//    case FileError.INVALID_STATE_ERR:
-		//      msg = 'INVALID_STATE_ERR';
-		//      break;
-		//    default:
-		//      msg = 'Unknown Error';
-		//      break;
-		//  };
-
-		console.log('Error: ' + e);
-	};
-	var onInitFs = function(fs) {
-
-		fs.root.getFile('popchrom.txt', {
-			create: true
-		}, function(fileEntry) {
-
-			// Create a FileWriter object for our FileEntry (log.txt).
-			fileEntry.createWriter(function(fileWriter) {
-
-				fileWriter.onwriteend = function(e) {
-					console.log('Write completed.');
-					console.log('See ' + fileEntry.fullPath);
-					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
-				};
-
-				fileWriter.onerror = function(e) {
-					console.log('Write failed: ' + e.toString());
-				};
-
-				// Create a new Blob and write it to log.txt.
-				var blob = new Blob([localStorage.map], {
-					type: 'text/plain'
+  // Send message to content page to export to local, sandboxed, filesystem.
+			var etfs = chrome.extension.getBackgroundPage().exportToFileSystem();
+			if (false) {
+				chrome.extension.sendMessage({
+					cmd: "export", //$NON-NLS-0$
+					action: "ignored" //$NON-NLS-0$
+				}, function(response) {
+// 					if (response.paste) {
+// 						document.activeElement.setRangeText(response.paste);
+// 					}
+// 					setNonEditableSelectionCursor(r.before.length,
+// 					tmp.length + response.paste.length - clipParam.length, element, settings);
 				});
-
-				fileWriter.write(blob);
-
-			}, errorHandler);
-
-		}, errorHandler);
-
-	};
-	window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ , onInitFs, errorHandler);
-	if (window.confirm(chrome.i18n.getMessage("select_copy_save"))) { //$NON-NLS-0$
-		window.alert(localStorage.map.toString());
-	}
+			}
+// 		try {
+// 			chrome.tabs.query({
+// 				'active': true
+// 			}, function(tab) {
+// 				try {
+// 					console.log(JSON.stringify(tab));
+// 					chrome.tabs.sendMessage(tab[0].id, {
+// 						greeting: "export",
+// 								    // appDetails: JSON.stringify(chrome.app.getDetails())
+// 					}, function(response) {
+// // 						chrome.tabs.create({
+// // 							url: response.newIssueQueryUrl
+// // 						}, function(tab) {});
+// 					});
+// 				} catch (e) {
+// 					console.log("tabs.query reports:\n" + JSON.stringify(e));
+// 				}
+// 			});
+// 		} catch (e) {
+// 		  console.log("onSubmitPopchromIssue reports " + e);
+// 		}
+// 	if (window.confirm(chrome.i18n.getMessage("select_copy_save"))) { //$NON-NLS-0$
+// 		window.alert(localStorage.map.toString());
+// 	}
 }
 
 function import_settings(event) {
