@@ -1,17 +1,16 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-	"use strict"; //$NON-NLS-0$
-
+"use strict";//$NON-NLS-0$
 function getClipboard() {
-	var pasteTarget = document.createElement("div");
+	var pasteTarget = document.createElement("div"); //$NON-NLS-0$
 	pasteTarget.contentEditable = true;
 	var actElem = document.activeElement.appendChild(pasteTarget).parentNode;
 	pasteTarget.focus();
-	document.execCommand("Paste", null, null);
+	document.execCommand("Paste", null, null); //$NON-NLS-0$
 	var paste = pasteTarget.innerText;
 	actElem.removeChild(pasteTarget);
 	return paste;
-};
+}
 
 function exportToFileSystem() {
 	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -54,24 +53,26 @@ function exportToFileSystem() {
 					console.log('Write completed.');
 					console.log('See ' + fileEntry.fullPath);
 					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
-					chrome.tabs.create({ url: "filesystem.html" },
-							   function(tab) {
-							   });
-// 	chrome.tabs.create({
-// 	  url: fileEntry.filesystem.root.toURL()
-// 	      }, function(tab) {
-// 		if (chrome.extension.lastError) {
-// 			console.log("lastError:" + chrome.extension.lastError.message);
-// 			return;
-// 		}
-// 		chrome.tabs.executeScript(tab.id, { file: "scripts/filesystem.js", runAt: "document_end" }, function callback(arrayOfAny) {});
-// // 			     if (tab.status === "complete") {
-// 		console.log("document.URL = " + document.URL);
-// 		console.log("tab = " + JSON.stringify(tab));
-// 			     document.body.title = "Please drag files to your desktop for backup";
-// 			     tab.title = "Popchrom Exports";
-// // 			     }
-// });
+					chrome.tabs.create({
+						url: "filesystem.html"
+					},
+
+					function(tab) {});
+					// 	chrome.tabs.create({
+					// 	  url: fileEntry.filesystem.root.toURL()
+					// 	      }, function(tab) {
+					// 		if (chrome.extension.lastError) {
+					// 			console.log("lastError:" + chrome.extension.lastError.message);
+					// 			return;
+					// 		}
+					// 		chrome.tabs.executeScript(tab.id, { file: "scripts/filesystem.js", runAt: "document_end" }, function callback(arrayOfAny) {});
+					// // 			     if (tab.status === "complete") {
+					// 		console.log("document.URL = " + document.URL);
+					// 		console.log("tab = " + JSON.stringify(tab));
+					// 			     document.body.title = "Please drag files to your desktop for backup";
+					// 			     tab.title = "Popchrom Exports";
+					// // 			     }
+					// });
 				};
 
 				fileWriter.onerror = function(e) {
@@ -208,26 +209,30 @@ function onClipboardMessage(request, sender, sendResponse) {
 }
 
 function handleMessage(request, sender, sendResponse) {
+	// TODO "Format JS" in eclipse orion moves trailing comments on case labels to next line!
+	// Use find regexp replace to fix that for now:
+	// From:\n[ \t]+(//\$NON.+)
+	// To: $1
+	// Options: [v] Regular expression
 	switch (request.cmd) {
 		case "read"://$NON-NLS-0$
 			onReadMessage(request, sender, sendResponse);
 			break;
-
 		case "pageaction"://$NON-NLS-0$
 			onPageActionMessage(request, sender, sendResponse);
 			break;
 		case "clipboard"://$NON-NLS-0$
 			onClipboardMessage(request, sender, sendResponse);
 			break;
-	case "export"://$NON-NLS-0$
-	  exportToFileSystem();
-  	sendResponse({}); // snub them.
-	  break;
+		case "export"://$NON-NLS-0$
+			exportToFileSystem();
+			sendResponse({}); // snub them.
+			break;
 		default:
 			console.warn("unknown request"); //$NON-NLS-0$
 			console.warn(request);
-		// don't respond if you don't understand the message.
-//		sendResponse({}); // snub them.
+			// don't respond if you don't understand the message.
+			//		sendResponse({}); // snub them.
 	}
 }
 
@@ -286,7 +291,7 @@ function init() {
 				}
 			});
 		} catch (e) {
-		  console.log("onSubmitPopchromIssue reports " + e);
+			console.log("onSubmitPopchromIssue reports " + e);
 		}
 	};
 	var onAddOrImportAbbrevs = function(info, tab) {
@@ -327,8 +332,8 @@ function init() {
 	//		}
 	//	});
 	var addAbbrevId = chrome.contextMenus.create({
-// TODO Causes lastError:Cannot create item with duplicate id addAbbrevId background.js:250
-// but multiple items are crated if id is absent. Live with the error for now.
+		// TODO Causes lastError:Cannot create item with duplicate id addAbbrevId background.js:250
+		// but multiple items are crated if id is absent. Live with the error for now.
 		id: "addAbbrevId",
 		type: "normal",
 		title: "Add/Import Popchrom abbreviation(s) for '%s'",
@@ -340,8 +345,8 @@ function init() {
 		}
 	});
 	var submitPopchromIssueId = chrome.contextMenus.create({
-// TODO Causes lastError:Cannot create item with duplicate id submitPopchromIssueId
-// but multiple items are crated if id is absent. Live with the error for now.
+		// TODO Causes lastError:Cannot create item with duplicate id submitPopchromIssueId
+		// but multiple items are crated if id is absent. Live with the error for now.
 		id: "submitPopchromIssueId",
 		type: "normal",
 		title: "Submit New Popchrom Issue for '%s'",
@@ -358,9 +363,9 @@ function init() {
 		chrome.tabs.query({
 			url: chrome.extension.getURL("options.html")
 		}, function(tabs) {
-//				if (tabs.length === 0) {
-//					window.open(chrome.extension.getURL("options.html"), "", "");
-//				}
+			//				if (tabs.length === 0) {
+			//					window.open(chrome.extension.getURL("options.html"), "", "");
+			//				}
 			// Just update an open options page, don't open it.
 			if (tabs.length === 1) {
 				chrome.tabs.update(tabs[0].id, {
@@ -372,8 +377,8 @@ function init() {
 		});
 	};
 	var toggleMarkText = chrome.contextMenus.create({
-// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
-// but multiple items are crated if id is absent. Live with the error for now.
+		// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
+		// but multiple items are crated if id is absent. Live with the error for now.
 		id: "toggleMarkText",
 		type: "checkbox",
 		checked: JSON.parse(localStorage.selectphrase),

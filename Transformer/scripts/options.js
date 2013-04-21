@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-	"use strict"; //$NON-NLS-0$
+"use strict";//$NON-NLS-0$
 //var settings = new Settings();
 var replaceKey = new KeyInfo();
 
@@ -152,44 +152,8 @@ function setKeyErrorColors(a) {
 }
 
 function export_settings(event) {
-  // Send message to content page to export to local, sandboxed, filesystem.
-			var etfs = chrome.extension.getBackgroundPage().exportToFileSystem();
-			if (false) {
-				chrome.extension.sendMessage({
-					cmd: "export", //$NON-NLS-0$
-					action: "ignored" //$NON-NLS-0$
-				}, function(response) {
-// 					if (response.paste) {
-// 						document.activeElement.setRangeText(response.paste);
-// 					}
-// 					setNonEditableSelectionCursor(r.before.length,
-// 					tmp.length + response.paste.length - clipParam.length, element, settings);
-				});
-			}
-// 		try {
-// 			chrome.tabs.query({
-// 				'active': true
-// 			}, function(tab) {
-// 				try {
-// 					console.log(JSON.stringify(tab));
-// 					chrome.tabs.sendMessage(tab[0].id, {
-// 						greeting: "export",
-// 								    // appDetails: JSON.stringify(chrome.app.getDetails())
-// 					}, function(response) {
-// // 						chrome.tabs.create({
-// // 							url: response.newIssueQueryUrl
-// // 						}, function(tab) {});
-// 					});
-// 				} catch (e) {
-// 					console.log("tabs.query reports:\n" + JSON.stringify(e));
-// 				}
-// 			});
-// 		} catch (e) {
-// 		  console.log("onSubmitPopchromIssue reports " + e);
-// 		}
-// 	if (window.confirm(chrome.i18n.getMessage("select_copy_save"))) { //$NON-NLS-0$
-// 		window.alert(localStorage.map.toString());
-// 	}
+	// Send message to content page to export to local, sandboxed, filesystem.
+	var etfs = chrome.extension.getBackgroundPage().exportToFileSystem();
 }
 
 function import_settings(event) {
