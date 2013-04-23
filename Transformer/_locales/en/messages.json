@@ -68,7 +68,7 @@
     "description": "Export button text."
   },
   "export_help": {
-    "message": "Export your abbreviation definitions for backup and later import with modifications.",
+    "message": "Drag and drop your abbreviation definitions to a file manager or your desktop for backup and later import, possibly with modifications.",
     "description": "Help text for Export button."
   },
   "import": {
@@ -76,7 +76,7 @@
     "description": "Import button text."
   },
   "import_help": {
-    "message": "Import your modified export data here. Please Export your existing abbreviations first and save this data as backup.",
+    "message": "Drop your modified export data here from your desktop or file manager. Please export (drag and drop) your existing abbreviations to your desktop or file manager first.",
     "description": "Help text for Import button."
   },
   "restore": {
@@ -159,7 +159,7 @@ This works by using the shortcut key again, but only when \"Select after replace
     "description": "Helptext"
   },
   "texttab": {
-    "message": "Text",
+    "message": "Text Export Import",
     "description": ""
   },
   "settingstab": {

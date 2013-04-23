@@ -68,7 +68,7 @@
     "description": "Text der export Schaltfläche."
   },
   "export_help": {
-    "message": "Exportieren Sie Ihre Abkürzungen zur Datensicherung und für späteren Import mit Änderungen.",
+    "message": "Ziehen Sie Ihre Abkürzungen zur Datensicherung und für späteren Import, viellecht mit Änderungen, auf Ihren Desktop oder Dateimanager.",
     "description": "Hilfetext für Schaltflächte zum Exportieren."
   },
   "import": {
@@ -76,7 +76,7 @@
     "description": "Text der import Schaltfläche."
   },
   "import_help": {
-    "message": "Importieren Sie Ihre geänderten Abkürzungen hier. Bitte exportieren Sie zuvor Ihre Abkürzungen und speichern diese zur Datensicherung.",
+    "message": "Ziehen Sie Ihre geänderten Abkürzungen von Desktop oder Dateimanager hier her. Bitte exportieren Sie zuvor Ihre Abkürzungen zur Datensicherung durch Ziehen  auf Desktop oder Dateimanager.",
     "description": "Hilfetext für Schaltflächte zum Importieren."
   },
   "restore": {
@@ -159,7 +159,7 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
     "description": "Hilfe text"
   },
   "texttab": {
-    "message": "Text",
+    "message": "Text Export Import",
     "description": ""
   },
   "settingstab": {

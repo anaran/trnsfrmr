@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-"use strict";//$NON-NLS-0$
+"use strict"; //$NON-NLS-0$
 //var settings = new Settings();
 var replaceKey = new KeyInfo();
 
@@ -267,7 +267,7 @@ function save_options(event) {
 			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
 		}, 750);
 		restore_options();
-
+		chrome.extension.getBackgroundPage().exportToFileSystem();
 	} else {
 		setKeyErrorColors(a);
 		$("#saving").html(chrome.i18n.getMessage("keys_not_unique")); //$NON-NLS-0$ //$NON-NLS-1$
@@ -322,6 +322,111 @@ function init() {
 
 document.addEventListener("keydown", onKeyDown, false); //$NON-NLS-0$
 
+function reportDragDrop(e) {
+	// this / e.target is current target element.
+	//   if (e.preventDefault) {
+	//   }
+	//   if (e.stopPropagation) {
+	//     e.stopPropagation(); // stops the browser from redirecting.
+	//   }
+	switch (e.type) {
+		case "dragstart":
+			//         e.stopPropagation(); // stops the browser from redirecting.
+			break;
+		case "dragenter":
+			//            e.preventDefault(); // stops the browser from redirecting.
+			break;
+		case "dragend":
+			console.log("onDragEnd: e.dataTransfer.dropEffect = " + e.dataTransfer.dropEffect);
+			console.log("onDragEnd: e.dataTransfer = " + JSON.stringify(e.dataTransfer));
+			break;
+		case "dragover":
+			// TODO needed for drop to work!
+			e.preventDefault(); // stops the browser from redirecting.
+			break;
+		case "dragexit":
+			break;
+		case "dragleave":
+			break;
+		case "drop":
+			// TODO needed for drop to work!
+			e.preventDefault(); // stops the browser from redirecting.
+			var item = e.dataTransfer.items[0];
+			if (!item.type.match('text/*')) {
+				console.log("Sorry. That's not a text file.");
+				return;
+			}
+
+			var chosenFileEntry = item.webkitGetAsEntry();
+			readAsText(chosenFileEntry, function(result) {
+				console.log(result);
+			});
+			break;
+		default:
+			break;
+	}
+	//    console.log("e.type = " + e.type + ": e = " + JSON.stringify(e, function(key, value) {
+	//        if (key.length > 0 && value instanceof Object) {
+	//            return typeof value;
+	//        } else {
+	//            return value;
+	//        }
+	//    }).replace(/([{,])("\w+":)/g, "$1\n$2"));
+	console.log("e.type = " + e.type + ": e.dataTransfer = " + JSON.stringify(e.dataTransfer));
+	//    console.log("e.type = " + e.type + ": e.dataTransfer.getData('DownloadURL') = " + e.dataTransfer.getData("DownloadURL"));
+	//    console.log("e.type = " + e.type + ": e.dataTransfer.getData('downloadurl') = " + e.dataTransfer.getData("downloadurl"));
+	//    var length = event.dataTransfer.items.length;
+	//    for (var i = 0; i < length; i++) {
+	//        console.log("e.type = " + e.type + ": event.dataTransfer.items[i].webkitGetAsEntry() = " + event.dataTransfer.items[i].webkitGetAsEntry());
+	//        console.log("e.type = " + e.type + ": event.dataTransfer.getData(\"URL\") = " + event.dataTransfer.getData("URL"));
+	//        console.log("e.type = " + e.type + ": e.dataTransfer.items[" + i + "].type = " + e.dataTransfer.items[i].type);
+	//        if (e.dataTransfer.items[i].type === "downloadurl") {
+	//            // console.log("e.type = " + e.type + ": e.dataTransfer.items[i].getData(e.dataTransfer.items[i].type) = " + e.dataTransfer.items[i].getData(e.dataTransfer.items[i].type));
+	//        }
+	//    }
+	// See the section on the DataTransfer object.
+
+	return false;
+}
+
+function onDragEnd(e) {
+	var el = e.srcElement;
+	//   var name = el.innerText.replace(":", "");
+	//   var download_url_data = "application/octet-stream:" + name + ":" + el.href;
+	//   e.dataTransfer.setData("DownloadURL", download_url_data);
+	//   //  e.dataTransfer.effectAllowed = "copyMove";
+	switch (e.dataTransfer.dropEffect) {
+		case "move":
+			break;
+		case "copy":
+			break;
+		case "none":
+			break;
+		default:
+			break;
+	}
+	console.log("onDragEnd: e.dataTransfer.dropEffect = " + e.dataTransfer.dropEffect);
+	console.log("onDragEnd: e.dataTransfer = " + JSON.stringify(e.dataTransfer));
+}
+
+function onDragStart(e) {
+	//    var el = e.srcElement;
+	var name = chrome.extension.getBackgroundPage().getExportFileURL().split("/").pop();
+	var download_url_data = "application/octet-stream:" + name + ":" + chrome.extension.getBackgroundPage().getExportFileURL();
+	//   if (e.preventDefault) {
+	//     e.preventDefault(); // stops the browser from redirecting.
+	//   }
+	//   if (e.stopPropagation) {
+	//     e.stopPropagation(); // stops the browser from redirecting.
+	//   }
+	// e.dataTransfer.setData("DownloadURL", download_url_data);
+	e.dataTransfer.setData("downloadurl", download_url_data);
+	e.dataTransfer.effectAllowed = "copyMove";
+	e.dataTransfer.dropEffect = undefined;
+	reportDragDrop(e);
+	// e.dataTransfer.effectAllowed = "move";
+}
+
 // Add event listeners once the DOM has fully loaded by listening for the
 // `DOMContentLoaded` event on the document, and adding your listeners to
 // specific elements when it triggers.
@@ -333,11 +438,23 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 			return;
 		}
 		init();
-		document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
+		//        document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
+		//        document.querySelector('label[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('span[name=caption]').title = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=import]').title = chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
+		//        document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
+		//        var dropzoneImport = $('div#tabs-1')[0];
+		var dropzoneImport = $('a[name=texttab]')[0];
+		//        var dropzoneImport = $('label[name=import]')[0];
+		if (dropzoneImport) {
+			//            dropzoneImport.addEventListener("dragstart", onDragStart, false);
+			// TODO needed for drop to work!
+			dropzoneImport.addEventListener("dragover", reportDragDrop, false);
+			//                        dropzoneImport.addEventListener("dragexit", reportDragDrop, false);
+			//                        dropzoneImport.addEventListener("dragleave", reportDragDrop, false);
+			dropzoneImport.addEventListener("drop", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
+			//            dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
+			dropzoneImport.title += chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
+		}
 		document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
 		//	NOTE: See createSubLine(key, value) for delete button event listener setup. //$NON-NLS-0$ //$NON-NLS-1$
 		//	document.querySelector('button[name=delete]').addEventListener('click', del);
@@ -345,7 +462,40 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		document.querySelector('span[name=deleteshortcut]').addEventListener('click', deleteShortcut); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('button[name=save]').addEventListener('click', save_options); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('button[name=save]').click();
+		//        var draggableExport;
+		//        var draggableExport = $('div#tabs-1')[0];
+		var draggableExport = $('a[name=texttab]')[0];
+		//        var draggableExport = $('label[name=export]')[0];
+		if (draggableExport) {
+			draggableExport.addEventListener("dragstart", onDragStart, false);
+			//            draggableExport.addEventListener("dragenter", reportDragDrop, false);
+			draggableExport.addEventListener("dragend", reportDragDrop, false);
+			draggableExport.title += chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
+			//            draggableExport.addEventListener("dragover", reportDragDrop, false);
+			//            draggableExport.addEventListener("dragexit", reportDragDrop, false);
+			//            draggableExport.addEventListener("dragleave", reportDragDrop, false);
+			//            draggableExport.addEventListener("drop", reportDragDrop, false);
+		} else {
+			console.log("draggableExport = " + draggableExport);
+		}
 	} catch (e) {
 		console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + e.stack);
 	}
 });
+
+function errorHandler(e) {
+	console.error(e);
+}
+
+function readAsText(fileEntry, callback) {
+	fileEntry.file(function(file) {
+		var reader = new FileReader();
+
+		reader.onerror = errorHandler;
+		reader.onload = function(e) {
+			callback(e.target.result);
+		};
+
+		reader.readAsText(file);
+	});
+}

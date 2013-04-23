@@ -1,6 +1,13 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-"use strict";//$NON-NLS-0$
+"use strict"; //$NON-NLS-0$
+
+var exportFileURL;
+
+function getExportFileURL() {
+	return exportFileURL;
+}
+
 function getClipboard() {
 	var pasteTarget = document.createElement("div"); //$NON-NLS-0$
 	pasteTarget.contentEditable = true;
@@ -41,7 +48,16 @@ function exportToFileSystem() {
 		console.log('Error: ' + e);
 	};
 	var onInitFs = function(fs) {
-
+		// Remove file if it already exists since existing file will not be truncated by write!
+		fs.root.getFile('popchrom.txt', {
+			create: false
+		}, function(fileEntry) {
+			fileEntry.remove(function onSuccess() {
+				console.log("Removed " + fileEntry.toURL());
+			}, function onError() {
+				console.log("Cannot remove " + fileEntry.toURL());
+			});
+		});
 		fs.root.getFile('popchrom.txt', {
 			create: true
 		}, function(fileEntry) {
@@ -53,11 +69,12 @@ function exportToFileSystem() {
 					console.log('Write completed.');
 					console.log('See ' + fileEntry.fullPath);
 					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
-					chrome.tabs.create({
-						url: "filesystem.html"
-					},
-
-					function(tab) {});
+					exportFileURL = fileEntry.toURL();
+					//					chrome.tabs.create({
+					//						url: "filesystem.html"
+					//					},
+					//
+					//					function(tab) {});
 					// 	chrome.tabs.create({
 					// 	  url: fileEntry.filesystem.root.toURL()
 					// 	      }, function(tab) {
@@ -83,7 +100,6 @@ function exportToFileSystem() {
 				var blob = new window.Blob([localStorage.map], {
 					type: 'text/plain'
 				});
-
 				fileWriter.write(blob);
 
 			}, errorHandler);
@@ -180,15 +196,18 @@ function onPageActionMessage(request, sender, sendResponse) {
 	// To: $1
 	// Options: [v] Regular expression
 	switch (request.action) {
-		case "show"://$NON-NLS-0$
+		case "show":
+			//$NON-NLS-0$
 			if (localStorage.hideicon !== "true") { //$NON-NLS-0$
 				chrome.pageAction.show(sender.tab.id);
 			}
 			break;
-		case "hide"://$NON-NLS-0$
+		case "hide":
+			//$NON-NLS-0$
 			chrome.pageAction.hide(sender.tab.id);
 			break;
-		case "notify"://$NON-NLS-0$
+		case "notify":
+			//$NON-NLS-0$
 			notify(sender.tab.id);
 			break;
 		default:
@@ -215,16 +234,20 @@ function handleMessage(request, sender, sendResponse) {
 	// To: $1
 	// Options: [v] Regular expression
 	switch (request.cmd) {
-		case "read"://$NON-NLS-0$
+		case "read":
+			//$NON-NLS-0$
 			onReadMessage(request, sender, sendResponse);
 			break;
-		case "pageaction"://$NON-NLS-0$
+		case "pageaction":
+			//$NON-NLS-0$
 			onPageActionMessage(request, sender, sendResponse);
 			break;
-		case "clipboard"://$NON-NLS-0$
+		case "clipboard":
+			//$NON-NLS-0$
 			onClipboardMessage(request, sender, sendResponse);
 			break;
-		case "export"://$NON-NLS-0$
+		case "export":
+			//$NON-NLS-0$
 			exportToFileSystem();
 			sendResponse({}); // snub them.
 			break;
