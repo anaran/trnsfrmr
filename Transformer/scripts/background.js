@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-"use strict"; //$NON-NLS-0$
+	"use strict"; //$NON-NLS-0$
 
 var exportFileURL;
 
@@ -58,7 +58,37 @@ function exportToFileSystem() {
 				console.log("Cannot remove " + fileEntry.toURL());
 			});
 		});
-		fs.root.getFile('popchrom.txt', {
+		var abbrevCount;
+		try {
+			var arrayLength = JSON.parse(localStorage.map).length;
+			if (arrayLength % 2) {
+				window.alert("Please report an issue! arrayLength = " + arrayLength);
+			}
+			abbrevCount = arrayLength / 2;
+		} catch (e) {}
+		var d = new Date();
+		var fileName = 'popchrom-' + abbrevCount + '-';
+		fileName += d.getFullYear();
+		var month = d.getMonth() + 1;
+		fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
+		//	TODO getDay() returns the day of week,
+		//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
+		var day = d.getDate();
+		fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
+		var hours = d.getHours();
+		fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
+		var minutes = d.getMinutes();
+		fileName += ((minutes < 10) ? "0" + minutes : minutes);
+		var seconds = d.getSeconds();
+		fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
+		var timeZoneOffset = -d.getTimezoneOffset();
+		var offsetMinutes = timeZoneOffset % 60;
+		var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
+		fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
+		//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
+		//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
+		fileName += '.txt';
+		fs.root.getFile(fileName, {
 			create: true
 		}, function(fileEntry) {
 
@@ -234,6 +264,9 @@ function handleMessage(request, sender, sendResponse) {
 	// To: $1
 	// Options: [v] Regular expression
 	switch (request.cmd) {
+		case "options":
+			reloadOptionsPage("createAsWell");
+			break;
 		case "read":
 			//$NON-NLS-0$
 			onReadMessage(request, sender, sendResponse);
@@ -289,6 +322,65 @@ function save_default() {
 	localStorage.map = chrome.i18n.getMessage("map_template"); //$NON-NLS-0$
 }
 
+function addOrImportAbbrevs(text) {
+	var parsedText;
+	try {
+		parsedText = JSON.parse(text);
+		if (parsedText instanceof Array) {
+			if (window.confirm("Do you want to import a set of " + parsedText.length / 2 + " abbreviations defined by the text you selected?")) {
+				import_settings(parsedText);
+			}
+			return;
+		}
+	} catch (e) {
+		//			NOTE OK, this does not look like an import data array.
+		var name = window.prompt("Name for new abbreviation?");
+		if (name === null || name === "") {} else {
+			var re = window.prompt("Enter Pattern below if abbreviation '" + name + "' should take arguments\ne.g.\n\\s+(\\d+)\\s+(\\w+)");
+			var regexp = new RegExp(re);
+			if (re === null || re === "") {
+				import_settings([name, text]);
+			} else {
+				if (regexp && regexp instanceof RegExp) {
+					import_settings([name, JSON.stringify([re, text])]);
+					//    		import_settings("[\""+name+"\", \"[\\\""+re+"\\\", \\\""+text+"\\\"]\"]");
+					window.confirm("Please review expansion text of '" + name + "' and place symbol substitutions like $1 or $& where appropriate.\nReplace a literal $ with $$.\nAdd \\n line breaks where needed .");
+				} else {
+					window.confirm("Cannot construct RegExp from String '" + re + "'");
+				}
+			}
+		}
+	}
+
+}
+
+function reloadOptionsPage(create) {
+	var url = chrome.extension.getURL("options.html");
+	chrome.tabs.query({
+		url: url
+	}, function(tabs) {
+		// Just update an open options page, don't open it.
+		if (tabs.length === 1) {
+			chrome.tabs.update(tabs[0].id, {
+				highlighted: true
+				//					active: true
+			});
+			chrome.tabs.reload(tabs[0].id);
+		} else if (create) {
+			chrome.tabs.query({
+				'active': true,
+				currentWindow: true
+			}, function(tab) {
+				chrome.tabs.create({
+					url: url,
+					// TODO Please note that when we specify openerTabId closing the new tab brings us back to that tab when it still exists.
+					openerTabId: tab[0].id
+				}, function(tab) {});
+			});
+		}
+	});
+}
+
 function init() {
 	chrome.extension.onMessage.addListener(handleMessage);
 	if (localStorage.used_before !== "true") { //$NON-NLS-0$
@@ -318,37 +410,10 @@ function init() {
 		}
 	};
 	var onAddOrImportAbbrevs = function(info, tab) {
-		var parsedText;
-		try {
-			parsedText = JSON.parse(info.selectionText);
-			if (parsedText instanceof Array) {
-				if (window.confirm("Do you want to import a set of " + parsedText.length / 2 + " abbreviations defined by the text you selected?")) {
-					import_settings(parsedText);
-				}
-				return;
-			}
-		} catch (e) {
-			//			NOTE OK, this does not look like and import data array.
-			var name = window.prompt("Name for new abbreviation?");
-			if (name === null || name === "") {} else {
-				var re = window.prompt("Enter Pattern below if abbreviation '" + name + "' should take arguments\ne.g.\n\\s+(\\d+)\\s+(\\w+)");
-				var regexp = new RegExp(re);
-				if (re === null || re === "") {
-					import_settings([name, info.selectionText]);
-				} else {
-					if (regexp && regexp instanceof RegExp) {
-						import_settings([name, JSON.stringify([re, info.selectionText])]);
-						//    		import_settings("[\""+name+"\", \"[\\\""+re+"\\\", \\\""+info.selectionText+"\\\"]\"]");
-						window.confirm("Please review expansion text of '" + name + "' and place symbol substitutions like $1 or $& where appropriate.\nReplace a literal $ with $$.\nAdd \\n line breaks where needed .");
-					} else {
-						window.confirm("Cannot construct RegExp from String '" + re + "'");
-					}
-				}
-			}
-		}
+		addOrImportAbbrevs(info.selectionText);
 	};
 	localStorage.used_before = "true"; //$NON-NLS-0$
-	//	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
+	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
 	//	chrome.contextMenus.removeAll(function() {
 	//		if (chrome.extension.lastError) {
 	//			console.log("lastError:" + chrome.extension.lastError.message);
@@ -383,21 +448,7 @@ function init() {
 	var toggleMarkingText = function(info, tab) {
 		localStorage.selectphrase = JSON.stringify(!JSON.parse(localStorage.selectphrase));
 		broadcastSettings();
-		chrome.tabs.query({
-			url: chrome.extension.getURL("options.html")
-		}, function(tabs) {
-			//				if (tabs.length === 0) {
-			//					window.open(chrome.extension.getURL("options.html"), "", "");
-			//				}
-			// Just update an open options page, don't open it.
-			if (tabs.length === 1) {
-				chrome.tabs.update(tabs[0].id, {
-					highlighted: true
-					//					active: true
-				});
-				chrome.tabs.reload(tabs[0].id);
-			}
-		});
+		reloadOptionsPage();
 	};
 	var toggleMarkText = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
@@ -416,23 +467,7 @@ function init() {
 	//	chrome.contextMenus.onClicked.addListener(onClick);
 	chrome.pageAction.onClicked.addListener(function(tab) {
 		console.log("clicked popchrom pageAction on tab " + tab.url);
-		chrome.tabs.query({
-			url: chrome.extension.getURL("options.html")
-		}, function(tabs) {
-			if (tabs.length === 0) {
-				chrome.pageAction.getTitle({
-					tabId: tab.id
-				}, function(result) {
-					window.open(chrome.extension.getURL("options.html"), result, "");
-				});
-			}
-			if (tabs.length === 1) {
-				chrome.tabs.update(tabs[0].id, {
-					highlighted: true
-					//					active: true
-				});
-			}
-		});
+		reloadOptionsPage("createAsWell");
 	});
 }
 

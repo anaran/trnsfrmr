@@ -103,6 +103,8 @@ function replaceDate(value) {
 function replaceDates(value) {
 
 	var d = new Date();
+	//	TODO getDay() returns the day of week,
+	//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
 	value = value.replace(/(?:%DAY%|%d)/, (d.getDate() < 10) ? "0" + d.getDate() : d.getDate()); //$NON-NLS-0$
 	var month = d.getMonth() + 1;
 	value = value.replace(/(?:%MONTH%|%m)/, (month < 10) ? "0" + month : month); //$NON-NLS-0$
@@ -116,7 +118,7 @@ function replaceDates(value) {
 	var timeZoneOffset = -d.getTimezoneOffset();
 	var offsetMinutes = timeZoneOffset % 60;
 	var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-	value = value.replace(/%z/, (offsetHours > 0 ? "+" : "") + offsetHours + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes)); //$NON-NLS-0$
+	value = value.replace(/%z/, (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes)); //$NON-NLS-0$
 	value = replaceDate(value);
 
 	return value;
