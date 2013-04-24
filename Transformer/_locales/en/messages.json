@@ -159,7 +159,7 @@ This works by using the shortcut key again, but only when \"Select after replace
     "description": "Helptext"
   },
   "texttab": {
-    "message": "Text Export Import",
+    "message": "Text",
     "description": ""
   },
   "settingstab": {

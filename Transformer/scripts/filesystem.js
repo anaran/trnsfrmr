@@ -261,6 +261,7 @@ var i18nTemplate = (function() {
 		var elements = node.querySelectorAll(selector);
 		// TODO: See also https://code.google.com/p/switchy/source/browse/trunk/assets/scripts/i18n.js?r=90
 		// for this same JSLint error.
+		// See also http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml?showone=Tips_and_Tricks#Tips_and_Tricks
 		for (var element, i = 0; element = elements[i]; i++) {
 			for (var j = 0; j < attributeNames.length; j++) {
 				var name = attributeNames[j];

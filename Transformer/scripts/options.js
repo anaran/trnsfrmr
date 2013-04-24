@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
-"use strict"; //$NON-NLS-0$
+	"use strict"; //$NON-NLS-0$
 //var settings = new Settings();
 var replaceKey = new KeyInfo();
 
@@ -223,8 +223,8 @@ function import_settings(event) {
 				}
 			}
 		}
-	} catch (e) {
-		window.alert(chrome.i18n.getMessage("invalid_data") + importArray + "\n" + e); //$NON-NLS-0$ //$NON-NLS-1$
+	} catch (exception) {
+		window.alert(chrome.i18n.getMessage("invalid_data") + importArray + "\n" + exception); //$NON-NLS-0$ //$NON-NLS-1$
 	}
 }
 
@@ -322,27 +322,66 @@ function init() {
 
 document.addEventListener("keydown", onKeyDown, false); //$NON-NLS-0$
 
-function reportDragDrop(e) {
-	// this / e.target is current target element.
-	//   if (e.preventDefault) {
+function errorHandler(domError) {
+	console.error(domError);
+}
+
+function readAsText(fileEntry, callback) {
+	fileEntry.file(function(file) {
+		var reader = new FileReader();
+
+		reader.onerror = errorHandler;
+		reader.onload = function(domError) {
+			callback(domError.target.result);
+		};
+
+		reader.readAsText(file);
+	});
+}
+
+function reportDragDrop(event) {
+	// this / event.target is current target element.
+	//   if (event.preventDefault) {
 	//   }
-	//   if (e.stopPropagation) {
-	//     e.stopPropagation(); // stops the browser from redirecting.
+	//   if (event.stopPropagation) {
+	//     event.stopPropagation(); // stops the browser from redirecting.
 	//   }
-	switch (e.type) {
+	switch (event.type) {
 		case "dragstart":
-			//         e.stopPropagation(); // stops the browser from redirecting.
+			//         event.stopPropagation(); // stops the browser from redirecting.
 			break;
 		case "dragenter":
-			//            e.preventDefault(); // stops the browser from redirecting.
+			// TODO needed for drop to work!
+			event.preventDefault(); // stops the browser from redirecting.
 			break;
 		case "dragend":
-			console.log("onDragEnd: e.dataTransfer.dropEffect = " + e.dataTransfer.dropEffect);
-			console.log("onDragEnd: e.dataTransfer = " + JSON.stringify(e.dataTransfer));
+			//			console.log("onDragEnd: event.dataTransfer.dropEffect = " + event.dataTransfer.dropEffect);
+			//			console.log("onDragEnd: event.dataTransfer = " + JSON.stringify(event.dataTransfer));
+			var el = event.srcElement;
+			//	var href = chrome.extension.getBackgroundPage().getExportFileURL();
+			//	var name = href.split("/").pop();
+			el.href = "";
+			el.innerText = "";
+			switch (event.dataTransfer.dropEffect) {
+				case "copy":
+					break;
+				case "move":
+					localStorage.map = "[]";
+					restore_options();
+					break;
+				case "none":
+					if (window.confirm("cannot distinguish drag move vs. copy on your platform.\nDo you want to delete all abbreviations in popchrom now?")) {
+						localStorage.map = "[]";
+						restore_options();
+					} else {}
+					break;
+				default:
+					break;
+			}
 			break;
 		case "dragover":
 			// TODO needed for drop to work!
-			e.preventDefault(); // stops the browser from redirecting.
+			event.preventDefault(); // stops the browser from redirecting.
 			break;
 		case "dragexit":
 			break;
@@ -350,9 +389,9 @@ function reportDragDrop(e) {
 			break;
 		case "drop":
 			// TODO needed for drop to work!
-			e.preventDefault(); // stops the browser from redirecting.
-			var item = e.dataTransfer.items[0];
-			if (!item.type.match('text/*')) {
+			event.preventDefault(); // stops the browser from redirecting.
+			var item = event.dataTransfer.items[0];
+			if (!item || !item.type.match('text/*')) {
 				console.log("Sorry. That's not a text file.");
 				return;
 			}
@@ -360,28 +399,31 @@ function reportDragDrop(e) {
 			var chosenFileEntry = item.webkitGetAsEntry();
 			readAsText(chosenFileEntry, function(result) {
 				console.log(result);
+				chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
 			});
 			break;
 		default:
 			break;
 	}
-	//    console.log("e.type = " + e.type + ": e = " + JSON.stringify(e, function(key, value) {
-	//        if (key.length > 0 && value instanceof Object) {
-	//            return typeof value;
-	//        } else {
-	//            return value;
-	//        }
-	//    }).replace(/([{,])("\w+":)/g, "$1\n$2"));
-	console.log("e.type = " + e.type + ": e.dataTransfer = " + JSON.stringify(e.dataTransfer));
-	//    console.log("e.type = " + e.type + ": e.dataTransfer.getData('DownloadURL') = " + e.dataTransfer.getData("DownloadURL"));
-	//    console.log("e.type = " + e.type + ": e.dataTransfer.getData('downloadurl') = " + e.dataTransfer.getData("downloadurl"));
+	//	console.log("event.type = " + event.type + ": event = " + JSON.stringify(event, function(key, value) {
+	//		if (key.length > 0 && value instanceof Object) {
+	//			return typeof value;
+	//		} else {
+	//			return value;
+	//		}
+	//	}).replace(/([{,])("\w+":)/g, "$1\n$2"));
+	console.log("event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer));
+	console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+	console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+	//    console.log("event.type = " + event.type + ": event.dataTransfer.getData('DownloadURL') = " + event.dataTransfer.getData("DownloadURL"));
+	//    console.log("event.type = " + event.type + ": event.dataTransfer.getData('downloadurl') = " + event.dataTransfer.getData("downloadurl"));
 	//    var length = event.dataTransfer.items.length;
 	//    for (var i = 0; i < length; i++) {
-	//        console.log("e.type = " + e.type + ": event.dataTransfer.items[i].webkitGetAsEntry() = " + event.dataTransfer.items[i].webkitGetAsEntry());
-	//        console.log("e.type = " + e.type + ": event.dataTransfer.getData(\"URL\") = " + event.dataTransfer.getData("URL"));
-	//        console.log("e.type = " + e.type + ": e.dataTransfer.items[" + i + "].type = " + e.dataTransfer.items[i].type);
-	//        if (e.dataTransfer.items[i].type === "downloadurl") {
-	//            // console.log("e.type = " + e.type + ": e.dataTransfer.items[i].getData(e.dataTransfer.items[i].type) = " + e.dataTransfer.items[i].getData(e.dataTransfer.items[i].type));
+	//        console.log("event.type = " + event.type + ": event.dataTransfer.items[i].webkitGetAsEntry() = " + event.dataTransfer.items[i].webkitGetAsEntry());
+	//        console.log("event.type = " + event.type + ": event.dataTransfer.getData(\"URL\") = " + event.dataTransfer.getData("URL"));
+	//        console.log("event.type = " + event.type + ": event.dataTransfer.items[" + i + "].type = " + event.dataTransfer.items[i].type);
+	//        if (event.dataTransfer.items[i].type === "downloadurl") {
+	//            // console.log("event.type = " + event.type + ": event.dataTransfer.items[i].getData(event.dataTransfer.items[i].type) = " + event.dataTransfer.items[i].getData(event.dataTransfer.items[i].type));
 	//        }
 	//    }
 	// See the section on the DataTransfer object.
@@ -389,42 +431,45 @@ function reportDragDrop(e) {
 	return false;
 }
 
-function onDragEnd(e) {
-	var el = e.srcElement;
-	//   var name = el.innerText.replace(":", "");
-	//   var download_url_data = "application/octet-stream:" + name + ":" + el.href;
-	//   e.dataTransfer.setData("DownloadURL", download_url_data);
-	//   //  e.dataTransfer.effectAllowed = "copyMove";
-	switch (e.dataTransfer.dropEffect) {
-		case "move":
-			break;
-		case "copy":
-			break;
-		case "none":
-			break;
-		default:
-			break;
-	}
-	console.log("onDragEnd: e.dataTransfer.dropEffect = " + e.dataTransfer.dropEffect);
-	console.log("onDragEnd: e.dataTransfer = " + JSON.stringify(e.dataTransfer));
-}
+//function onDragEnd(event) {
+//	var el = event.srcElement;
+//	//   var name = el.innerText.replace(":", "");
+//	//   var download_url_data = "application/octet-stream:" + name + ":" + el.href;
+//	//   event.dataTransfer.setData("DownloadURL", download_url_data);
+//	//   //  event.dataTransfer.effectAllowed = "copy";
+//	switch (event.dataTransfer.dropEffect) {
+//		case "move":
+//			break;
+//		case "copy":
+//			break;
+//		case "none":
+//			break;
+//		default:
+//			break;
+//	}
+//	console.log("onDragEnd: event.dataTransfer.dropEffect = " + event.dataTransfer.dropEffect);
+//	console.log("onDragEnd: event.dataTransfer = " + JSON.stringify(event.dataTransfer));
+//}
 
-function onDragStart(e) {
-	//    var el = e.srcElement;
-	var name = chrome.extension.getBackgroundPage().getExportFileURL().split("/").pop();
-	var download_url_data = "application/octet-stream:" + name + ":" + chrome.extension.getBackgroundPage().getExportFileURL();
-	//   if (e.preventDefault) {
-	//     e.preventDefault(); // stops the browser from redirecting.
+function onDragStart(event) {
+	var el = event.srcElement;
+	var href = chrome.extension.getBackgroundPage().getExportFileURL();
+	var name = decodeURIComponent(href.split("/").pop());
+	el.href = href;
+	el.innerText = name;
+	var download_url_data = "application/octet-stream:" + name + ":" + href;
+	//   if (event.preventDefault) {
+	//     event.preventDefault(); // stops the browser from redirecting.
 	//   }
-	//   if (e.stopPropagation) {
-	//     e.stopPropagation(); // stops the browser from redirecting.
+	//   if (event.stopPropagation) {
+	//     event.stopPropagation(); // stops the browser from redirecting.
 	//   }
-	// e.dataTransfer.setData("DownloadURL", download_url_data);
-	e.dataTransfer.setData("downloadurl", download_url_data);
-	e.dataTransfer.effectAllowed = "copyMove";
-	e.dataTransfer.dropEffect = undefined;
-	reportDragDrop(e);
-	// e.dataTransfer.effectAllowed = "move";
+	// event.dataTransfer.setData("DownloadURL", download_url_data);
+	event.dataTransfer.setData("downloadurl", download_url_data);
+	event.dataTransfer.effectAllowed = "copy";
+	event.dataTransfer.dropEffect = undefined;
+	reportDragDrop(event);
+	// event.dataTransfer.effectAllowed = "move";
 }
 
 // Add event listeners once the DOM has fully loaded by listening for the
@@ -432,7 +477,7 @@ function onDragStart(e) {
 // specific elements when it triggers.
 document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	try {
-		//TODO options.js is also loaded by background.html to get access to export and import functionality.
+		// TODO options.js is also loaded by background.html to get access to export and import functionality.
 		if (document.URL !== chrome.extension.getURL("options.html")) {
 			console.log("early exit being loaded from other than options page..."); //$NON-NLS-0$
 			return;
@@ -444,15 +489,108 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		//        document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
 		//        var dropzoneImport = $('div#tabs-1')[0];
 		var dropzoneImport = $('a[name=texttab]')[0];
+		var invalidDropTarget;
 		//        var dropzoneImport = $('label[name=import]')[0];
 		if (dropzoneImport) {
-			//            dropzoneImport.addEventListener("dragstart", onDragStart, false);
-			// TODO needed for drop to work!
-			dropzoneImport.addEventListener("dragover", reportDragDrop, false);
+			//		dropzoneImport.draggable = "false";
+			//			dropzoneImport.addEventListener("click", function doNothing(event) {
+			//				event.preventDefault();
+			//			}, false);
+			dropzoneImport.addEventListener("dragstart", function doNothing(event) {
+				event.preventDefault();
+			}, false);
+			if (false) {
+				dropzoneImport.addEventListener("dragenter", function(event) {
+					if (event.srcElement !== dropzoneImport) {
+						return false;
+					}
+					reportDragDrop(event);
+				}, false);
+				//  TODO needed for drop to work!
+				dropzoneImport.addEventListener("dragover", function(event) {
+					event.preventDefault();
+					event.dataTransfer.effectAllowed = "none";
+					event.dataTransfer.dropEffect = "none";
+					return false;
+				}, false);
+			} else {
+				document.addEventListener("dragover", function(event) {
+					event.preventDefault();
+					if (event.srcElement !== dropzoneImport || invalidDropTarget) {
+						event.dataTransfer.effectAllowed = "none";
+						event.dataTransfer.dropEffect = "none";
+					}
+					console.log("ignore event.type = " + event.type);
+					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+					return false;
+				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
+				document.addEventListener("dragenter", function(event) {
+								invalidDropTarget = true;
+				console.log("invalidDropTarget = " + invalidDropTarget);
+					if (event.srcElement === dropzoneImport) {
+						reportDragDrop(event);
+					}
+					console.log("ignore event.type = " + event.type);
+					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+					//				return false;
+				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
+				document.addEventListener("dragleave", function(event) {
+					console.log("ignore event.type = " + event.type);
+								invalidDropTarget = false;
+				console.log("invalidDropTarget = " + invalidDropTarget);
+					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+					//				return false;
+				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
+				dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
+			}
 			//                        dropzoneImport.addEventListener("dragexit", reportDragDrop, false);
 			//                        dropzoneImport.addEventListener("dragleave", reportDragDrop, false);
-			dropzoneImport.addEventListener("drop", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
-			//            dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
+			dropzoneImport.addEventListener("drop", function(event) {
+				if (!invalidDropTarget) {
+					//				if (event.srcElement === draggableExport) {
+					reportDragDrop(event);
+				}
+			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
+//			document.addEventListener("drop", function(event) {
+//				//				invalidDropTarget = true;
+//				if (true) {
+//					//			if (event.target === dropzoneImport) {
+//					event.stopPropagation();
+//					event.preventDefault();
+//					//				} else {
+//					//				event.stopPropagation(); 
+//				} else {}
+//				console.log("ignore event.type = " + event.type);
+//				console.log("invalidDropTarget = " + invalidDropTarget);
+//				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+//				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+//			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
+			document.addEventListener("dragstart", function(event) {
+				invalidDropTarget = true;
+				if (false && true || event.target === dropzoneImport) {
+					event.preventDefault();
+					//				} else {
+					//				event.stopPropagation(); 
+				} else {}
+				console.log("ignore event.type = " + event.type);
+				console.log("invalidDropTarget = " + invalidDropTarget);
+				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
+			document.addEventListener("dragend", function(event) {
+				//				invalidDropTarget = true;
+					event.stopPropagation();
+				event.preventDefault();
+				console.log("ignore event.type = " + event.type);
+				console.log("ignore event.returnValue = " + event.returnValue);
+				console.log("invalidDropTarget = " + invalidDropTarget);
+				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
+				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+	console.log("ignore event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer));
+			}, true && "useCapture");
 			dropzoneImport.title += chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
 		}
 		document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
@@ -464,38 +602,37 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		document.querySelector('button[name=save]').click();
 		//        var draggableExport;
 		//        var draggableExport = $('div#tabs-1')[0];
-		var draggableExport = $('a[name=texttab]')[0];
+		var draggableExport = $('a[class=icon file]')[0];
+		draggableExport.href = chrome.extension.getBackgroundPage().getExportFileURL();
+		//		var draggableExport = $('a[name=texttab]')[0];
+		draggableExport.draggable = "true";
 		//        var draggableExport = $('label[name=export]')[0];
 		if (draggableExport) {
-			draggableExport.addEventListener("dragstart", onDragStart, false);
+			draggableExport.addEventListener("dragstart", onDragStart, false && "useCapture");
+			draggableExport.addEventListener("click", function doNothing(event) {
+//				event.preventDefault();
+			}, false);
 			//            draggableExport.addEventListener("dragenter", reportDragDrop, false);
-			draggableExport.addEventListener("dragend", reportDragDrop, false);
+			draggableExport.addEventListener("dragend", function(event) {
+					event.stopPropagation();
+					event.preventDefault();
+				console.log("event.type = " + event.type);
+				console.log("event.returnValue = " + event.returnValue);
+				if (!invalidDropTarget) {
+					//				if (event.srcElement === draggableExport) {
+					reportDragDrop(event);
+				}
+				invalidDropTarget = false;
+			}, false && "useCapture");
 			draggableExport.title += chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
 			//            draggableExport.addEventListener("dragover", reportDragDrop, false);
 			//            draggableExport.addEventListener("dragexit", reportDragDrop, false);
 			//            draggableExport.addEventListener("dragleave", reportDragDrop, false);
-			//            draggableExport.addEventListener("drop", reportDragDrop, false);
+//			draggableExport.addEventListener("drop", reportDragDrop, false);
 		} else {
 			console.log("draggableExport = " + draggableExport);
 		}
-	} catch (e) {
-		console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + e.stack);
+	} catch (exception) {
+		console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + exception.stack);
 	}
 });
-
-function errorHandler(e) {
-	console.error(e);
-}
-
-function readAsText(fileEntry, callback) {
-	fileEntry.file(function(file) {
-		var reader = new FileReader();
-
-		reader.onerror = errorHandler;
-		reader.onload = function(e) {
-			callback(e.target.result);
-		};
-
-		reader.readAsText(file);
-	});
-}

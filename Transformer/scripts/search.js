@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: true */
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
-"use strict";
+	"use strict";
 var settings;
 var pageaction;
 var abbrevMostRecentlyUsed = window.localStorage.mru ? JSON.parse(window.localStorage.mru) : new Array(10);
@@ -265,9 +265,9 @@ function checkElements(elem) {
 		} else {
 			var ancestor = selection.anchorNode.parentNode.parentNode;
 			var unexpandedNode = doc.createTextNode(unExpandedValue);
-//			document.getSelection().getRangeAt(0).deleteContents();
-//			document.getSelection().getRangeAt(0).insertNode(unexpandedNode);
-//			ancestor.parentNode.replaceChild(unexpandedNode, ancestor);
+			//			document.getSelection().getRangeAt(0).deleteContents();
+			//			document.getSelection().getRangeAt(0).insertNode(unexpandedNode);
+			//			ancestor.parentNode.replaceChild(unexpandedNode, ancestor);
 			// Emulate insertAfter, see https://developer.mozilla.org/en-US/docs/DOM/Node.insertBefore
 			ancestor.parentNode.insertBefore(unexpandedNode, ancestor.nextSibling);
 			ancestor.parentNode.removeChild(ancestor);
@@ -279,17 +279,17 @@ function checkElements(elem) {
 			range.selectNode(x);
 			document.getSelection().addRange(range);
 			document.getSelection().collapseToStart();
-//			if (doc.getSelection().toString().length) {
-//				doc.getSelection().collapseToStart();
-//			}
-//
-//			if (false) {
-//				// Collapse range to end, i.e. toStart argument is false.
-//				range.collapse(false);
-//			}
+			//			if (doc.getSelection().toString().length) {
+			//				doc.getSelection().collapseToStart();
+			//			}
+			//
+			//			if (false) {
+			//				// Collapse range to end, i.e. toStart argument is false.
+			//				range.collapse(false);
+			//			}
 			// Always add the range to restore focus.
-//			doc.getSelection().addRange(range);
-			
+			//			doc.getSelection().addRange(range);
+
 			substituted = true;
 		}
 	}
@@ -311,21 +311,27 @@ function onKeyEvent(e) {
 		if (checkElements(element)) {
 			pageaction.notify();
 		} else {
-			var notification = webkitNotifications.createNotification(
-			//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
-			//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
-			//TODO See issue chromium:134315 for possible trouble with this.
-			chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT!
-			chrome.i18n.getMessage("extname") + ' - Recent Expansions', // notification title
-			//			HMTL content seems to be only supported by a possible future createHTMLNotification
-			//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-			getMostRecentlyUsedList().filter(function(value, index, object) {
-				return true;
-			}).map(function(value, index, object) {
-				return value;
-			}).join(" ") // notification body text
-			);
-			notification.show();
+			if (document.activeElement.isContentEditable || (document.activeElement.hasOwnProperty("readOnly") && !document.activeElement.readOnly)) {
+				var notification = webkitNotifications.createNotification(
+				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
+				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
+				//TODO See issue chromium:134315 for possible trouble with this.
+				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT!
+				chrome.i18n.getMessage("extname") + ' - Recent Expansions', // notification title
+				//			HMTL content seems to be only supported by a possible future createHTMLNotification
+				//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+				getMostRecentlyUsedList().filter(function(value, index, object) {
+					return true;
+				}).map(function(value, index, object) {
+					return value;
+				}).join(" ") // notification body text
+				);
+				notification.show();
+			} else {
+				chrome.extension.sendMessage({
+					cmd: "options" //$NON-NLS-0$
+				}, function(response) {});
+			}
 		}
 		// consume event
 		e.returnValue = false;
