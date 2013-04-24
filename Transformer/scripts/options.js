@@ -610,10 +610,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		if (draggableExport) {
 			draggableExport.addEventListener("dragstart", onDragStart, false && "useCapture");
 			draggableExport.addEventListener("click", function doNothing(event) {
-<<<<<<< HEAD
 				console.log(event);
-=======
->>>>>>> cb87c71d630e94226625098a2962a7bb710ab6ca
 //				event.preventDefault();
 			}, false);
 			//            draggableExport.addEventListener("dragenter", reportDragDrop, false);
