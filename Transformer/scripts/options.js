@@ -3,178 +3,184 @@
     "use strict"; //$NON-NLS-0$
 //var settings = new Settings();
 
+function logEvent(event) {
+    var text = JSON.stringify([event.type,
+    event.srcElement.localName + (event.srcElement.id ? '#' + event.srcElement.id : "") + (event.srcElement.classList.length ? '[class=' + event.srcElement.classList + ']' : "")]);
+    console.log(text);
+}
+
 var exportFileURL;
 
 function getDownloadFileName() {
-		var abbrevCount;
-		try {
-			var arrayLength = JSON.parse(localStorage.map).length;
-			if (arrayLength % 2) {
-				window.alert("Please report an issue! arrayLength = " + arrayLength);
-			}
-			abbrevCount = arrayLength / 2;
-		} catch (e) {}
-		var d = new Date();
-		var fileName = 'popchrom-' + abbrevCount + '-';
-		fileName += d.getFullYear();
-		var month = d.getMonth() + 1;
-		fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
-		//	TODO getDay() returns the day of week,
-		//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
-		var day = d.getDate();
-		fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
-		var hours = d.getHours();
-		fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
-		var minutes = d.getMinutes();
-		fileName += ((minutes < 10) ? "0" + minutes : minutes);
-		var seconds = d.getSeconds();
-		fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
-		var timeZoneOffset = -d.getTimezoneOffset();
-		var offsetMinutes = timeZoneOffset % 60;
-		var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-		fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
-		//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
-		//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
-		fileName += '.txt';
-		return fileName;
+    var abbrevCount;
+    try {
+        var arrayLength = JSON.parse(localStorage.map).length;
+        if (arrayLength % 2) {
+            window.alert("Please report an issue! arrayLength = " + arrayLength);
+        }
+        abbrevCount = arrayLength / 2;
+    } catch (e) {}
+    var d = new Date();
+    var fileName = 'popchrom-' + abbrevCount + '-';
+    fileName += d.getFullYear();
+    var month = d.getMonth() + 1;
+    fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
+    //	TODO getDay() returns the day of week,
+    //	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
+    var day = d.getDate();
+    fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
+    var hours = d.getHours();
+    fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
+    var minutes = d.getMinutes();
+    fileName += ((minutes < 10) ? "0" + minutes : minutes);
+    var seconds = d.getSeconds();
+    fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
+    var timeZoneOffset = -d.getTimezoneOffset();
+    var offsetMinutes = timeZoneOffset % 60;
+    var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
+    fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
+    //	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
+    //		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
+    fileName += '.txt';
+    return fileName;
 }
 
 function getExportFileURL() {
-	return exportFileURL;
+    return exportFileURL;
 }
 
 function getClipboard() {
-	var pasteTarget = document.createElement("div"); //$NON-NLS-0$
-	pasteTarget.contentEditable = true;
-	var actElem = document.activeElement.appendChild(pasteTarget).parentNode;
-	pasteTarget.focus();
-	document.execCommand("Paste", null, null); //$NON-NLS-0$
-	var paste = pasteTarget.innerText;
-	actElem.removeChild(pasteTarget);
-	return paste;
+    var pasteTarget = document.createElement("div"); //$NON-NLS-0$
+    pasteTarget.contentEditable = true;
+    var actElem = document.activeElement.appendChild(pasteTarget).parentNode;
+    pasteTarget.focus();
+    document.execCommand("Paste", null, null); //$NON-NLS-0$
+    var paste = pasteTarget.innerText;
+    actElem.removeChild(pasteTarget);
+    return paste;
 }
 
 function exportToFileSystem() {
-	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-	var errorHandler = function(e) {
-		//  var msg = '';
-		//
-		//  switch (e.code) {
-		//    case FileError.QUOTA_EXCEEDED_ERR:
-		//      msg = 'QUOTA_EXCEEDED_ERR';
-		//      break;
-		//    case FileError.NOT_FOUND_ERR:
-		//      msg = 'NOT_FOUND_ERR';
-		//      break;
-		//    case FileError.SECURITY_ERR:
-		//      msg = 'SECURITY_ERR';
-		//      break;
-		//    case FileError.INVALID_MODIFICATION_ERR:
-		//      msg = 'INVALID_MODIFICATION_ERR';
-		//      break;
-		//    case FileError.INVALID_STATE_ERR:
-		//      msg = 'INVALID_STATE_ERR';
-		//      break;
-		//    default:
-		//      msg = 'Unknown Error';
-		//      break;
-		//  };
+    window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+    var errorHandler = function(e) {
+        //  var msg = '';
+        //
+        //  switch (e.code) {
+        //    case FileError.QUOTA_EXCEEDED_ERR:
+        //      msg = 'QUOTA_EXCEEDED_ERR';
+        //      break;
+        //    case FileError.NOT_FOUND_ERR:
+        //      msg = 'NOT_FOUND_ERR';
+        //      break;
+        //    case FileError.SECURITY_ERR:
+        //      msg = 'SECURITY_ERR';
+        //      break;
+        //    case FileError.INVALID_MODIFICATION_ERR:
+        //      msg = 'INVALID_MODIFICATION_ERR';
+        //      break;
+        //    case FileError.INVALID_STATE_ERR:
+        //      msg = 'INVALID_STATE_ERR';
+        //      break;
+        //    default:
+        //      msg = 'Unknown Error';
+        //      break;
+        //  };
 
-		console.log('Error: ' + e);
-	};
-	var onInitFs = function(fs) {
-		// Remove file if it already exists since existing file will not be truncated by write!
-		fs.root.getFile('popchrom.txt', {
-			create: false
-		}, function(fileEntry) {
-			fileEntry.remove(function onSuccess() {
-				console.log("Removed " + fileEntry.toURL());
-			}, function onError() {
-				console.log("Cannot remove " + fileEntry.toURL());
-			});
-		});
-		var abbrevCount;
-		try {
-			var arrayLength = JSON.parse(localStorage.map).length;
-			if (arrayLength % 2) {
-				window.alert("Please report an issue! arrayLength = " + arrayLength);
-			}
-			abbrevCount = arrayLength / 2;
-		} catch (e) {}
-		var d = new Date();
-		var fileName = 'popchrom-' + abbrevCount + '-';
-		fileName += d.getFullYear();
-		var month = d.getMonth() + 1;
-		fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
-		//	TODO getDay() returns the day of week,
-		//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
-		var day = d.getDate();
-		fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
-		var hours = d.getHours();
-		fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
-		var minutes = d.getMinutes();
-		fileName += ((minutes < 10) ? "0" + minutes : minutes);
-		var seconds = d.getSeconds();
-		fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
-		var timeZoneOffset = -d.getTimezoneOffset();
-		var offsetMinutes = timeZoneOffset % 60;
-		var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-		fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
-		//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
-		//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
-		fileName += '.txt';
-		fs.root.getFile(fileName, {
-			create: true
-		}, function(fileEntry) {
+        console.log('Error: ' + e);
+    };
+    var onInitFs = function(fs) {
+        // Remove file if it already exists since existing file will not be truncated by write!
+        fs.root.getFile('popchrom.txt', {
+            create: false
+        }, function(fileEntry) {
+            fileEntry.remove(function onSuccess() {
+                console.log("Removed " + fileEntry.toURL());
+            }, function onError() {
+                console.log("Cannot remove " + fileEntry.toURL());
+            });
+        });
+        var abbrevCount;
+        try {
+            var arrayLength = JSON.parse(localStorage.map).length;
+            if (arrayLength % 2) {
+                window.alert("Please report an issue! arrayLength = " + arrayLength);
+            }
+            abbrevCount = arrayLength / 2;
+        } catch (e) {}
+        var d = new Date();
+        var fileName = 'popchrom-' + abbrevCount + '-';
+        fileName += d.getFullYear();
+        var month = d.getMonth() + 1;
+        fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
+        //	TODO getDay() returns the day of week,
+        //	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
+        var day = d.getDate();
+        fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
+        var hours = d.getHours();
+        fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
+        var minutes = d.getMinutes();
+        fileName += ((minutes < 10) ? "0" + minutes : minutes);
+        var seconds = d.getSeconds();
+        fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
+        var timeZoneOffset = -d.getTimezoneOffset();
+        var offsetMinutes = timeZoneOffset % 60;
+        var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
+        fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
+        //	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
+        //		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
+        fileName += '.txt';
+        fs.root.getFile(fileName, {
+            create: true
+        }, function(fileEntry) {
 
-			// Create a FileWriter object for our FileEntry (log.txt).
-			fileEntry.createWriter(function(fileWriter) {
+            // Create a FileWriter object for our FileEntry (log.txt).
+            fileEntry.createWriter(function(fileWriter) {
 
-				fileWriter.onwriteend = function(e) {
-					console.log('Write completed.');
-					console.log('See ' + fileEntry.fullPath);
-					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
-					exportFileURL = fileEntry.toURL();
-				$('a[class=icon file]')[0].href = fileEntry.toURL();
-				$('a[class=icon file]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop());
-					//					chrome.tabs.create({
-					//						url: "filesystem.html"
-					//					},
-					//
-					//					function(tab) {});
-					// 	chrome.tabs.create({
-					// 	  url: fileEntry.filesystem.root.toURL()
-					// 	      }, function(tab) {
-					// 		if (chrome.extension.lastError) {
-					// 			console.log("lastError:" + chrome.extension.lastError.message);
-					// 			return;
-					// 		}
-					// 		chrome.tabs.executeScript(tab.id, { file: "scripts/filesystem.js", runAt: "document_end" }, function callback(arrayOfAny) {});
-					// // 			     if (tab.status === "complete") {
-					// 		console.log("document.URL = " + document.URL);
-					// 		console.log("tab = " + JSON.stringify(tab));
-					// 			     document.body.title = "Please drag files to your desktop for backup";
-					// 			     tab.title = "Popchrom Exports";
-					// // 			     }
-					// });
-				};
+                fileWriter.onwriteend = function(e) {
+                    console.log('Write completed.');
+                    console.log('See ' + fileEntry.fullPath);
+                    console.log('fileEntry.toURL() = ' + fileEntry.toURL());
+                    exportFileURL = fileEntry.toURL();
+                    $('a[class=icon file]')[0].href = fileEntry.toURL();
+                    $('a[class=icon file]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop());
+                    //					chrome.tabs.create({
+                    //						url: "filesystem.html"
+                    //					},
+                    //
+                    //					function(tab) {});
+                    // 	chrome.tabs.create({
+                    // 	  url: fileEntry.filesystem.root.toURL()
+                    // 	      }, function(tab) {
+                    // 		if (chrome.extension.lastError) {
+                    // 			console.log("lastError:" + chrome.extension.lastError.message);
+                    // 			return;
+                    // 		}
+                    // 		chrome.tabs.executeScript(tab.id, { file: "scripts/filesystem.js", runAt: "document_end" }, function callback(arrayOfAny) {});
+                    // // 			     if (tab.status === "complete") {
+                    // 		console.log("document.URL = " + document.URL);
+                    // 		console.log("tab = " + JSON.stringify(tab));
+                    // 			     document.body.title = "Please drag files to your desktop for backup";
+                    // 			     tab.title = "Popchrom Exports";
+                    // // 			     }
+                    // });
+                };
 
-				fileWriter.onerror = function(e) {
-					console.log('Write failed: ' + e.toString());
-				};
+                fileWriter.onerror = function(e) {
+                    console.log('Write failed: ' + e.toString());
+                };
 
-				// Create a new Blob and write it to log.txt.
-				var blob = new window.Blob([localStorage.map], {
-					type: 'text/plain'
-				});
-				fileWriter.write(blob);
+                // Create a new Blob and write it to log.txt.
+                var blob = new window.Blob([localStorage.map], {
+                    type: 'text/plain'
+                });
+                fileWriter.write(blob);
 
-			}, errorHandler);
+            }, errorHandler);
 
-		}, errorHandler);
+        }, errorHandler);
 
-	};
-	window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ , onInitFs, errorHandler);
+    };
+    window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ , onInitFs, errorHandler);
 }
 
 var replaceKey = new KeyInfo();
@@ -335,7 +341,7 @@ function setKeyErrorColors(a) {
 function export_settings(event) {
     // Send message to content page to export to local, sandboxed, filesystem.
     var etfs = exportToFileSystem();
-//    var etfs = chrome.extension.getBackgroundPage().exportToFileSystem();
+    //    var etfs = chrome.extension.getBackgroundPage().exportToFileSystem();
 }
 
 function import_settings(event) {
@@ -449,14 +455,14 @@ function save_options(event) {
             $("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
         }, 750);
         restore_options();
-        				var blob = new window.Blob([localStorage.map], {
-					type: 'text/plain'
-				});
-				var href = URL.createObjectURL(blob);
-				$('a[class=icon file]')[0].href = href;
-				$('a[class=icon file]')[0].download = getDownloadFileName();
-//        exportToFileSystem();
-//        chrome.extension.getBackgroundPage().exportToFileSystem();
+        var blob = new window.Blob([localStorage.map], {
+            type: 'text/plain'
+        });
+        var href = URL.createObjectURL(blob);
+        $('a[class=icon file]')[0].href = href;
+        $('a[class=icon file]')[0].download = getDownloadFileName();
+        //        exportToFileSystem();
+        //        chrome.extension.getBackgroundPage().exportToFileSystem();
     } else {
         setKeyErrorColors(a);
         $("#saving").html(chrome.i18n.getMessage("keys_not_unique")); //$NON-NLS-0$ //$NON-NLS-1$
@@ -579,17 +585,27 @@ function reportDragDrop(event) {
         case "drop":
             // TODO needed for drop to work!
             event.preventDefault(); // stops the browser from redirecting.
-            var item = event.dataTransfer.items[0];
-            if (!item || !item.type.match('text/*')) {
-                console.log("Sorry. That's not a text file.");
-                return;
-            }
+            //            var item = event.dataTransfer.items[0];
+            //            if (!item || !item.type.match('text/*')) {
+            //                console.log("Sorry. That's not a text file.");
+            //                return;
+            //            }
 
-            var chosenFileEntry = item.webkitGetAsEntry();
-            readAsText(chosenFileEntry, function(result) {
+            //            var chosenFileEntry = event.dataTransfer.files[0].webkitGetAsEntry();
+            //            readAsText(chosenFileEntry, function(result) {
+            //                console.log(result);
+            //                chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
+            //            });
+            var reader = new FileReader();
+
+            reader.onerror = errorHandler;
+            reader.onload = function(domError) {
+                //            callback(domError.target.result);
+                var result = domError.target.result;
                 console.log(result);
                 chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
-            });
+            };
+            reader.readAsText(event.dataTransfer.files[0]);
             break;
         default:
             break;
@@ -642,11 +658,11 @@ function reportDragDrop(event) {
 
 function onDragStart(event) {
     var el = event.srcElement;
-//    var href = getExportFileURL();
-//    var href = chrome.extension.getBackgroundPage().getExportFileURL();
-//    var name = decodeURIComponent(href.split("/").pop());
-//    el.href = href;
-//    el.innerText = name;
+    //    var href = getExportFileURL();
+    //    var href = chrome.extension.getBackgroundPage().getExportFileURL();
+    //    var name = decodeURIComponent(href.split("/").pop());
+    //    el.href = href;
+    //    el.innerText = name;
     var download_url_data = "application/octet-stream:" + name + ":" + href;
     //   if (event.preventDefault) {
     //     event.preventDefault(); // stops the browser from redirecting.
@@ -794,10 +810,10 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
         //        var draggableExport;
         //        var draggableExport = $('div#tabs-1')[0];
         var draggableExport = $('a[class=icon file]')[0];
-//        draggableExport.href = getExportFileURL();
-//        draggableExport.href = chrome.extension.getBackgroundPage().getExportFileURL();
+        //        draggableExport.href = getExportFileURL();
+        //        draggableExport.href = chrome.extension.getBackgroundPage().getExportFileURL();
         //		var draggableExport = $('a[name=texttab]')[0];
-//        draggableExport.draggable = "true";
+        //        draggableExport.draggable = "true";
         //        var draggableExport = $('label[name=export]')[0];
         if (false && draggableExport) {
             draggableExport.addEventListener("dragstart", onDragStart, false && "useCapture");
@@ -812,7 +828,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
                 console.log("event.type = " + event.type);
                 console.log("event.returnValue = " + event.returnValue);
                 if (outsideBrowser(event)) {
-//                    console.log("Elvis has left the building.");
+                    //                    console.log("Elvis has left the building.");
                     //				if (event.srcElement === draggableExport) {
                     reportDragDrop(event);
                 }
@@ -826,6 +842,35 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
         } else {
             console.log("draggableExport = " + draggableExport);
         }
+        // TODO testing an empty event type: ""
+        //        draggableExport.addEventListener("", logEvent, false);
+        draggableExport.addEventListener("click", function(event) {
+            logEvent(event);
+            if (event.altKey) {
+                if (window.confirm("You requested to remove all abbreviations. Please perform a download without removing abbreviations first.")) {
+                    localStorage.map = "[]";
+                    restore_options();
+                }
+            }
+        }, false);
+        draggableExport.addEventListener("load", logEvent, false);
+        draggableExport.addEventListener("error", logEvent, false);
+        draggableExport.addEventListener("abort", logEvent, false);
+        //        chrome.webRequest.onBeforeRequest.addListener(function(details) {
+        //            console.log(JSON.stringify(details));
+        //        }, {
+        //            urls: ["<all_urls>"]
+        //        });
+        //        chrome.webRequest.onCompleted.addListener(function(details) {
+        //            console.log(JSON.stringify(details));
+        //        }, {
+        //            urls: ["<all_urls>"]
+        //        });
+        //        chrome.webRequest.onErrorOccurred.addListener(function(details) {
+        //            console.log(JSON.stringify(details));
+        //        }, {
+        //            urls: ["<all_urls>"]
+        //        });
     } catch (exception) {
         console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + exception.stack);
     }

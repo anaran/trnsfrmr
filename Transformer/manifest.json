@@ -11,7 +11,8 @@
 		"notifications",
 		"storage",
 		"tabs",
-		"webNavigation"
+		"webNavigation",
+		"webRequest"
 	],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
