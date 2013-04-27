@@ -2,10 +2,10 @@
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
     "use strict"; //$NON-NLS-0$
 
-// TODO Find and unquote first quoted object property
+// TODO Find unquoted object properties and double-quote them (conforms to JSON)
 // Use find regexp replace to fix that for now:
-// From:({\s+)'([^']+)'
-// To:$1$2
+// From:([{,]\s+)((//.*\n)*)([^'"/ ]+):
+// To:$1$2"$4":
 // Options: [v] Regular expression
 
 var default_icon = chrome.extension.getURL("icons/icon-16x16.png"); //$NON-NLS-0$
@@ -50,16 +50,16 @@ function playSound() {
 function animateNotify(tabId, pos) {
     if (pos < notifyImages.length) {
         chrome.pageAction.setIcon({
-            tabId: tabId,
-            path: notifyImages[pos++]
+            "tabId": tabId,
+            "path": notifyImages[pos++]
         });
         setTimeout(function() {
             animateNotify(tabId, pos);
         }, notifyDelay);
     } else {
         chrome.pageAction.setIcon({
-            tabId: tabId,
-            path: default_icon
+            "tabId": tabId,
+            "path": default_icon
         });
     }
 }
@@ -76,10 +76,10 @@ function notify(tabId) {
 function getSettings() {
     // TODO pack all settings into response
     return {
-        cmd: "push", //$NON-NLS-0$
-        map: localStorage.map,
-        selectPhrase: localStorage.selectphrase,
-        replaceKey: localStorage.replacekey
+        "cmd": "push", //$NON-NLS-0$
+        "map": localStorage.map,
+        "selectPhrase": localStorage.selectphrase,
+        "replaceKey": localStorage.replacekey
     };
 }
 
@@ -120,7 +120,7 @@ function onPageActionMessage(request, sender, sendResponse) {
 function onClipboardMessage(request, sender, sendResponse) {
     if (request.action === "paste") { //$NON-NLS-0$
         sendResponse({
-            paste: getClipboard()
+            "paste": getClipboard()
         });
     }
 }
@@ -152,9 +152,29 @@ function handleMessage(request, sender, sendResponse) {
             exportToFileSystem();
             sendResponse({}); // snub them.
             break;
-        default:
-            console.warn("unknown request"); //$NON-NLS-0$
-            console.warn(request);
+            case "issuedetails":
+            chrome.tabs.query({
+                "active": true,
+                "currentWindow": true
+            }, function(tab) {
+            chrome.tabs.sendMessage(tab[0].id, {
+                "cmd": "onSubmitPopchromIssue",
+                "appDetails": JSON.stringify(chrome.app.getDetails())
+            }, function(response) {
+            sendResponse({"summary": response.summary, "body": response.body});
+            chrome.tabs.update(sender.tab.id, {
+                "highlighted": true
+                //					active: true
+            });
+            });
+            });
+// TODO Note that I am fixing following problem here: Could not send response: The chrome.runtime.onMessage listener must return true if you want to send a response after the listener returns  (message was sent by extension hiefpgnngkikffmhgghabfikbbeilkif).
+            return true;
+// TODO Note that not all message types are handled for a single content script.
+// It is OK to not understand a message.
+//        default:
+//            console.warn("unknown request"); //$NON-NLS-0$
+//            console.warn(request);
             // don't respond if you don't understand the message.
             //		sendResponse({}); // snub them.
     }
@@ -177,7 +197,7 @@ function updateSettings(windows) {
 
 function broadcastSettings() {
     chrome.windows.getAll({
-        populate: true
+        "populate": true
     }, updateSettings);
 }
 
@@ -225,24 +245,24 @@ function addOrImportAbbrevs(text) {
 function reloadOptionsPage(create) {
     var url = chrome.extension.getURL("options.html");
     chrome.tabs.query({
-        url: url
+        "url": url
     }, function(tabs) {
         // Just update an open options page, don't open it.
         if (tabs.length === 1) {
             chrome.tabs.update(tabs[0].id, {
-                highlighted: true
+                "highlighted": true
                 //					active: true
             });
             chrome.tabs.reload(tabs[0].id);
         } else if (create) {
             chrome.tabs.query({
-                active: true,
-                currentWindow: true
+                "active": true,
+                "currentWindow": true
             }, function(tab) {
                 chrome.tabs.create({
-                    url: url,
+                    "url": url,
                     // TODO Please note that when we specify openerTabId closing the new tab brings us back to that tab when it still exists.
-                    openerTabId: tab[0].id
+                    "openerTabId": tab[0].id
                 }, function(tab) {});
             });
         }
@@ -254,24 +274,16 @@ function init() {
     if (localStorage.used_before !== "true") { //$NON-NLS-0$
         save_default();
     }
-    var onSubmitPopchromIssue = function(info, tab) {
-        try {
-            console.log(JSON.stringify(tab));
-            chrome.tabs.sendMessage(tab.id, {
-                cmd: "onSubmitPopchromIssue",
-                appDetails: JSON.stringify(chrome.app.getDetails())
-            }, function(response) {
-                chrome.tabs.create({
-                    url: response.newIssueQueryUrl
-                }, function(tab) {});
-            });
-        } catch (e) {
-            console.log("onSubmitPopchromIssue reports " + e);
-        }
-    };
+    localStorage.used_before = "true"; //$NON-NLS-0$
+    //	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
+    //	chrome.contextMenus.removeAll(function() {
+    //		if (chrome.extension.lastError) {
+    //			console.log("lastError:" + chrome.extension.lastError.message);
+    //		}
+    //	});
     var onAddOrImportAbbrevs = function(info, tab) {
         chrome.tabs.sendMessage(tab.id, {
-            cmd: "getSelection"
+            "cmd": "getSelection"
         }, function(response) {
             if (response.selection) {
                 addOrImportAbbrevs(response.selection);
@@ -280,34 +292,42 @@ function init() {
             }
         });
     };
-    localStorage.used_before = "true"; //$NON-NLS-0$
-    //	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
-    //	chrome.contextMenus.removeAll(function() {
-    //		if (chrome.extension.lastError) {
-    //			console.log("lastError:" + chrome.extension.lastError.message);
-    //		}
-    //	});
     var addAbbrevId = chrome.contextMenus.create({
         // TODO Causes lastError:Cannot create item with duplicate id addAbbrevId background.js:250
         // but multiple items are crated if id is absent. Live with the error for now.
-        id: "addAbbrevId",
-        type: "normal",
-        title: "Add/Import Popchrom abbreviation(s) for '%s'",
-        onclick: onAddOrImportAbbrevs,
-        contexts: ["selection"]
+        "id": "addAbbrevId",
+        "type": "normal",
+        "title": "Add/Import Popchrom abbreviation(s) for '%s'",
+        "onclick": onAddOrImportAbbrevs,
+        "contexts": ["selection"]
     }, function() {
         if (chrome.extension.lastError) {
             console.log("lastError:" + chrome.extension.lastError.message);
         }
     });
-    var submitPopchromIssueId = chrome.contextMenus.create({
+     var onSubmitPopchromIssue = function(info, tab) {
+        try {
+            console.log(JSON.stringify(tab));
+// TODO This URL is duplicated in search.js so that the content script can determine whether it has to send an "issuedetails" message.
+                     var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
+// TODO Note that the content script of the issue page will send us a "issuedetails" message.
+                    chrome.tabs.create({
+                    "active":false,
+                    "url": newIssueUrl
+                }, function(tab) {
+                });
+        } catch (e) {
+            console.log("onSubmitPopchromIssue reports " + e);
+        }
+    };
+   var submitPopchromIssueId = chrome.contextMenus.create({
         // TODO Causes lastError:Cannot create item with duplicate id submitPopchromIssueId
         // but multiple items are crated if id is absent. Live with the error for now.
-        id: "submitPopchromIssueId",
-        type: "normal",
-        title: "Submit New Popchrom Issue for '%s'",
-        onclick: onSubmitPopchromIssue,
-        contexts: ["all"]
+        "id": "submitPopchromIssueId",
+        "type": "normal",
+        "title": "Submit New Popchrom Issue for '%s'",
+        "onclick": onSubmitPopchromIssue,
+        "contexts": ["all"]
     }, function() {
         if (chrome.extension.lastError) {
             console.log("lastError:" + chrome.extension.lastError.message);
@@ -321,12 +341,12 @@ function init() {
     var toggleMarkText = chrome.contextMenus.create({
         // TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
         // but multiple items are crated if id is absent. Live with the error for now.
-        id: "toggleMarkText",
-        type: "checkbox",
-        checked: JSON.parse(localStorage.selectphrase),
-        title: chrome.i18n.getMessage("selectphrase"),
-        onclick: toggleMarkingText,
-        contexts: ["all"]
+        "id": "toggleMarkText",
+        "type": "checkbox",
+        "checked": JSON.parse(localStorage.selectphrase),
+        "title": chrome.i18n.getMessage("selectphrase"),
+        "onclick": toggleMarkingText,
+        "contexts": ["all"]
     }, function() {
         if (chrome.extension.lastError) {
             console.log("lastError:" + chrome.extension.lastError.message);

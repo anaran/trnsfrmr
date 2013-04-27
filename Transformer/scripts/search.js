@@ -2,11 +2,10 @@
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
     "use strict";
 
-// TODO Find and unquote first quoted object property
+// TODO Find unquoted object properties and double-quote them (conforms to JSON)
 // Use find regexp replace to fix that for now:
-// From:({\s+)'([^']+)'
-// To:$1$2
-// Options: [v] Regular expression
+// From:([{,]\s+)((//.*\n)*)([^'"/ ]+):
+// To:$1$2"$4":
 
 var settings;
 var pageaction;
@@ -389,10 +388,6 @@ function init() {
         switch (request.cmd) {
             case "onSubmitPopchromIssue":
                 try {
-                    //	console.log(JSON.stringify([request, sender, sendResponse]));
-                    //			console.log(sender.tab ?
-                    //				"from a content script:" + sender.tab.url :
-                    //				"from the extension");
                     var sel = document.getSelection();
                     var additionalInformation = "document.URL = " + document.URL; //$NON-NLS-0$
                     var rng;
@@ -433,18 +428,16 @@ function init() {
                         }).replace(/([{,])("\w+":)/g, "$1\n$2");
                     }
                     var appDetails = JSON.parse(request.appDetails);
-                    var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
-                    var queryString = "comment=" + window.encodeURIComponent("What steps will reproduce the problem?\n1. Use testcase below in a" + (actElem.nodeName.match(/^[aeio]/i) ? "n" : "") + " " + actElem.nodeName + ".\n2. What do do now?\n3. What to do next?\n\n" + "What is the expected output? What do you see instead?\n\n\n" + "What version of the product are you using? On what operating system?" + "\n\nPopchrom Version " + appDetails.version + "\nPopchrom ID " + appDetails.id + "\nPopchrom Locale " + appDetails.current_locale + "\nBrowser " + navigator.appVersion + "\n\nPlease review information about your minimal testcase below.\n\n" + additionalInformation) + "&summary=What is the problem?";
-                    var newIssueQueryUrl = newIssueUrl + "?" + queryString;
-                    console.log("newIssueQueryUrl.length = " + newIssueQueryUrl.length);
-                    if (newIssueQueryUrl.length <= 2060) {
+                    var issueSummary = "What is the problem?";
+                    var issueBody = "What steps will reproduce the problem?\n1. Use testcase below in a" + (actElem.nodeName.match(/^[aeio]/i) ? "n" : "") + " " + actElem.nodeName + ".\n2. What to do now?\n3. What to do next?\n\n" + "What is the expected output? What do you see instead?\n\n\n" + "What version of the product are you using? On what operating system?" + "\n\nPopchrom Version " + appDetails.version + "\nPopchrom ID " + appDetails.id + "\nPopchrom Locale " + appDetails.current_locale + "\nBrowser " + navigator.appVersion + "\n\nPlease review information about your minimal testcase below.\n\n" + additionalInformation;
+                    console.log("issueBody.length = " + issueBody.length);
+                    if (issueBody.length) {
                         if (sendResponse) {
                             sendResponse({
-                                newIssueQueryUrl: newIssueQueryUrl
+								summary: issueSummary,
+                                body: issueBody
                             });
                         }
-                    } else {
-                        window.alert("Please shorten your testcase (text content, text selection) by ca. " + (newIssueQueryUrl.length - 2060) + " characters");
                     }
                 } catch (e) {
                     console.log("onMessage callback reports:\n" + e.stack);
@@ -473,6 +466,17 @@ function init() {
         }
     };
     chrome.extension.onMessage.addListener(messageListener);
+                                         var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
+                                         if (document.URL === newIssueUrl) {
+                                         console.log("I need issuedetails");
+                chrome.extension.sendMessage({
+                    cmd: "issuedetails" //$NON-NLS-0$
+                }, function(response) {
+                                         console.log("I got issuedetails "+JSON.stringify(response));
+                document.querySelector('textarea[name=comment]').value = response.body;
+                document.querySelector('input#summary').value = response.summary;
+                });
+}
 }
 
 setTimeout(function() {

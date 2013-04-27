@@ -3,6 +3,11 @@
     "use strict"; //$NON-NLS-0$
 //var settings = new Settings();
 
+// TODO Find unquoted object properties and double-quote them (conforms to JSON)
+// Use find regexp replace to fix that for now:
+// From:([{,]\s+)((//.*\n)*)([^'"/ ]+):
+// To:$1$2"$4":
+
 function logEvent(event) {
     var text = JSON.stringify([event.type,
     event.srcElement.localName + (event.srcElement.id ? '#' + event.srcElement.id : "") + (event.srcElement.classList.length ? '[class=' + event.srcElement.classList + ']' : "")]);
@@ -91,7 +96,7 @@ function exportToFileSystem() {
     var onInitFs = function(fs) {
         // Remove file if it already exists since existing file will not be truncated by write!
         fs.root.getFile('popchrom.txt', {
-            create: false
+            "create": false
         }, function(fileEntry) {
             fileEntry.remove(function onSuccess() {
                 console.log("Removed " + fileEntry.toURL());
@@ -130,7 +135,7 @@ function exportToFileSystem() {
         //		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
         fileName += '.txt';
         fs.root.getFile(fileName, {
-            create: true
+            "create": true
         }, function(fileEntry) {
 
             // Create a FileWriter object for our FileEntry (log.txt).
@@ -171,7 +176,7 @@ function exportToFileSystem() {
 
                 // Create a new Blob and write it to log.txt.
                 var blob = new window.Blob([localStorage.map], {
-                    type: 'text/plain'
+                    "type": 'text/plain'
                 });
                 fileWriter.write(blob);
 
@@ -395,14 +400,14 @@ function import_settings(event) {
                     restore_options();
                 } else {
                     chrome.tabs.query({
-                        url: chrome.extension.getURL("options.html")
+                        "url": chrome.extension.getURL("options.html")
                     }, function(tabs) {
                         if (tabs.length === 0) {
                             window.open(chrome.extension.getURL("options.html"), "", "");
                         }
                         if (tabs.length === 1) {
                             chrome.tabs.update(tabs[0].id, {
-                                highlighted: true
+                                "highlighted": true
                                 //					active: true
                             });
                             chrome.tabs.reload(tabs[0].id);
@@ -456,7 +461,7 @@ function save_options(event) {
         }, 750);
         restore_options();
         var blob = new window.Blob([localStorage.map], {
-            type: 'text/plain'
+            "type": 'text/plain'
         });
         var href = URL.createObjectURL(blob);
         $('a[class=icon file]')[0].href = href;
