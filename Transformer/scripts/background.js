@@ -256,23 +256,14 @@ function init() {
     }
     var onSubmitPopchromIssue = function(info, tab) {
         try {
-            chrome.tabs.query({
-                active: true,
-                lastFocusedWindow: true
-            }, function(tab) {
-                try {
-                    console.log(JSON.stringify(tab));
-                    chrome.tabs.sendMessage(tab[0].id, {
-                        cmd: "onSubmitPopchromIssue",
-                        appDetails: JSON.stringify(chrome.app.getDetails())
-                    }, function(response) {
-                        chrome.tabs.create({
-                            url: response.newIssueQueryUrl
-                        }, function(tab) {});
-                    });
-                } catch (e) {
-                    console.log("tabs.query reports:\n" + JSON.stringify(e));
-                }
+            console.log(JSON.stringify(tab));
+            chrome.tabs.sendMessage(tab.id, {
+                cmd: "onSubmitPopchromIssue",
+                appDetails: JSON.stringify(chrome.app.getDetails())
+            }, function(response) {
+                chrome.tabs.create({
+                    url: response.newIssueQueryUrl
+                }, function(tab) {});
             });
         } catch (e) {
             console.log("onSubmitPopchromIssue reports " + e);
