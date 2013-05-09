@@ -21,24 +21,22 @@
   
     <div id="tabs">
       <ul>
-        <li><a href="#tabs-1" name="texttab"></a><a href="." class="icon file" download>Download</a></li>
+        <li><a href="#tabs-1" name="texttab"></a></li>
         <li><a href="#tabs-2" name="settingstab"></a></li>
         <li><a href="#tabs-3" name="helptab"></a></li>
         <li><a href="#tabs-4" name="changelogtab"></a></li>
-        <div class="saving">
-		<span id=saving class="saving"></span>
-		</div>
-        <div id="buttons" class="buttons_align_right">
+      </ul>
+      <div id="tabs-1"  class="tab_class">
+            <div class="subs" id="subs">
+<div id="buttons" class="buttons_align_right">
+        <span id=saving class="saving"></span>
 <!--        NOTE: Moved onClick code to event listeners in options.js and replaced all ' onClick="[^\"]+"' in options.html with nothing via Find Replace Regexp in Eclipse Orion. -->
-		<button name="add" id="add" ></button>
-        <button name="save" id="save" ></button>
+		<a href="." class="icon file" download>Download</a>
+		<button name="add" id="add" >Add</button>
+        <button name="save" id="save" >Save</button>
 <!--        <label name="export" id="export"></label> -->
 <!--        <label name="import" id="import"></label> -->
-        </div>
-      </ul>
-      
-      <div  id="tabs-1"  class="tab_class">
-            <div class="subs" id="subs">
+        </div>      
           <div class="sub_line_template">
             <div class="key_div">              
             	<input class="sub_key" type="text" value=""/>            
