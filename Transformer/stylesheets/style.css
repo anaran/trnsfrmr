@@ -166,6 +166,12 @@ pre {
 	white-space: pre-line;
 }
 
+[dropzone] {
+	border-style: dotted;
+	border-color: #FFCC66;
+	/*border-style: dashed;*/
+}
+
 #tabs-1 {
 	position: relative;
 	top: 125px;
