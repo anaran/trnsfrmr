@@ -269,33 +269,22 @@ function checkElements(elem) {
 				}
 			}
 		} else {
-			var ancestor = selection.anchorNode.parentNode.parentNode;
+			var ancestor = selection.anchorNode;
 			var unexpandedNode = doc.createTextNode(unExpandedValue);
 			//			document.getSelection().getRangeAt(0).deleteContents();
 			//			document.getSelection().getRangeAt(0).insertNode(unexpandedNode);
 			//			ancestor.parentNode.replaceChild(unexpandedNode, ancestor);
 			// Emulate insertAfter, see https://developer.mozilla.org/en-US/docs/DOM/Node.insertBefore
-			ancestor.parentNode.insertBefore(unexpandedNode, ancestor.nextSibling);
-			ancestor.parentNode.removeChild(ancestor);
-			document.getSelection().removeAllRanges();
+			ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
+			selection.deleteFromDocument();
 			// Normalization also deactivated a selection.
 			var x = unexpandedNode.parentNode;
 			x.normalize();
 			var range = doc.createRange();
-			range.selectNode(x);
+			range.selectNode(unexpandedNode);
+			document.getSelection().removeAllRanges();
 			document.getSelection().addRange(range);
 			document.getSelection().collapseToStart();
-			//			if (doc.getSelection().toString().length) {
-			//				doc.getSelection().collapseToStart();
-			//			}
-			//
-			//			if (false) {
-			//				// Collapse range to end, i.e. toStart argument is false.
-			//				range.collapse(false);
-			//			}
-			// Always add the range to restore focus.
-			//			doc.getSelection().addRange(range);
-
 			substituted = true;
 		}
 	}
