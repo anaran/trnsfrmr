@@ -27,7 +27,6 @@
         <li><a href="#tabs-4" name="changelogtab"></a></li>
       </ul>
       <div id="tabs-1"  class="tab_class">
-            <div class="subs" id="subs">
 <div id="buttons" class="buttons_align_right">
         <span id=saving class="saving"></span>
 <!--        NOTE: Moved onClick code to event listeners in options.js and replaced all ' onClick="[^\"]+"' in options.html with nothing via Find Replace Regexp in Eclipse Orion. -->
@@ -37,9 +36,13 @@
 <!--        <label name="export" id="export"></label> -->
 <!--        <label name="import" id="import"></label> -->
         </div>      
+            <div class="subs" id="subs">
           <div class="sub_line_template">
             <div class="key_div">              
             	<input class="sub_key" type="text" value=""/>            
+            </div>
+            <div class="args_div">              
+            	<input class="sub_args" type="text" value=""/>            
             </div>
             <div class="value_div">              
             	<textarea rows="2" cols="30"  class="expand50-1000"></textarea>            
