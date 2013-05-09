@@ -230,11 +230,12 @@ function del(event) {
 	row.outerHTML = "";
 }
 
-function createSubLine(key, value) {
+function createSubLine(key, args, value) {
 	var line = $("#subs .sub_line_template").clone(); //$NON-NLS-0$
 	line.removeClass("sub_line_template").addClass("sub_line"); //$NON-NLS-0$ //$NON-NLS-1$
 
 	$(".sub_key", line).val(key); //$NON-NLS-0$
+	$(".sub_args", line).val(args); //$NON-NLS-0$
 	$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr")); //$NON-NLS-0$ //$NON-NLS-1$
 	$(".sub_key", line).keydown(onKeyDownEvent); //$NON-NLS-0$
 	$(".sub_key", line).change(onInputChange); //$NON-NLS-0$
@@ -247,7 +248,7 @@ function createSubLine(key, value) {
 
 function add(event) {
 	var subs = $("#subs"); //$NON-NLS-0$
-	var line = createSubLine("", ""); //$NON-NLS-0$
+	var line = createSubLine("", "", ""); //$NON-NLS-0$
 	subs.prepend(line);
 	$("a[name=texttab]").click();
 }
@@ -265,7 +266,21 @@ function restore_options(event) {
 	}
 	var keyArray = a.sort();
 	for (var k = 0; k < keyArray.length; k++) {
-		var line = createSubLine(a[k], map.get(a[k]));
+	var args = "";
+	var expansion = "";
+	try {
+	var array = JSON.parse(map.get(a[k]));
+		var arrayLength = array.length;
+		if (arrayLength !== 2) {
+			console.error("Please report an issue! arrayLength = " + arrayLength);
+		} else {
+			args = array[0];
+			expansion = array[1];
+		}
+	} catch (e) {
+			expansion = map.get(a[k]);
+	}
+		var line = createSubLine(a[k], args, expansion);
 		subs.append(line);
 	}
 
@@ -414,11 +429,12 @@ function save_options(event) {
 
 	for (var i = 0; i < lines.length; i++) {
 		var key = $(".sub_key", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
+		var args = $(".sub_args", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
 		var value = $(".expand50-1000", lines[i])[0].value; //$NON-NLS-0$
 
 		if (key !== "" || value !== "") { //$NON-NLS-0$ //$NON-NLS-1$
 			a.push(key);
-			a.push(value);
+			a.push(JSON.stringify([args, value]));
 		}
 	}
 	if (keysUnique(a)) {
@@ -498,13 +514,6 @@ function init() {
 
 	//		document.getElementById("hiddenExpandShortcut").value = shortcuts.copy;
 	//		document.getElementById("spanExpandShortcut").innerText = getStringByShortcutCode(shortcuts.copy);
-//	if (false) {
-//	$('span#head')[0].style.zIndex = 1;
-//	$('span#head')[0].style.position = "fixed";
-//	$('div#tabs>ul')[0].style.zIndex = 1;
-//	$('div#tabs>ul')[0].style.position = "fixed";
-//	}
-
 }
 
 document.addEventListener("keydown", onKeyDown, false); //$NON-NLS-0$
