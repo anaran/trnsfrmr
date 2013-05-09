@@ -148,26 +148,6 @@ function exportToFileSystem() {
 					exportFileURL = fileEntry.toURL();
 					$('a[class=icon file]')[0].href = fileEntry.toURL();
 					$('a[class=icon file]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop());
-					//					chrome.tabs.create({
-					//						url: "filesystem.html"
-					//					},
-					//
-					//					function(tab) {});
-					// 	chrome.tabs.create({
-					// 	  url: fileEntry.filesystem.root.toURL()
-					// 	      }, function(tab) {
-					// 		if (chrome.extension.lastError) {
-					// 			console.log("lastError:" + chrome.extension.lastError.message);
-					// 			return;
-					// 		}
-					// 		chrome.tabs.executeScript(tab.id, { file: "scripts/filesystem.js", runAt: "document_end" }, function callback(arrayOfAny) {});
-					// // 			     if (tab.status === "complete") {
-					// 		console.log("document.URL = " + document.URL);
-					// 		console.log("tab = " + JSON.stringify(tab));
-					// 			     document.body.title = "Please drag files to your desktop for backup";
-					// 			     tab.title = "Popchrom Exports";
-					// // 			     }
-					// });
 				};
 
 				fileWriter.onerror = function(e) {
@@ -269,6 +249,7 @@ function add(event) {
 	var subs = $("#subs"); //$NON-NLS-0$
 	var line = createSubLine("", ""); //$NON-NLS-0$
 	subs.prepend(line);
+	$("a[name=texttab]").click();
 }
 
 // Restores select box state to saved value from localStorage.
@@ -517,6 +498,12 @@ function init() {
 
 	//		document.getElementById("hiddenExpandShortcut").value = shortcuts.copy;
 	//		document.getElementById("spanExpandShortcut").innerText = getStringByShortcutCode(shortcuts.copy);
+//	if (false) {
+//	$('span#head')[0].style.zIndex = 1;
+//	$('span#head')[0].style.position = "fixed";
+//	$('div#tabs>ul')[0].style.zIndex = 1;
+//	$('div#tabs>ul')[0].style.position = "fixed";
+//	}
 
 }
 
