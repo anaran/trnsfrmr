@@ -118,7 +118,7 @@ function Settings() {
 		} else {
 			console.warn("unknown command message"); //$NON-NLS-0$
 		}
-		// respond respond if you don't understand the message.
+		// don't respond if you don't understand the message.
 //		sendResponse({}); // snub them.
 	};
 
