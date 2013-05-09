@@ -159,7 +159,7 @@ function handleMessage(request, sender, sendResponse) {
 			}, function(tab) {
 				chrome.tabs.sendMessage(tab[0].id, {
 					"cmd": "onSubmitPopchromIssue",
-						"url": tab.url,
+						"url": tab[0].url,
 						"appDetails": JSON.stringify(chrome.app.getDetails())
 				}, function(response) {
 					sendResponse({
