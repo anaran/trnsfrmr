@@ -60,10 +60,10 @@ pre {
 
 .del_button {
 	position: relative;
-	height: 0px;
-	top: -90px;
-	left: 90%;
-	bottom: 20px;
+	/* height: 0px; */
+	top: -80px;
+	left: 87%;
+	/* bottom: 20px; */
 	width: 100px;
 }
 
@@ -81,13 +81,13 @@ pre {
 .args_div {
 	position: relative;
 	left: 1%;
-	top: 20%;
+	top: -85px;
 	width: 23%;
 }
 
 .value_div {
 	position: relative;
-	top: -60px;
+	/* top: -60px; */
 	left: 23%;
 	bottom: 29px;
 	width: 63%;
