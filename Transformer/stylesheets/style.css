@@ -5,12 +5,16 @@ body {
 }
 
 .expand50-1000 {
-	height:50px;
+/*	height:50px; */
 	font-family: Arial, Helvetica, sans-serif;
-	top: 0%;
-	width: 100%;
-	max-width: 100%;
+/*	top: 0%; */
+/*	width: 100%; */
+/*	max-width: 100%; */
+	overflow: hidden;
+	resize: none;
+	display: inline-block;
 }
+
 .tab_class {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12pt;
@@ -29,10 +33,11 @@ div#tabs>ul {
 div#buttons {
        z-index: 1;
        position: fixed;
-       top: 122px;
+       top: 118px;
        left: 30px;
        right: 30px;
        background-color: #fff7d9;
+	padding: 5px;       
 }
 
 .saving {
@@ -41,11 +46,8 @@ div#buttons {
 }
 
 .sub_line {
+    display: block;
 }
-
-//.sub_key {
-//	width: 100%;
-//}
 
 .logo {
 	background-color: #FFCC66;
@@ -59,43 +61,48 @@ pre {
 }
 
 .del_button {
-	position: relative;
+float: left;
+position: relative;
 	/* height: 0px; */
-	top: -80px;
-	left: 87%;
+/*	top: -80px; */
+/*	left: 87%; */
 	/* bottom: 20px; */
-	width: 100px;
+/*	width: 100px; */
 }
 
 .sub_line_template {
-	visibility: hidden;
-	height: 0px;
+	/* height: 0px; */
+	display: none;
 }
 
-.key_div {
-	position: relative;
-	left: 1%;
-	width: 23%;
+.key_args {
+float:left;
+position: relative;
+/*	left: 1%; */
+/*	width: 23%; */
 }
 
-.args_div {
+/*.args_div {
 	position: relative;
 	left: 1%;
 	top: -85px;
 	width: 23%;
-}
+}*/
 
 .value_div {
-	position: relative;
-	/* top: -60px; */
-	left: 23%;
-	bottom: 29px;
-	width: 63%;
-	height: inherit;
+position: relative;
+	
+/* overflow: hidden; */
+/* top: -60px; */
+/*	left: 23%; */
+/*	bottom: 29px; */
+/*	width: 63%; */
+/*	height: inherit; */
 }
-.del_div {
-	position: relative;
-}
+
+/*.del_div { */
+/*	position: relative; */
+/*} */
 
 .bg_key_error {
 	background-color: #FF7F7F;

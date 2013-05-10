@@ -225,7 +225,7 @@ function isKeyUnique(a, key) {
 }
 
 function del(event) {
-	var row = event.srcElement.parentElement.parentElement;
+	var row = event.srcElement.parentElement.parentElement.parentElement;
 
 	row.outerHTML = "";
 }
@@ -243,7 +243,34 @@ function createSubLine(key, args, value) {
 
 	$(".expand50-1000", line).val(value); //$NON-NLS-0$
 	$(".expand50-1000", line).Watermark(chrome.i18n.getMessage("long")); //$NON-NLS-0$ //$NON-NLS-1$
-	$(".del_button. button", line).click(del); //$NON-NLS-0$
+	$(".expand50-1000", line).focusout(function (event) {
+// TODO initialize from current unfocussed values instead.
+    event.target.cols = 78; 
+    event.target.rows = 4; 
+	});
+	$(".expand50-1000", line).focus(function (event) {
+	    console.log(event.timeStamp);
+    console.log(event);
+    var tc = event.target.value;
+    var rowIndex = 0;
+    var cols = 0;
+    var rows = 0;
+    tc.split("\n").forEach(function(value, index, object) {
+        rowIndex = index;
+        if (value.length > cols) {
+            cols = value.length;
+        }
+    });
+    rows = rowIndex + 1;
+    console.log("tc.length = " + tc.length);
+    console.log("rows = " + rows);
+//    this.cols = cols; 
+//    this.rows = rows; 
+    event.target.cols = cols > 78 ? cols : 78; 
+    event.target.rows = rows > 4 ? rows : 4; 
+    console.log("cols = " + cols);
+});
+	$(".del_button>button", line).click(del); //$NON-NLS-0$
 	return line;
 }
 

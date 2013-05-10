@@ -21,7 +21,7 @@
   
     <div id="tabs">
       <ul>
-        <li><a href="#tabs-1" name="texttab"></a></li>
+        <li><a href="#tabs-1" dropzone="copy" name="texttab"></a></li>
         <li><a href="#tabs-2" name="settingstab"></a></li>
         <li><a href="#tabs-3" name="helptab"></a></li>
         <li><a href="#tabs-4" name="changelogtab"></a></li>
@@ -38,19 +38,21 @@
         </div>      
             <div class="subs" id="subs">
           <div class="sub_line_template">
+<span class="key_args">
             <div class="key_div">              
-            	<input class="sub_key" type="text" value=""/>            
+            	<input class="sub_key" type="text" value="" tabindex="2"/>            
             </div>
             <div class="args_div">              
-            	<input class="sub_args" type="text" value=""/>            
-            </div>
-            <div class="value_div">              
-            	<textarea rows="2" cols="30"  class="expand50-1000"></textarea>            
-				<script type="text/javascript" src="scripts/jquery.textarea-expander.js"></script>
+            	<input class="sub_args" type="text" value="" tabindex="3"/>            
             </div>
             <div class="del_button">
-            	<button name="delete"></button>            
+            	<button name="delete" tabindex="-1"></button>            
             </div>
+</span>
+            <span class="value_div">              
+            	<textarea rows="4" cols="78" class="expand50-1000" tabindex="1"></textarea>            
+<!--				<script type="text/javascript" src="scripts/jquery.textarea-expander.js"></script> -->
+            </span>
           </div>
         </div>
         

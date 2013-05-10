@@ -228,7 +228,8 @@ function addOrImportAbbrevs(text) {
 		//			NOTE OK, this does not look like an import data array.
 		var name = window.prompt("Name for new abbreviation?");
 		if (name === null || name === "") {} else {
-			var re = window.prompt("Enter Pattern below if abbreviation '" + name + "' should take arguments\ne.g.\n\\s+(\\d+)\\s+(\\w+)");
+			var re = window.prompt("Enter Pattern below if abbreviation '" + name + "' should take arguments\ne.g.\n\\s+(\\d+)\\s+(\\w+), else delete it",
+			"\\s+(\\d+)\\s+(\\w+)");
 			var regexp = new RegExp(re);
 			if (re === null || re === "") {
 				import_settings([name, text]);
