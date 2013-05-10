@@ -235,8 +235,9 @@ function createSubLine(key, args, value) {
 	line.removeClass("sub_line_template").addClass("sub_line"); //$NON-NLS-0$ //$NON-NLS-1$
 
 	$(".sub_key", line).val(key); //$NON-NLS-0$
-	$(".sub_args", line).val(args); //$NON-NLS-0$
 	$(".sub_key", line).Watermark(chrome.i18n.getMessage("abbr")); //$NON-NLS-0$ //$NON-NLS-1$
+	$(".sub_args", line).val(args); //$NON-NLS-0$
+	$(".sub_args", line).Watermark(chrome.i18n.getMessage("args")); //$NON-NLS-0$ //$NON-NLS-1$
 	$(".sub_key", line).keydown(onKeyDownEvent); //$NON-NLS-0$
 	$(".sub_key", line).change(onInputChange); //$NON-NLS-0$
 
