@@ -87,6 +87,10 @@
     "message": "Abbreviation",
     "description": ""
   },
+  "args": {
+    "message": "Argument Pattern",
+    "description": "Argument Pattern"
+  },
   "long": {
     "message": "Expand to...",
     "description": ""

@@ -146,8 +146,8 @@ function exportToFileSystem() {
 					console.log('See ' + fileEntry.fullPath);
 					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
 					exportFileURL = fileEntry.toURL();
-					$('a[class=icon file]')[0].href = fileEntry.toURL();
-					$('a[class=icon file]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop());
+					$('a[download]')[0].href = fileEntry.toURL();
+					$('a[download]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop());
 				};
 
 				fileWriter.onerror = function(e) {
@@ -243,33 +243,33 @@ function createSubLine(key, args, value) {
 
 	$(".expand50-1000", line).val(value); //$NON-NLS-0$
 	$(".expand50-1000", line).Watermark(chrome.i18n.getMessage("long")); //$NON-NLS-0$ //$NON-NLS-1$
-	$(".expand50-1000", line).focusout(function (event) {
-// TODO initialize from current unfocussed values instead.
-    event.target.cols = 78; 
-    event.target.rows = 4; 
+	$(".expand50-1000", line).focusout(function(event) {
+		// TODO initialize from current unfocussed values instead.
+		event.target.cols = 78;
+		event.target.rows = 4;
 	});
-	$(".expand50-1000", line).focus(function (event) {
-	    console.log(event.timeStamp);
-    console.log(event);
-    var tc = event.target.value;
-    var rowIndex = 0;
-    var cols = 0;
-    var rows = 0;
-    tc.split("\n").forEach(function(value, index, object) {
-        rowIndex = index;
-        if (value.length > cols) {
-            cols = value.length;
-        }
-    });
-    rows = rowIndex + 1;
-    console.log("tc.length = " + tc.length);
-    console.log("rows = " + rows);
-//    this.cols = cols; 
-//    this.rows = rows; 
-    event.target.cols = cols > 78 ? cols : 78; 
-    event.target.rows = rows > 4 ? rows : 4; 
-    console.log("cols = " + cols);
-});
+	$(".expand50-1000", line).focus(function(event) {
+		console.log(event.timeStamp);
+		console.log(event);
+		var tc = event.target.value;
+		var rowIndex = 0;
+		var cols = 0;
+		var rows = 0;
+		tc.split("\n").forEach(function(value, index, object) {
+			rowIndex = index;
+			if (value.length > cols) {
+				cols = value.length;
+			}
+		});
+		rows = rowIndex + 1;
+		console.log("tc.length = " + tc.length);
+		console.log("rows = " + rows);
+		//    this.cols = cols; 
+		//    this.rows = rows; 
+		event.target.cols = cols > 78 ? cols : 78;
+		event.target.rows = rows > 4 ? rows : 4;
+		console.log("cols = " + cols);
+	});
 	$(".del_button>button", line).click(del); //$NON-NLS-0$
 	return line;
 }
@@ -294,20 +294,20 @@ function restore_options(event) {
 	}
 	var keyArray = a.sort();
 	for (var k = 0; k < keyArray.length; k++) {
-	var args = "";
-	var expansion = "";
-	try {
-	var array = JSON.parse(map.get(a[k]));
-		var arrayLength = array.length;
-		if (arrayLength !== 2) {
-			console.error("Please report an issue! arrayLength = " + arrayLength);
-		} else {
-			args = array[0];
-			expansion = array[1];
-		}
-	} catch (e) {
+		var args = "";
+		var expansion = "";
+		try {
+			var array = JSON.parse(map.get(a[k]));
+			var arrayLength = array.length;
+			if (arrayLength !== 2) {
+				console.error("Please report an issue! arrayLength = " + arrayLength);
+			} else {
+				args = array[0];
+				expansion = array[1];
+			}
+		} catch (e) {
 			expansion = map.get(a[k]);
-	}
+		}
 		var line = createSubLine(a[k], args, expansion);
 		subs.append(line);
 	}
@@ -333,17 +333,13 @@ var current_keylearner;
 
 function keyUpEventListener(event) {
 	replaceKey.fromEvent(event);
-
 	document.getElementById('spanExpandShortcut').innerText = replaceKey.toString(); //$NON-NLS-0$
-
+	localize("editshortcut", "option_shortcut_edit"); //$NON-NLS-0$ //$NON-NLS-1$
 	document.removeEventListener('keyup', keyUpEventListener); //$NON-NLS-0$
-
-	//save();
 }
 
 function createShortcut(event) {
 	current_keylearner = event.srcElement;
-
 	document.addEventListener('keyup', keyUpEventListener); //$NON-NLS-0$
 	event.srcElement.innerText = chrome.i18n.getMessage("option_shortcut_press"); //$NON-NLS-0$
 }
@@ -351,7 +347,8 @@ function createShortcut(event) {
 function deleteShortcut(event) {
 	event.srcElement.innerText = "";
 
-	replaceKey = null;
+	replaceKey = new KeyInfo();
+	localStorage.replacekey = replaceKey.toStore();
 
 }
 
@@ -447,7 +444,9 @@ function import_settings(event) {
 
 // Saves options to localStorage.
 function save_options(event) {
-	$("#saving").html(chrome.i18n.getMessage("saving")); //$NON-NLS-0$ //$NON-NLS-1$
+	//	$("#saving").html(chrome.i18n.getMessage("saving")); //$NON-NLS-0$ //$NON-NLS-1$
+	//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
+	$('#saving_progress')[0].style.display = "inline-block";
 
 	$.Watermark.HideAll();
 
@@ -483,14 +482,16 @@ function save_options(event) {
 
 		setTimeout(function() {
 			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
-		}, 750);
+			$('#saving_progress')[0].style.display = "none";
+			//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
+		}, 100);
 		restore_options();
 		var blob = new window.Blob([localStorage.map], {
 			"type": 'text/plain'
 		});
 		var href = URL.createObjectURL(blob);
-		$('a[class=icon file]')[0].href = href;
-		$('a[class=icon file]')[0].download = getDownloadFileName();
+		$('a[download]')[0].href = href;
+		$('a[download]')[0].download = getDownloadFileName();
 		//        exportToFileSystem();
 		//        chrome.extension.getBackgroundPage().exportToFileSystem();
 	} else {
@@ -720,7 +721,8 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		init();
 		//        document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
 		//        document.querySelector('label[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('span[name=caption]').title = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
+		//		document.querySelector('span[name=caption]').title = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
+		//		document.querySelector('span#version').innerText = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
 		//        document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
 		//        var dropzoneImport = $('div#tabs-1')[0];
 		var dropzoneImport = $('a[name=texttab]')[0];
@@ -834,11 +836,24 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		//	document.querySelector('button[name=delete]').addEventListener('click', del);
 		document.querySelector('span[name=editshortcut]').addEventListener('click', createShortcut); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('span[name=deleteshortcut]').addEventListener('click', deleteShortcut); //$NON-NLS-0$ //$NON-NLS-1$
+		document.querySelector('button[name=download]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
+			console.time("download");
+			document.querySelector('a[download]').click();
+			console.timeEnd("download");
+		});
+		document.querySelector('button[name=delete_all]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
+			document.querySelector('a[download]').click();
+			console.time("delete_all");
+			localStorage.map_backup = localStorage.map;
+			localStorage.map = "[]";
+			console.timeEnd("delete_all");
+			restore_options();
+		});
 		document.querySelector('button[name=save]').addEventListener('click', save_options); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('button[name=save]').click();
 		//        var draggableExport;
 		//        var draggableExport = $('div#tabs-1')[0];
-		var draggableExport = $('a[class=icon file]')[0];
+		var draggableExport = $('a[download]')[0];
 		//        draggableExport.href = getExportFileURL();
 		//        draggableExport.href = chrome.extension.getBackgroundPage().getExportFileURL();
 		//		var draggableExport = $('a[name=texttab]')[0];

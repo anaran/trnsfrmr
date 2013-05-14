@@ -16,7 +16,9 @@
 <body>
 
 <div id="main">
-  <img src="icons/icon-48x48.png" align="top" class="logo"><span name="caption" id="head"></span>
+  <img src="icons/icon-48x48.png" align="top" class="logo">
+  <span name="caption" id="head"></span>
+  <span id="version"></span>
   <div id="body">
   
     <div id="tabs">
@@ -30,9 +32,12 @@
 <div id="buttons" class="buttons_align_right">
         <span id=saving class="saving"></span>
 <!--        NOTE: Moved onClick code to event listeners in options.js and replaced all ' onClick="[^\"]+"' in options.html with nothing via Find Replace Regexp in Eclipse Orion. -->
-		<a href="." class="icon file" download>Download</a>
-		<button name="add" id="add" >Add</button>
-        <button name="save" id="save" >Save</button>
+		<a href="." download></a>
+		<button name="download" id="download">Download</button>
+		<button name="delete_all" id="delete_all">Delete All</button>
+		<button name="add" id="add">Add</button>
+        <button name="save" id="save">Save</button>
+        <progress id="saving_progress"></progress>
 <!--        <label name="export" id="export"></label> -->
 <!--        <label name="import" id="import"></label> -->
         </div>      

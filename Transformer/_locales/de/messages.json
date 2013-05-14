@@ -87,6 +87,10 @@
     "message": "Abkürzung",
     "description": ""
   },
+  "args": {
+    "message": "Argument Muster",
+    "description": ""
+  },
   "long": {
     "message": "Wird erweitert zu...",
     "description": ""
