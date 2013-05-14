@@ -446,7 +446,7 @@ function import_settings(event) {
 function save_options(event) {
 	//	$("#saving").html(chrome.i18n.getMessage("saving")); //$NON-NLS-0$ //$NON-NLS-1$
 	//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
-	$('#saving_progress')[0].style.display = "inline-block";
+	$('#saving_progress')[0].style.visibility = "visible";
 
 	$.Watermark.HideAll();
 
@@ -482,9 +482,9 @@ function save_options(event) {
 
 		setTimeout(function() {
 			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
-			$('#saving_progress')[0].style.display = "none";
+			$('#saving_progress')[0].style.visibility = "hidden";
 			//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
-		}, 100);
+		}, 1000);
 		restore_options();
 		var blob = new window.Blob([localStorage.map], {
 			"type": 'text/plain'
