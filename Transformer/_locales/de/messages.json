@@ -16,7 +16,11 @@
     "description": ""
   },
   "option_del": {
-    "message": "Entfernen",
+    "message": "Löschen",
+    "description": ""
+  },
+  "option_delete_all": {
+    "message": "Alle Löschen",
     "description": ""
   },
   "option_shortcut_expand": {
@@ -63,21 +67,13 @@
     "message": "Speichern",
     "description": ""
   },
-  "export": {
-    "message": "Exportieren",
-    "description": "Text der export Schaltfläche."
-  },
-  "export_help": {
-    "message": "Ziehen Sie Ihre Abkürzungen zur Datensicherung und für späteren Import, viellecht mit Änderungen, auf Ihren Desktop oder Dateimanager.",
-    "description": "Hilfetext für Schaltflächte zum Exportieren."
-  },
-  "import": {
-    "message": "Importieren",
-    "description": "Text der import Schaltfläche."
-  },
-  "import_help": {
-    "message": "Ziehen Sie Ihre geänderten Abkürzungen von Desktop oder Dateimanager hier her. Bitte exportieren Sie zuvor Ihre Abkürzungen zur Datensicherung durch Ziehen  auf Desktop oder Dateimanager.",
+  "dropzone_help": {
+    "message": "Ziehen Sie Ihre geänderten Abkürzungen von Desktop oder Dateimanager hier her. Bitte exportieren Sie zuvor Ihre Abkürzungen zur Datensicherung mittels Download button.",
     "description": "Hilfetext für Schaltflächte zum Importieren."
+  },
+  "delete_all_help": {
+    "message": "Delete all abbreviations. An automatic download is done first.",
+    "description": "Help text for Delete All button."
   },
   "restore": {
     "message": "Laden",
