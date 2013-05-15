@@ -21,7 +21,7 @@ function getDownloadFileName() {
 	try {
 		var arrayLength = JSON.parse(localStorage.map).length;
 		if (arrayLength % 2) {
-			window.alert(chrome.i18n.getMessage("Please report an issue! arrayLength = ") + arrayLength);
+			window.alert(chrome.i18n.getMessage("odd_map_array_length") + arrayLength);
 		}
 		abbrevCount = arrayLength / 2;
 	} catch (e) {}
@@ -627,6 +627,7 @@ function reportDragDrop(event) {
 			//                console.log(result);
 			//                chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
 			//            });
+			document.querySelector('a[download]').click(); //$NON-NLS-0$
 			var reader = new FileReader();
 
 			reader.onerror = errorHandler;
@@ -842,7 +843,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 			document.querySelector('a[download]').click(); //$NON-NLS-0$
 			console.timeEnd("download"); //$NON-NLS-0$
 		});
-		document.querySelector('button[name=delete_all]').title = chrome.i18n.getMessage("delete_all"); //$NON-NLS-0$ //$NON-NLS-1$
+		document.querySelector('button[name=delete_all]').title = chrome.i18n.getMessage("delete_all_help"); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('button[name=delete_all]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
 			document.querySelector('a[download]').click(); //$NON-NLS-0$
 			console.time("delete_all"); //$NON-NLS-0$
