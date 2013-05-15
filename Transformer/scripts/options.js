@@ -10,7 +10,7 @@
 
 function logEvent(event) {
 	var text = JSON.stringify([event.type,
-	event.srcElement.localName + (event.srcElement.id ? '#' + event.srcElement.id : "") + (event.srcElement.classList.length ? '[class=' + event.srcElement.classList + ']' : "")]);
+	event.srcElement.localName + (event.srcElement.id ? '#' + event.srcElement.id : "") + (event.srcElement.classList.length ? '[class=' + event.srcElement.classList + ']' : "")]); //$NON-NLS-1$ //$NON-NLS-0$
 	console.log(text);
 }
 
@@ -21,32 +21,32 @@ function getDownloadFileName() {
 	try {
 		var arrayLength = JSON.parse(localStorage.map).length;
 		if (arrayLength % 2) {
-			window.alert("Please report an issue! arrayLength = " + arrayLength);
+			window.alert(chrome.i18n.getMessage("Please report an issue! arrayLength = ") + arrayLength);
 		}
 		abbrevCount = arrayLength / 2;
 	} catch (e) {}
 	var d = new Date();
-	var fileName = 'popchrom-' + abbrevCount + '-';
+	var fileName = 'popchrom-' + abbrevCount + '-'; //$NON-NLS-1$ //$NON-NLS-0$
 	fileName += d.getFullYear();
 	var month = d.getMonth() + 1;
-	fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
+	fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$ //$NON-NLS-1$
 	//	TODO getDay() returns the day of week,
 	//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
 	var day = d.getDate();
-	fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
+	fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$ //$NON-NLS-1$
 	var hours = d.getHours();
-	fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
+	fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$ //$NON-NLS-1$
 	var minutes = d.getMinutes();
-	fileName += ((minutes < 10) ? "0" + minutes : minutes);
+	fileName += ((minutes < 10) ? "0" + minutes : minutes); //$NON-NLS-0$
 	var seconds = d.getSeconds();
 	fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
 	var timeZoneOffset = -d.getTimezoneOffset();
 	var offsetMinutes = timeZoneOffset % 60;
 	var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-	fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
+	fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$ //$NON-NLS-2$ //$NON-NLS-1$
 	//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
 	//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
-	fileName += '.txt';
+	fileName += '.txt'; //$NON-NLS-0$
 	return fileName;
 }
 
@@ -91,72 +91,72 @@ function exportToFileSystem() {
 		//      break;
 		//  };
 
-		console.log('Error: ' + e);
+		console.log('Error: ' + e); //$NON-NLS-0$
 	};
 	var onInitFs = function(fs) {
 		// Remove file if it already exists since existing file will not be truncated by write!
-		fs.root.getFile('popchrom.txt', {
-			"create": false
+		fs.root.getFile('popchrom.txt', { //$NON-NLS-0$
+			"create": false //$NON-NLS-0$
 		}, function(fileEntry) {
 			fileEntry.remove(function onSuccess() {
-				console.log("Removed " + fileEntry.toURL());
+				console.log("Removed " + fileEntry.toURL()); //$NON-NLS-0$
 			}, function onError() {
-				console.log("Cannot remove " + fileEntry.toURL());
+				console.log("Cannot remove " + fileEntry.toURL()); //$NON-NLS-0$
 			});
 		});
 		var abbrevCount;
 		try {
 			var arrayLength = JSON.parse(localStorage.map).length;
 			if (arrayLength % 2) {
-				window.alert("Please report an issue! arrayLength = " + arrayLength);
+				window.alert("Please report an issue! arrayLength = " + arrayLength); //$NON-NLS-0$
 			}
 			abbrevCount = arrayLength / 2;
 		} catch (e) {}
 		var d = new Date();
-		var fileName = 'popchrom-' + abbrevCount + '-';
+		var fileName = 'popchrom-' + abbrevCount + '-'; //$NON-NLS-1$ //$NON-NLS-0$
 		fileName += d.getFullYear();
 		var month = d.getMonth() + 1;
-		fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$
+		fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$ //$NON-NLS-1$
 		//	TODO getDay() returns the day of week,
 		//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
 		var day = d.getDate();
-		fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$
+		fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$ //$NON-NLS-1$
 		var hours = d.getHours();
-		fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$
+		fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$ //$NON-NLS-1$
 		var minutes = d.getMinutes();
-		fileName += ((minutes < 10) ? "0" + minutes : minutes);
+		fileName += ((minutes < 10) ? "0" + minutes : minutes); //$NON-NLS-0$
 		var seconds = d.getSeconds();
 		fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
 		var timeZoneOffset = -d.getTimezoneOffset();
 		var offsetMinutes = timeZoneOffset % 60;
 		var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-		fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$
+		fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$ //$NON-NLS-2$ //$NON-NLS-1$
 		//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
 		//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
-		fileName += '.txt';
+		fileName += '.txt'; //$NON-NLS-0$
 		fs.root.getFile(fileName, {
-			"create": true
+			"create": true //$NON-NLS-0$
 		}, function(fileEntry) {
 
 			// Create a FileWriter object for our FileEntry (log.txt).
 			fileEntry.createWriter(function(fileWriter) {
 
 				fileWriter.onwriteend = function(e) {
-					console.log('Write completed.');
-					console.log('See ' + fileEntry.fullPath);
-					console.log('fileEntry.toURL() = ' + fileEntry.toURL());
+					console.log('Write completed.'); //$NON-NLS-0$
+					console.log('See ' + fileEntry.fullPath); //$NON-NLS-0$
+					console.log('fileEntry.toURL() = ' + fileEntry.toURL()); //$NON-NLS-0$
 					exportFileURL = fileEntry.toURL();
-					$('a[download]')[0].href = fileEntry.toURL();
-					$('a[download]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop());
+					$('a[download]')[0].href = fileEntry.toURL(); //$NON-NLS-0$
+					$('a[download]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop()); //$NON-NLS-1$ //$NON-NLS-0$
 				};
 
 				fileWriter.onerror = function(e) {
-					console.log('Write failed: ' + e.toString());
+					console.log('Write failed: ' + e.toString()); //$NON-NLS-0$
 				};
 
 				// Create a new Blob and write it to log.txt.
 				var blob = new window.Blob([localStorage.map], {
-					"type": 'text/plain'
+					"type": 'text/plain' //$NON-NLS-1$ //$NON-NLS-0$
 				});
 				fileWriter.write(blob);
 
@@ -243,32 +243,32 @@ function createSubLine(key, args, value) {
 
 	$(".expand50-1000", line).val(value); //$NON-NLS-0$
 	$(".expand50-1000", line).Watermark(chrome.i18n.getMessage("long")); //$NON-NLS-0$ //$NON-NLS-1$
-	$(".expand50-1000", line).focusout(function(event) {
+	$(".expand50-1000", line).focusout(function(event) { //$NON-NLS-0$
 		// TODO initialize from current unfocussed values instead.
 		event.target.cols = 78;
 		event.target.rows = 4;
 	});
-	$(".expand50-1000", line).focus(function(event) {
+	$(".expand50-1000", line).focus(function(event) { //$NON-NLS-0$
 		console.log(event.timeStamp);
 		console.log(event);
 		var tc = event.target.value;
 		var rowIndex = 0;
 		var cols = 0;
 		var rows = 0;
-		tc.split("\n").forEach(function(value, index, object) {
+		tc.split("\n").forEach(function(value, index, object) { //$NON-NLS-0$
 			rowIndex = index;
 			if (value.length > cols) {
 				cols = value.length;
 			}
 		});
 		rows = rowIndex + 1;
-		console.log("tc.length = " + tc.length);
-		console.log("rows = " + rows);
+		console.log("tc.length = " + tc.length); //$NON-NLS-0$
+		console.log("rows = " + rows); //$NON-NLS-0$
 		//    this.cols = cols; 
 		//    this.rows = rows; 
 		event.target.cols = cols > 78 ? cols : 78;
 		event.target.rows = rows > 4 ? rows : 4;
-		console.log("cols = " + cols);
+		console.log("cols = " + cols); //$NON-NLS-0$
 	});
 	$(".del_button>button", line).click(del); //$NON-NLS-0$
 	return line;
@@ -276,9 +276,9 @@ function createSubLine(key, args, value) {
 
 function add(event) {
 	var subs = $("#subs"); //$NON-NLS-0$
-	var line = createSubLine("", "", ""); //$NON-NLS-0$
+	var line = createSubLine("", "", ""); //$NON-NLS-0$ //$NON-NLS-1$
 	subs.prepend(line);
-	$("a[name=texttab]").click();
+	$("a[name=texttab]").click(); //$NON-NLS-0$
 }
 
 // Restores select box state to saved value from localStorage.
@@ -300,7 +300,7 @@ function restore_options(event) {
 			var array = JSON.parse(map.get(a[k]));
 			var arrayLength = array.length;
 			if (arrayLength !== 2) {
-				console.error("Please report an issue! arrayLength = " + arrayLength);
+				console.error(chrome.i18n.getMessage("Please report an issue! arrayLength = ") + arrayLength);
 			} else {
 				args = array[0];
 				expansion = array[1];
@@ -378,7 +378,7 @@ function import_settings(event) {
 	var mapArray = JSON.parse(localStorage.map);
 	var optionsDocument;
 	try {
-		if (event.hasOwnProperty("srcElement")) {
+		if (event.hasOwnProperty("srcElement")) { //$NON-NLS-0$
 			importArray = JSON.parse(window.prompt(chrome.i18n.getMessage("paste_below"))); //$NON-NLS-0$
 		} else {
 			importArray = event;
@@ -417,18 +417,18 @@ function import_settings(event) {
 					mapArray.push(importMap.value());
 				}
 				localStorage.map = JSON.stringify(mapArray);
-				if (event.hasOwnProperty("srcElement")) {
+				if (event.hasOwnProperty("srcElement")) { //$NON-NLS-0$
 					restore_options();
 				} else {
 					chrome.tabs.query({
-						"url": chrome.extension.getURL("options.html")
+						"url": chrome.extension.getURL("options.html") //$NON-NLS-1$ //$NON-NLS-0$
 					}, function(tabs) {
 						if (tabs.length === 0) {
-							window.open(chrome.extension.getURL("options.html"), "", "");
+							window.open(chrome.extension.getURL("options.html"), "", ""); //$NON-NLS-1$ //$NON-NLS-0$
 						}
 						if (tabs.length === 1) {
 							chrome.tabs.update(tabs[0].id, {
-								"highlighted": true
+								"highlighted": true //$NON-NLS-0$
 								//					active: true
 							});
 							chrome.tabs.reload(tabs[0].id);
@@ -446,7 +446,7 @@ function import_settings(event) {
 function save_options(event) {
 	//	$("#saving").html(chrome.i18n.getMessage("saving")); //$NON-NLS-0$ //$NON-NLS-1$
 	//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
-	$('#saving_progress')[0].style.visibility = "visible";
+	$('#saving_progress')[0].style.visibility = "visible"; //$NON-NLS-1$ //$NON-NLS-0$
 
 	$.Watermark.HideAll();
 
@@ -482,16 +482,16 @@ function save_options(event) {
 
 		setTimeout(function() {
 			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
-			$('#saving_progress')[0].style.visibility = "hidden";
+			$('#saving_progress')[0].style.visibility = "hidden"; //$NON-NLS-1$ //$NON-NLS-0$
 			//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
 		}, 1000);
 		restore_options();
 		var blob = new window.Blob([localStorage.map], {
-			"type": 'text/plain'
+			"type": 'text/plain' //$NON-NLS-1$ //$NON-NLS-0$
 		});
 		var href = URL.createObjectURL(blob);
-		$('a[download]')[0].href = href;
-		$('a[download]')[0].download = getDownloadFileName();
+		$('a[download]')[0].href = href; //$NON-NLS-0$
+		$('a[download]')[0].download = getDownloadFileName(); //$NON-NLS-0$
 		//        exportToFileSystem();
 		//        chrome.extension.getBackgroundPage().exportToFileSystem();
 	} else {
@@ -515,11 +515,12 @@ function init() {
 	localizeString("caption", document.title); //$NON-NLS-0$
 
 	localize("save", "save"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("export", "export"); //$NON-NLS-0$ //$NON-NLS-1$
-	localize("import", "import"); //$NON-NLS-0$ //$NON-NLS-1$
+//	localize("export", "export"); //$NON-NLS-0$ //$NON-NLS-1$
+//	localize("import", "import"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("restore", "restore"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("add", "option_add"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("delete", "option_del"); //$NON-NLS-0$ //$NON-NLS-1$
+	localize("delete_all", "option_delete_all"); //$NON-NLS-0$ //$NON-NLS-1$
 
 	localize("guide", "guide"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("abbr", "abbr"); //$NON-NLS-0$ //$NON-NLS-1$
@@ -572,14 +573,14 @@ function reportDragDrop(event) {
 	//     event.stopPropagation(); // stops the browser from redirecting.
 	//   }
 	switch (event.type) {
-		case "dragstart":
+		case "dragstart": //$NON-NLS-0$
 			//         event.stopPropagation(); // stops the browser from redirecting.
 			break;
-		case "dragenter":
+		case "dragenter": //$NON-NLS-0$
 			// TODO needed for drop to work!
 			event.preventDefault(); // stops the browser from redirecting.
 			break;
-		case "dragend":
+		case "dragend": //$NON-NLS-0$
 			//			console.log("onDragEnd: event.dataTransfer.dropEffect = " + event.dataTransfer.dropEffect);
 			//			console.log("onDragEnd: event.dataTransfer = " + JSON.stringify(event.dataTransfer));
 			var el = event.srcElement;
@@ -588,15 +589,15 @@ function reportDragDrop(event) {
 			el.href = "";
 			el.innerText = "";
 			switch (event.dataTransfer.dropEffect) {
-				case "copy":
+				case "copy": //$NON-NLS-0$
 					break;
-				case "move":
-					localStorage.map = "[]";
+				case "move": //$NON-NLS-0$
+					localStorage.map = "[]"; //$NON-NLS-0$
 					restore_options();
 					break;
-				case "none":
-					if (window.confirm("cannot distinguish drag move vs. copy on your platform.\nDo you want to delete all abbreviations in popchrom now?")) {
-						localStorage.map = "[]";
+				case "none": //$NON-NLS-0$
+					if (window.confirm("cannot distinguish drag move vs. copy on your platform.\nDo you want to delete all abbreviations in popchrom now?")) { //$NON-NLS-0$
+						localStorage.map = "[]"; //$NON-NLS-0$
 						restore_options();
 					} else {}
 					break;
@@ -604,15 +605,15 @@ function reportDragDrop(event) {
 					break;
 			}
 			break;
-		case "dragover":
+		case "dragover": //$NON-NLS-0$
 			// TODO needed for drop to work!
 			event.preventDefault(); // stops the browser from redirecting.
 			break;
-		case "dragexit":
+		case "dragexit": //$NON-NLS-0$
 			break;
-		case "dragleave":
+		case "dragleave": //$NON-NLS-0$
 			break;
-		case "drop":
+		case "drop": //$NON-NLS-0$
 			// TODO needed for drop to work!
 			event.preventDefault(); // stops the browser from redirecting.
 			//            var item = event.dataTransfer.items[0];
@@ -647,9 +648,9 @@ function reportDragDrop(event) {
 	//			return value;
 	//		}
 	//	}).replace(/([{,])("\w+":)/g, "$1\n$2"));
-	console.log("event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer));
-	console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-	console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+	console.log("event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer)); //$NON-NLS-1$ //$NON-NLS-0$
+	console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+	console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 	//    console.log("event.type = " + event.type + ": event.dataTransfer.getData('DownloadURL') = " + event.dataTransfer.getData("DownloadURL"));
 	//    console.log("event.type = " + event.type + ": event.dataTransfer.getData('downloadurl') = " + event.dataTransfer.getData("downloadurl"));
 	//    var length = event.dataTransfer.items.length;
@@ -693,7 +694,7 @@ function onDragStart(event) {
 	//    var name = decodeURIComponent(href.split("/").pop());
 	//    el.href = href;
 	//    el.innerText = name;
-	var download_url_data = "application/octet-stream:" + name + ":" + href;
+	var download_url_data = "application/octet-stream:" + name + ":" + href; //$NON-NLS-1$ //$NON-NLS-0$
 	//   if (event.preventDefault) {
 	//     event.preventDefault(); // stops the browser from redirecting.
 	//   }
@@ -701,8 +702,8 @@ function onDragStart(event) {
 	//     event.stopPropagation(); // stops the browser from redirecting.
 	//   }
 	// event.dataTransfer.setData("DownloadURL", download_url_data);
-	event.dataTransfer.setData("downloadurl", download_url_data);
-	event.dataTransfer.effectAllowed = "copy";
+	event.dataTransfer.setData("downloadurl", download_url_data); //$NON-NLS-0$
+	event.dataTransfer.effectAllowed = "copy"; //$NON-NLS-0$
 	event.dataTransfer.dropEffect = undefined;
 	reportDragDrop(event);
 	// event.dataTransfer.effectAllowed = "move";
@@ -714,7 +715,7 @@ function onDragStart(event) {
 document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	try {
 		// TODO options.js is also loaded by background.html to get access to export and import functionality.
-		if (document.URL !== chrome.extension.getURL("options.html")) {
+		if (document.URL !== chrome.extension.getURL("options.html")) { //$NON-NLS-0$
 			console.log("early exit being loaded from other than options page..."); //$NON-NLS-0$
 			return;
 		}
@@ -725,7 +726,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		//		document.querySelector('span#version').innerText = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
 		//        document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
 		//        var dropzoneImport = $('div#tabs-1')[0];
-		var dropzoneImport = $('a[name=texttab]')[0];
+		var dropzoneImport = $('a[name=texttab]')[0]; //$NON-NLS-0$
 		var invalidDropTarget;
 		//        var dropzoneImport = $('label[name=import]')[0];
 		if (dropzoneImport) {
@@ -733,45 +734,45 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 			//			dropzoneImport.addEventListener("click", function doNothing(event) {
 			//				event.preventDefault();
 			//			}, false);
-			dropzoneImport.addEventListener("dragstart", function doNothing(event) {
+			dropzoneImport.addEventListener("dragstart", function doNothing(event) { //$NON-NLS-0$
 				event.preventDefault();
 			}, false);
 			if (false) {
-				dropzoneImport.addEventListener("dragenter", function(event) {
+				dropzoneImport.addEventListener("dragenter", function(event) { //$NON-NLS-0$
 					if (event.srcElement !== dropzoneImport || invalidDropTarget) {
 						return false;
 					}
 					reportDragDrop(event);
 				}, false);
 				//  TODO needed for drop to work!
-				dropzoneImport.addEventListener("dragover", function(event) {
+				dropzoneImport.addEventListener("dragover", function(event) { //$NON-NLS-0$
 					event.preventDefault();
-					event.dataTransfer.effectAllowed = "none";
-					event.dataTransfer.dropEffect = "none";
+					event.dataTransfer.effectAllowed = "none"; //$NON-NLS-0$
+					event.dataTransfer.dropEffect = "none"; //$NON-NLS-0$
 					return false;
 				}, false);
 			} else {
-				document.addEventListener("dragover", function(event) {
+				document.addEventListener("dragover", function(event) { //$NON-NLS-0$
 					event.preventDefault();
 					if ((event.srcElement !== dropzoneImport) || invalidDropTarget) {
-						event.dataTransfer.effectAllowed = "none";
-						event.dataTransfer.dropEffect = "none";
+						event.dataTransfer.effectAllowed = "none"; //$NON-NLS-0$
+						event.dataTransfer.dropEffect = "none"; //$NON-NLS-0$
 					}
-					console.log("ignore event.type = " + event.type);
-					console.log("invalidDropTarget = " + invalidDropTarget);
-					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+					console.log("ignore event.type = " + event.type); //$NON-NLS-0$
+					console.log("invalidDropTarget = " + invalidDropTarget); //$NON-NLS-0$
+					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 					return false;
 				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-				document.addEventListener("dragenter", function(event) {
+				document.addEventListener("dragenter", function(event) { //$NON-NLS-0$
 					//								invalidDropTarget = true;
-					console.log("invalidDropTarget = " + invalidDropTarget);
+					console.log("invalidDropTarget = " + invalidDropTarget); //$NON-NLS-0$
 					if (event.srcElement === dropzoneImport && !invalidDropTarget) {
 						reportDragDrop(event);
 					}
-					console.log("ignore event.type = " + event.type);
-					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+					console.log("ignore event.type = " + event.type); //$NON-NLS-0$
+					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 					//				return false;
 				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
 				//				document.addEventListener("dragleave", function(event) {
@@ -786,7 +787,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 			}
 			//                        dropzoneImport.addEventListener("dragexit", reportDragDrop, false);
 			//                        dropzoneImport.addEventListener("dragleave", reportDragDrop, false);
-			dropzoneImport.addEventListener("drop", function(event) {
+			dropzoneImport.addEventListener("drop", function(event) { //$NON-NLS-0$
 				if (!invalidDropTarget) {
 					//				if (event.srcElement === draggableExport) {
 					reportDragDrop(event);
@@ -806,17 +807,17 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 			//				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
 			//				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
 			//			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-			document.addEventListener("dragstart", function(event) {
+			document.addEventListener("dragstart", function(event) { //$NON-NLS-0$
 				invalidDropTarget = true;
 				if (false && true || event.target === dropzoneImport) {
 					event.preventDefault();
 					//				} else {
 					//				event.stopPropagation(); 
 				} else {}
-				console.log("ignore event.type = " + event.type);
-				console.log("invalidDropTarget = " + invalidDropTarget);
-				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
+				console.log("ignore event.type = " + event.type); //$NON-NLS-0$
+				console.log("invalidDropTarget = " + invalidDropTarget); //$NON-NLS-0$
+				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
 			//			document.addEventListener("dragend", function(event) {
 			//				//				invalidDropTarget = true;
@@ -829,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 			//				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
 			//	console.log("ignore event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer));
 			//			}, true && "useCapture");
-			dropzoneImport.title += chrome.i18n.getMessage("import_help"); //$NON-NLS-0$ //$NON-NLS-1$
+			dropzoneImport.title = chrome.i18n.getMessage("dropzone_help"); //$NON-NLS-0$ //$NON-NLS-1$
 		}
 		document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
 		//	NOTE: See createSubLine(key, value) for delete button event listener setup. //$NON-NLS-0$ //$NON-NLS-1$
@@ -837,69 +838,70 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		document.querySelector('span[name=editshortcut]').addEventListener('click', createShortcut); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('span[name=deleteshortcut]').addEventListener('click', deleteShortcut); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('button[name=download]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
-			console.time("download");
-			document.querySelector('a[download]').click();
-			console.timeEnd("download");
+			console.time("download"); //$NON-NLS-0$
+			document.querySelector('a[download]').click(); //$NON-NLS-0$
+			console.timeEnd("download"); //$NON-NLS-0$
 		});
+		document.querySelector('button[name=delete_all]').title = chrome.i18n.getMessage("delete_all"); //$NON-NLS-0$ //$NON-NLS-1$
 		document.querySelector('button[name=delete_all]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
-			document.querySelector('a[download]').click();
-			console.time("delete_all");
-			localStorage.map_backup = localStorage.map;
-			localStorage.map = "[]";
-			console.timeEnd("delete_all");
+			document.querySelector('a[download]').click(); //$NON-NLS-0$
+			console.time("delete_all"); //$NON-NLS-0$
+			localStorage['map' + (new Date()).getTime()] = localStorage.map; //$NON-NLS-0$
+			localStorage.map = "[]"; //$NON-NLS-0$
+			console.timeEnd("delete_all"); //$NON-NLS-0$
 			restore_options();
 		});
 		document.querySelector('button[name=save]').addEventListener('click', save_options); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=save]').click();
+		document.querySelector('button[name=save]').click(); //$NON-NLS-0$
 		//        var draggableExport;
 		//        var draggableExport = $('div#tabs-1')[0];
-		var draggableExport = $('a[download]')[0];
+		var draggableExport = $('a[download]')[0]; //$NON-NLS-0$
 		//        draggableExport.href = getExportFileURL();
 		//        draggableExport.href = chrome.extension.getBackgroundPage().getExportFileURL();
 		//		var draggableExport = $('a[name=texttab]')[0];
 		//        draggableExport.draggable = "true";
 		//        var draggableExport = $('label[name=export]')[0];
 		if (false && draggableExport) {
-			draggableExport.addEventListener("dragstart", onDragStart, false && "useCapture");
-			draggableExport.addEventListener("click", function doNothing(event) {
+			draggableExport.addEventListener("dragstart", onDragStart, false && "useCapture"); //$NON-NLS-1$ //$NON-NLS-0$
+			draggableExport.addEventListener("click", function doNothing(event) { //$NON-NLS-0$
 				console.log(event);
 				//				event.preventDefault();
 			}, false);
 			//            draggableExport.addEventListener("dragenter", reportDragDrop, false);
-			draggableExport.addEventListener("dragend", function(event) {
+			draggableExport.addEventListener("dragend", function(event) { //$NON-NLS-0$
 				event.stopPropagation();
 				event.preventDefault();
-				console.log("event.type = " + event.type);
-				console.log("event.returnValue = " + event.returnValue);
+				console.log("event.type = " + event.type); //$NON-NLS-0$
+				console.log("event.returnValue = " + event.returnValue); //$NON-NLS-0$
 				if (outsideBrowser(event)) {
 					//                    console.log("Elvis has left the building.");
 					//				if (event.srcElement === draggableExport) {
 					reportDragDrop(event);
 				}
 				invalidDropTarget = false;
-			}, false && "useCapture");
+			}, false && "useCapture"); //$NON-NLS-0$
 			draggableExport.title += chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
 			//            draggableExport.addEventListener("dragover", reportDragDrop, false);
 			//            draggableExport.addEventListener("dragexit", reportDragDrop, false);
 			//            draggableExport.addEventListener("dragleave", reportDragDrop, false);
 			//			draggableExport.addEventListener("drop", reportDragDrop, false);
 		} else {
-			console.log("draggableExport = " + draggableExport);
+			console.log("draggableExport = " + draggableExport); //$NON-NLS-0$
 		}
 		// TODO testing an empty event type: ""
 		//        draggableExport.addEventListener("", logEvent, false);
-		draggableExport.addEventListener("click", function(event) {
+		draggableExport.addEventListener("click", function(event) { //$NON-NLS-0$
 			logEvent(event);
 			if (event.altKey) {
-				if (window.confirm("You requested to remove all abbreviations. Please perform a download without removing abbreviations first.")) {
-					localStorage.map = "[]";
+				if (window.confirm(chrome.i18n.getMessage("You requested to remove all abbreviations. Please perform a download without removing abbreviations first."))) {
+					localStorage.map = "[]"; //$NON-NLS-0$
 					restore_options();
 				}
 			}
 		}, false);
-		draggableExport.addEventListener("load", logEvent, false);
-		draggableExport.addEventListener("error", logEvent, false);
-		draggableExport.addEventListener("abort", logEvent, false);
+		draggableExport.addEventListener("load", logEvent, false); //$NON-NLS-0$
+		draggableExport.addEventListener("error", logEvent, false); //$NON-NLS-0$
+		draggableExport.addEventListener("abort", logEvent, false); //$NON-NLS-0$
 		//        chrome.webRequest.onBeforeRequest.addListener(function(details) {
 		//            console.log(JSON.stringify(details));
 		//        }, {
@@ -916,6 +918,6 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		//            urls: ["<all_urls>"]
 		//        });
 	} catch (exception) {
-		console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + exception.stack);
+		console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + exception.stack); //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 	}
 });
