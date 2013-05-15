@@ -36,12 +36,18 @@ div#tabs>ul {
 
 div#buttons {
   background-color: #FFF7D9;
-  min-width: 100px;
-  padding: 6px;       
+  display: block;
+  left: 32px;
+  min-width: 450px;
+  padding: 6px 6px 6px 146px;   
   position: fixed;
-  right: 16px;
-  top: 112px;
+  right: 30px;
+  top: 107px;
   z-index: 1;
+}
+
+#saving_progress {
+  width: 30px;
 }
 
 .saving {
@@ -72,6 +78,10 @@ pre {
 
 .sub_line_template {
   display: none;
+}
+
+.sub_key, .sub_args {
+  width: 120px;
 }
 
 .key_args {
@@ -147,15 +157,20 @@ pre {
   white-space: pre-line;
 }
 
-[dropzone] {
+li > a {
   border-color: #FFCC66;
-  border-style: dashed dashed dashed;
+  border-style: solid;
+  border-width: 2px 2px 0;
+}
+
+[dropzone] {
+  border-style: dashed dashed none;
 }
 
 #tabs-1 {
   padding: 24px 24px 24px;
   position: relative;
-  top: 32px;
+  top: 16px;
 }
 
 td {
