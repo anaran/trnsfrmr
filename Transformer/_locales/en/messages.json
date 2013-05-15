@@ -11,6 +11,98 @@
     "message": "Options",
     "description": "The word options for the optionpage"
   },
+  "import_set": {
+    "message": "Do you want to import a set of ",
+    "description": ""
+  },
+  "import_selected_text": {
+    "message": " abbreviations defined by the text you selected?",
+    "description": ""
+  },
+  "import_new_before": {
+    "message": "Do you want to import a set of ",
+    "description": ""
+  },
+  "import_new_after": {
+    "message": " new abbreviations?",
+    "description": ""
+  },
+  "name_abbrev": {
+    "message": "Name for new abbreviation?",
+    "description": ""
+  },
+  "or_delete_pattern": {
+    "message": "' should take arguments\ne.g.\n\\s+(\\d+)\\s+(\\w+), else delete it",
+    "description": ""
+  },
+  "enter_pattern": {
+    "message": "Enter Pattern below if abbreviation '",
+    "description": ""
+  },
+  "place_substitutions": {
+    "message": "' and place symbol substitutions like $$1 or $$& where appropriate.\nReplace a literal $$ with two $$ signs.\nAdd line breaks where needed.",
+    "description": ""
+  },
+  "review_expansion": {
+    "message": "Please review expansion text of '",
+    "description": ""
+  },
+  "cannot_construct_regexp": {
+    "message": "Cannot construct RegExp from String '",
+    "description": ""
+  },
+  "add_import_for": {
+    "message": "Add/Import Popchrom abbreviation(s) for '%s'",
+    "description": ""
+  },
+  "submit_issue_for": {
+    "message": "Create New Popchrom Issue for '%s'",
+    "description": ""
+  },
+  "fix_args_def": {
+    "message": "\nPlease fix arguments or definition of abbreviation \"",
+    "description": ""
+   },
+  "eg_regexp": {
+    "message": "\ne.g.\n[\"(\\d+)\\s+(\\w+)\",\n \"$$1: $$2\"]",
+    "description": ""
+  },
+  "two_elements": {
+    "message": "Advanced abbreviations have exactly two string elements:",
+    "description": ""
+  },
+  "fix_non_quoted": {
+    "message": " is not a double-quoted string, as expected for an advanced abbreviation!\nPlease fix abbreviation \"",
+    "description": ""
+  },
+  "fix_args_or_def": {
+    "message": "\nPlease fix arguments or definition of abbreviation \"",
+    "description": ""
+  },
+  "not_match_arguments": {
+    "message": "\" does not match arguments\nfor \"",
+    "description": ""
+  },
+  "unexpected_token": {
+    "message": "SyntaxError: Unexpected token ",
+    "description": ""
+  },
+  "see_regexp_help": {
+    "message": "For the detailed syntax see http://www.ecma-international.org/ecma-262/5.1/#sec-15.10",
+    "description": ""
+  },
+  "fix_def": {
+    "message": "\nPlease fix definition of Abbreviation \"",
+    "description": ""
+  },
+  "recent_expansions": {
+    "message": " - Recent Expansions",
+    "description": ""
+  },
+  "bad_issue_tab": {
+    "message": "Please create your issue report from tab where you experienced Popchrom issue. Popchrom is not available in this tab.",
+    "description": ""
+  },
   "option_add": {
     "message": "Add",
     "description": ""
@@ -68,11 +160,11 @@
     "description": ""
   },
   "dropzone_help": {
-    "message": "Drop your modified export data here from your desktop or file manager. Please first export your abbreviations using Download button.",
-    "description": "Help text for Import button."
+    "message": "Please drop your modified download file here from your desktop or file manager. An automatic download is done first, which you may have to confirm.",
+    "description": "Help text for dropzone."
   },
   "delete_all_help": {
-    "message": "Delete all abbreviations. An automatic download is done first.",
+    "message": "Deletes all abbreviations. An automatic download is done first.",
     "description": "Help text for Delete All button."
   },
   "restore": {
@@ -160,6 +252,10 @@ This works by using the shortcut key again, but only when \"Select after replace
   },
   "texttab": {
     "message": "Text",
+    "description": ""
+  },
+  "odd_map_array_length": {
+    "message": "Please submit a Popchrom Issue: arrayLength = ",
     "description": ""
   },
   "settingstab": {

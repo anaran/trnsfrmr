@@ -50,16 +50,16 @@ function playSound() {
 function animateNotify(tabId, pos) {
 	if (pos < notifyImages.length) {
 		chrome.pageAction.setIcon({
-			"tabId": tabId,
-				"path": notifyImages[pos++]
+			"tabId": tabId, //$NON-NLS-0$
+				"path": notifyImages[pos++] //$NON-NLS-0$
 		});
 		setTimeout(function() {
 			animateNotify(tabId, pos);
 		}, notifyDelay);
 	} else {
 		chrome.pageAction.setIcon({
-			"tabId": tabId,
-				"path": default_icon
+			"tabId": tabId, //$NON-NLS-0$
+				"path": default_icon //$NON-NLS-0$
 		});
 	}
 }
@@ -76,10 +76,10 @@ function notify(tabId) {
 function getSettings() {
 	// TODO pack all settings into response
 	return {
-		"cmd": "push", //$NON-NLS-0$
-		"map": localStorage.map,
-			"selectPhrase": localStorage.selectphrase,
-			"replaceKey": localStorage.replacekey
+		"cmd": "push", //$NON-NLS-0$ //$NON-NLS-1$
+		"map": localStorage.map, //$NON-NLS-0$
+			"selectPhrase": localStorage.selectphrase, //$NON-NLS-0$
+			"replaceKey": localStorage.replacekey //$NON-NLS-0$
 	};
 }
 
@@ -94,17 +94,17 @@ function onPageActionMessage(request, sender, sendResponse) {
 	// To: $1
 	// Options: [v] Regular expression
 	switch (request.action) {
-		case "show":
+		case "show": //$NON-NLS-0$
 			//$NON-NLS-0$
 			if (localStorage.hideicon !== "true") { //$NON-NLS-0$
 				chrome.pageAction.show(sender.tab.id);
 			}
 			break;
-		case "hide":
+		case "hide": //$NON-NLS-0$
 			//$NON-NLS-0$
 			chrome.pageAction.hide(sender.tab.id);
 			break;
-		case "notify":
+		case "notify": //$NON-NLS-0$
 			//$NON-NLS-0$
 			notify(sender.tab.id);
 			break;
@@ -120,7 +120,7 @@ function onPageActionMessage(request, sender, sendResponse) {
 function onClipboardMessage(request, sender, sendResponse) {
 	if (request.action === "paste") { //$NON-NLS-0$
 		sendResponse({
-			"paste": getClipboard()
+			"paste": getClipboard() //$NON-NLS-0$
 		});
 	}
 }
@@ -132,44 +132,50 @@ function handleMessage(request, sender, sendResponse) {
 	// To: $1
 	// Options: [v] Regular expression
 	switch (request.cmd) {
-		case "options":
-			reloadOptionsPage("createAsWell");
+		case "options": //$NON-NLS-0$
+			reloadOptionsPage("createAsWell"); //$NON-NLS-0$
 			break;
-		case "read":
+		case "read": //$NON-NLS-0$
 			//$NON-NLS-0$
 			onReadMessage(request, sender, sendResponse);
 			break;
-		case "pageaction":
+		case "pageaction": //$NON-NLS-0$
 			//$NON-NLS-0$
 			onPageActionMessage(request, sender, sendResponse);
 			break;
-		case "clipboard":
+		case "clipboard": //$NON-NLS-0$
 			//$NON-NLS-0$
 			onClipboardMessage(request, sender, sendResponse);
 			break;
-		case "export":
+		case "export": //$NON-NLS-0$
 			//$NON-NLS-0$
 			exportToFileSystem();
 			sendResponse({}); // snub them.
 			break;
-		case "issuedetails":
+		case "issuedetails": //$NON-NLS-0$
 			chrome.tabs.query({
-				"active": true,
-					"currentWindow": true
+				"active": true, //$NON-NLS-0$
+					"currentWindow": true //$NON-NLS-0$
 			}, function(tab) {
 				chrome.tabs.sendMessage(tab[0].id, {
-					"cmd": "onSubmitPopchromIssue",
-						"url": tab[0].url,
-						"appDetails": JSON.stringify(chrome.app.getDetails())
+					"cmd": "onSubmitPopchromIssue", //$NON-NLS-1$ //$NON-NLS-0$
+						"url": tab[0].url, //$NON-NLS-0$
+						"appDetails": JSON.stringify(chrome.app.getDetails()) //$NON-NLS-0$
 				}, function(response) {
-					sendResponse({
-						"summary": response.summary,
-							"body": response.body
-					});
-					chrome.tabs.update(sender.tab.id, {
-						"highlighted": true
-						//					active: true
-					});
+					if (response) {
+						sendResponse({
+							"summary": response.summary, //$NON-NLS-0$
+								"body": response.body //$NON-NLS-0$
+						});
+						chrome.tabs.update(sender.tab.id, {
+							"highlighted": true //$NON-NLS-0$
+							//					active: true
+						});
+					} else {
+						console.log("onSubmitPopchromIssue leads undefined " + JSON.stringify(response)); //$NON-NLS-0$
+						// TODO Yep I am the backgorund page, I just use what other scripts should.
+						chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("bad_issue_tab")); //$NON-NLS-1$ //$NON-NLS-0$
+					}
 				});
 			});
 			// TODO Note that I am fixing following problem here: Could not send response: The chrome.runtime.onMessage listener must return true if you want to send a response after the listener returns  (message was sent by extension hiefpgnngkikffmhgghabfikbbeilkif).
@@ -201,7 +207,7 @@ function updateSettings(windows) {
 
 function broadcastSettings() {
 	chrome.windows.getAll({
-		"populate": true
+		"populate": true //$NON-NLS-0$
 	}, updateSettings);
 }
 
@@ -219,17 +225,17 @@ function addOrImportAbbrevs(text) {
 	try {
 		parsedText = JSON.parse(text);
 		if (parsedText instanceof Array) {
-			if (window.confirm("Do you want to import a set of " + parsedText.length / 2 + " abbreviations defined by the text you selected?")) {
+			if (chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("import_set") + parsedText.length / 2 + chrome.i18n.getMessage("import_selected_text"))) {
 				import_settings(parsedText);
 			}
 			return;
 		}
 	} catch (e) {
 		//			NOTE OK, this does not look like an import data array.
-		var name = window.prompt("Name for new abbreviation?");
+		var name = chrome.extension.getBackgroundPage().prompt(chrome.i18n.getMessage("name_abbrev"));
 		if (name === null || name === "") {} else {
-			var re = window.prompt("Enter Pattern below if abbreviation '" + name + "' should take arguments\ne.g.\n\\s+(\\d+)\\s+(\\w+), else delete it",
-			"\\s+(\\d+)\\s+(\\w+)");
+			var re = chrome.extension.getBackgroundPage().prompt(chrome.i18n.getMessage("enter_pattern") + name + chrome.i18n.getMessage("or_delete_pattern"),
+			"\\s+(\\d+)\\s+(\\w+)"); //$NON-NLS-0$
 			var regexp = new RegExp(re);
 			if (re === null || re === "") {
 				import_settings([name, text]);
@@ -237,9 +243,9 @@ function addOrImportAbbrevs(text) {
 				if (regexp && regexp instanceof RegExp) {
 					import_settings([name, JSON.stringify([re, text])]);
 					//    		import_settings("[\""+name+"\", \"[\\\""+re+"\\\", \\\""+text+"\\\"]\"]");
-					window.confirm("Please review expansion text of '" + name + "' and place symbol substitutions like $1 or $& where appropriate.\nReplace a literal $ with $$.\nAdd \\n line breaks where needed .");
+					chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("review_expansion") + name + chrome.i18n.getMessage("place_substitutions"));
 				} else {
-					window.confirm("Cannot construct RegExp from String '" + re + "'");
+					chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("cannot_construct_regexp") + re +"'");
 				}
 			}
 		}
@@ -248,26 +254,26 @@ function addOrImportAbbrevs(text) {
 }
 
 function reloadOptionsPage(create) {
-	var url = chrome.extension.getURL("options.html");
+	var url = chrome.extension.getURL("options.html"); //$NON-NLS-0$
 	chrome.tabs.query({
-		"url": url
+		"url": url //$NON-NLS-0$
 	}, function(tabs) {
 		// Just update an open options page, don't open it.
 		if (tabs.length === 1) {
 			chrome.tabs.update(tabs[0].id, {
-				"highlighted": true
+				"highlighted": true //$NON-NLS-0$
 				//					active: true
 			});
 			chrome.tabs.reload(tabs[0].id);
 		} else if (create) {
 			chrome.tabs.query({
-				"active": true,
-					"currentWindow": true
+				"active": true, //$NON-NLS-0$
+					"currentWindow": true //$NON-NLS-0$
 			}, function(tab) {
 				chrome.tabs.create({
-					"url": url,
+					"url": url, //$NON-NLS-0$
 					// TODO Please note that when we specify openerTabId closing the new tab brings us back to that tab when it still exists.
-					"openerTabId": tab[0].id
+					"openerTabId": tab[0].id //$NON-NLS-0$
 				}, function(tab) {});
 			});
 		}
@@ -280,19 +286,20 @@ function init() {
 		save_default();
 	}
 	localStorage.used_before = "true"; //$NON-NLS-0$
-	//	TODO Need to understand why this removeAll is necessary. I had this code in another extension where I struggled with two calls to the oncLicked listener as well.
-	//	chrome.contextMenus.removeAll(function() {
-	//		if (chrome.extension.lastError) {
-	//			console.log("lastError:" + chrome.extension.lastError.message);
-	//		}
-	//	});
+	// TODO Please note this removeAll is necessary to avoid following warning when extension is reloaded:
+	// contextMenus.create: Cannot create item with duplicate id ID
+	chrome.contextMenus.removeAll(function () {
+		if (chrome.extension.lastError) {
+			console.log("lastError:" + chrome.extension.lastError.message);
+		}
+	});
 	var onAddOrImportAbbrevs = function(info, tab) {
 		console.log(JSON.stringify([info, tab]));
 		chrome.tabs.sendMessage(tab.id, {
-			"cmd": "getSelection",
-				"url": tab.url
+			"cmd": "getSelection", //$NON-NLS-1$ //$NON-NLS-0$
+				"url": tab.url //$NON-NLS-0$
 		}, function(response) {
-			if (response.selection) {
+			if (response && response.selection) {
 				addOrImportAbbrevs(response.selection);
 			} else {
 				addOrImportAbbrevs(info.selectionText);
@@ -302,11 +309,11 @@ function init() {
 	var addAbbrevId = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id addAbbrevId background.js:250
 		// but multiple items are crated if id is absent. Live with the error for now.
-		"id": "addAbbrevId",
-			"type": "normal",
-			"title": "Add/Import Popchrom abbreviation(s) for '%s'",
-			"onclick": onAddOrImportAbbrevs,
-			"contexts": ["selection"]
+		"id": "addAbbrevId", //$NON-NLS-1$ //$NON-NLS-0$
+			"type": "normal", //$NON-NLS-1$ //$NON-NLS-0$
+			"title": chrome.i18n.getMessage("add_import_for"), //$NON-NLS-0$
+			"onclick": onAddOrImportAbbrevs, //$NON-NLS-0$
+			"contexts": ["selection"] //$NON-NLS-1$ //$NON-NLS-0$
 	}, function() {
 		if (chrome.extension.lastError) {
 			console.log("lastError:" + chrome.extension.lastError.message);
@@ -316,24 +323,24 @@ function init() {
 		try {
 			console.log(JSON.stringify([info, tab]));
 			// TODO This URL is duplicated in search.js so that the content script can determine whether it has to send an "issuedetails" message.
-			var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
+			var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry"; //$NON-NLS-0$
 			// TODO Note that the content script of the issue page will send us a "issuedetails" message.
 			chrome.tabs.create({
-				"active": false,
-					"url": newIssueUrl
+				"active": false, //$NON-NLS-0$
+					"url": newIssueUrl //$NON-NLS-0$
 			}, function(tab) {});
 		} catch (e) {
-			console.log("onSubmitPopchromIssue reports " + e);
+			console.log("onSubmitPopchromIssue reports " + e); //$NON-NLS-0$
 		}
 	};
 	var submitPopchromIssueId = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id submitPopchromIssueId
 		// but multiple items are crated if id is absent. Live with the error for now.
-		"id": "submitPopchromIssueId",
-			"type": "normal",
-			"title": "Submit New Popchrom Issue for '%s'",
-			"onclick": onSubmitPopchromIssue,
-			"contexts": ["all"]
+		"id": "submitPopchromIssueId", //$NON-NLS-1$ //$NON-NLS-0$
+			"type": "normal", //$NON-NLS-1$ //$NON-NLS-0$
+			"title": chrome.i18n.getMessage("submit_issue_for"), //$NON-NLS-0$
+			"onclick": onSubmitPopchromIssue, //$NON-NLS-0$
+			"contexts": ["all"] //$NON-NLS-1$ //$NON-NLS-0$
 	}, function() {
 		if (chrome.extension.lastError) {
 			console.log("lastError:" + chrome.extension.lastError.message);
@@ -347,12 +354,12 @@ function init() {
 	var toggleMarkText = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
 		// but multiple items are crated if id is absent. Live with the error for now.
-		"id": "toggleMarkText",
-			"type": "checkbox",
-			"checked": JSON.parse(localStorage.selectphrase),
-			"title": chrome.i18n.getMessage("selectphrase"),
-			"onclick": toggleMarkingText,
-			"contexts": ["all"]
+		"id": "toggleMarkText", //$NON-NLS-1$ //$NON-NLS-0$
+			"type": "checkbox", //$NON-NLS-1$ //$NON-NLS-0$
+			"checked": JSON.parse(localStorage.selectphrase), //$NON-NLS-0$
+			"title": chrome.i18n.getMessage("selectphrase"), //$NON-NLS-1$ //$NON-NLS-0$
+			"onclick": toggleMarkingText, //$NON-NLS-0$
+			"contexts": ["all"] //$NON-NLS-1$ //$NON-NLS-0$
 	}, function() {
 		if (chrome.extension.lastError) {
 			console.log("lastError:" + chrome.extension.lastError.message);
@@ -360,8 +367,8 @@ function init() {
 	});
 	//	chrome.contextMenus.onClicked.addListener(onClick);
 	chrome.pageAction.onClicked.addListener(function(tab) {
-		console.log("clicked popchrom pageAction on tab " + tab.url);
-		reloadOptionsPage("createAsWell");
+		console.log("clicked popchrom pageAction on tab " + tab.url); //$NON-NLS-0$
+		reloadOptionsPage("createAsWell"); //$NON-NLS-0$
 	});
 }
 

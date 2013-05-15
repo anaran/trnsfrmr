@@ -1,6 +1,6 @@
 /*jslint browser: true, devel: true, todo: true */
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
-	"use strict";
+	"use strict"; //$NON-NLS-0$
 
 // TODO Find unquoted object properties and double-quote them (conforms to JSON)
 // Use find regexp replace to fix that for now:
@@ -59,7 +59,7 @@ function findInputElements(elem) {
 	for (var i = 0; i < elem.length; i++) {
 		var type = elem[i].type;
 		type.toLocaleLowerCase();
-		if ((type === "text") || (type === "password") || (type === "textarea")) {
+		if ((type === "text") || (type === "password") || (type === "textarea")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 			return true;
 		}
 	}
@@ -107,31 +107,35 @@ function handleArguments(value, r) {
 	try {
 		var x = JSON.parse(value);
 		if (x.length !== 2) {
-			alert(chrome.i18n.getMessage("extname") + ": " + "Advanced abbreviations have exactly two string elements:" + "\ne.g.\n[\"(\\d+)\\s+(\\w+)\",\n \"$1: $2\"]" + "\nPlease fix definition of abbreviation \"" + r.key + "\"\n" + value);
+			chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("two_elements") + chrome.i18n.getMessage("eg_regexp")
+			+ chrome.i18n.getMessage("fix_def") + r.key + "\"\n" + value); //$NON-NLS-5$ //$NON-NLS-1$ //$NON-NLS-0$
 		}
 		try {
-			fromRegExp = new RegExp("^" + x[0], "");
+			fromRegExp = new RegExp("^" + x[0], ""); //$NON-NLS-0$
 		} catch (e) {
-			//              NOTE The initial array element is not a string (can be used in a RegExp constructor).
-			alert(chrome.i18n.getMessage("extname") + ": " + e.toString());
+			// NOTE The initial array element is not a string (can be used in a RegExp constructor).
+			chrome.extension.getBackgroundPage().prompt(e.toString(), //$NON-NLS-1$ //$NON-NLS-0$
+            chrome.i18n.getMessage("see_regexp_help"));
 		}
 		var toReplacement = x[1];
 		//          NOTE Is replacement argument really a string?
-		if (typeof(toReplacement) !== "string") {
-			alert(chrome.i18n.getMessage("extname") + ": " + toReplacement + " is not a double-quoted string, as expected for an advanced abbreviation!\nPlease fix abbreviation \"" + r.key + "\"\n" + value);
+		if (typeof(toReplacement) !== "string") { //$NON-NLS-0$
+			chrome.extension.getBackgroundPage().alert(toReplacement
+			+ chrome.i18n.getMessage("fix_non_quoted") + r.key + "\"\n" + value); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 		}
 		try {
 			m = r.after.match(fromRegExp);
 			if (m === null) {
-				alert(chrome.i18n.getMessage("extname") + ": \"" + fromRegExp + "\" does not match arguments\nfor \"" + r.key + "\" \"" + r.after.substring(0, Math.min(r.after.length, 15)) + (r.after.length > 15 ? "..." : "") + "\"\nPlease fix arguments or definition of abbreviation \"" + r.key + "\"\n" + value);
+				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("extname") + ": \"" + fromRegExp + chrome.i18n.getMessage("not_match_arguments")
+				+ r.key + "\" \"" + r.after.substring(0, Math.min(r.after.length, 15)) + (r.after.length > 15 ? "..." : "") + chrome.i18n.getMessage("fix_args_or_def") + r.key + "\"\n" + value); //$NON-NLS-7$ //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 				return;
 			}
 			unExpandedValue = r.key + m[0];
 			offsetFromEnd = r.after.length - m[0].length;
 			// x = r.after.replace(fromRegExp, toReplacement);
-			//              alert("m="+JSON.stringify(m));
+			//              chrome.extension.getBackgroundPage().alert("m="+JSON.stringify(m));
 		} catch (e1) {
-			alert(chrome.i18n.getMessage("extname") + ": " + e1.toString());
+			chrome.extension.getBackgroundPage().alert(e1.toString()); //$NON-NLS-1$ //$NON-NLS-0$
 		}
 		value = m[0].replace(fromRegExp, toReplacement);
 		r.after = r.after.substring(m[0].length);
@@ -141,8 +145,9 @@ function handleArguments(value, r) {
 		// JSON text.
 		// It might still be useful to report other errors to point out likely
 		// syntactical errors of advanced abbrevations.
-		if (e2 && e2.toString() !== "SyntaxError: Unexpected token " + typeof value === "string" ? value.substring(0, 1) : "") {
-			alert(chrome.i18n.getMessage("extname") + ": " + e2.toString() + "\nPlease fix definition of Abbreviation \"" + r.key + "\"\n" + value);
+		// TODO Please note that unexpected_token must be localized carefully because it is being compared to here.
+		if (e2 && e2.toString() !== chrome.i18n.getMessage("unexpected_token") + typeof value === "string" ? value.substring(0, 1) : "") { //$NON-NLS-1$
+			chrome.extension.getBackgroundPage().prompt(e2.toString() + chrome.i18n.getMessage("fix_def") + r.key + "\"\n" + value); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 		} else {
 			unExpandedValue = r.key;
 		}
@@ -156,7 +161,7 @@ function checkElements(elem) {
 	var substituted = false,
 		element = elem,
 		s, r, value, expandedElementType;
-	if ((element.tagName === "INPUT" && ((element.type === "text") || (element.type === "password"))) || element.tagName === "TEXTAREA") {
+	if ((element.tagName === "INPUT" && ((element.type === "text") || (element.type === "password"))) || element.tagName === "TEXTAREA") { //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 
 		// if text is selected abort... see wysiwyg-editor
 		if (element.selectionStart !== element.selectionEnd) {
@@ -179,8 +184,8 @@ function checkElements(elem) {
 			updateMostRecentlyUsedList(r.key);
 			// date substitution
 			value = replaceAllDates(value);
-			if (element.tagName === "TEXTAREA") {} else {
-				value = value.replace(/[\n\r]+/g, " ");
+			if (element.tagName === "TEXTAREA") {} else { //$NON-NLS-0$
+				value = value.replace(/[\n\r]+/g, " "); //$NON-NLS-0$
 			}
 			var tmp = r.before + value;
 
@@ -188,9 +193,9 @@ function checkElements(elem) {
 			element.value = tmp + r.after;
 			element.selectionStart = r.before.length;
 			element.selectionEnd = element.selectionStart;
-			var clipParam = "%CLIPBOARD%";
-			if (window.find(clipParam, "aCaseSensitive", !"aBackwards", !"aWrapAround",
-				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) {
+			var clipParam = "%CLIPBOARD%"; //$NON-NLS-0$
+			if (window.find(clipParam, "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 				chrome.extension.sendMessage({
 					cmd: "clipboard", //$NON-NLS-0$
 					action: "paste" //$NON-NLS-0$
@@ -213,7 +218,7 @@ function checkElements(elem) {
 		var doc = element.ownerDocument;
 		var selection = doc.getSelection();
 		//        NOTE undefined!
-		//        alert("element.selectionStart(HTML|BODY) " + element.selectionStart)
+		//        chrome.extension.getBackgroundPage().alert("element.selectionStart(HTML|BODY) " + element.selectionStart)
 		//      console.log( selection );
 
 		if (selection.isCollapsed) {
@@ -252,8 +257,8 @@ function checkElements(elem) {
 					expansionNode.appendChild(span.appendChild(doc.createTextNode(lines[0])).parentNode);
 				}
 				element.parentNode.replaceChild(expansionNode, keyword);
-				if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround",
-					"aWholeWord", !"aSearchInFrames", !"aShowDialog")) {
+				if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+					"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 					chrome.extension.sendMessage({
 						cmd: "clipboard", //$NON-NLS-0$
 						action: "paste" //$NON-NLS-0$
@@ -292,8 +297,8 @@ function checkElements(elem) {
 }
 
 function pageHasEditableElements() {
-	var elemInput = document.getElementsByTagName("input");
-	var elemTextarea = document.getElementsByTagName("textarea");
+	var elemInput = document.getElementsByTagName("input"); //$NON-NLS-0$
+	var elemTextarea = document.getElementsByTagName("textarea"); //$NON-NLS-0$
 
 	return (elemTextarea.length > 0 || findInputElements(elemInput));
 }
@@ -306,20 +311,20 @@ function onKeyEvent(e) {
 		if (checkElements(element)) {
 			pageaction.notify();
 		} else {
-			if (document.activeElement.isContentEditable || (document.activeElement.hasOwnProperty("readOnly") && !document.activeElement.readOnly)) {
+			if (document.activeElement.isContentEditable || (document.activeElement.hasOwnProperty("readOnly") && !document.activeElement.readOnly)) { //$NON-NLS-0$
 				var notification = webkitNotifications.createNotification(
 				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
 				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
 				//TODO See issue chromium:134315 for possible trouble with this.
-				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT!
-				chrome.i18n.getMessage("extname") + ' - Recent Expansions', // notification title
+				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
+				chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
 				//			HMTL content seems to be only supported by a possible future createHTMLNotification
 				//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
 				getMostRecentlyUsedList().filter(function(value, index, object) {
 					return true;
 				}).map(function(value, index, object) {
 					return value;
-				}).join(" ") // notification body text
+				}).join(" ") // notification body text //$NON-NLS-0$
 				);
 				notification.show();
 			} else {
@@ -334,14 +339,14 @@ function onKeyEvent(e) {
 }
 
 function addEventListenerToIframes() {
-	var iframes = document.getElementsByTagName("iframe");
+	var iframes = document.getElementsByTagName("iframe"); //$NON-NLS-0$
 
 	for (var i = 0; i < iframes.length; i++) {
 		var iframe = iframes[i];
-		if (iframe.src.match("^https?://") === null && iframe.contentDocument) {
-			iframe.contentDocument.addEventListener("keydown", onKeyEvent, false);
-		} else if (iframe.src.match("^https?://") === null && iframe.contentWindow) {
-			iframe.contentWindow.addEventListener("keydown", onKeyEvent, false);
+		if (iframe.src.match("^https?://") === null && iframe.contentDocument) { //$NON-NLS-0$
+			iframe.contentDocument.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
+		} else if (iframe.src.match("^https?://") === null && iframe.contentWindow) { //$NON-NLS-0$
+			iframe.contentWindow.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 		}
 	}
 
@@ -363,19 +368,19 @@ function init() {
 	settings.enableListener();
 	if (document.body) {
 		// TODO This approach does not work in Google Drive yet (formerly Google Docs).
-		var mySpans = document.body.querySelectorAll('span[class="goog-inline-block kix-lineview-text-block"]');
+		var mySpans = document.body.querySelectorAll('span[class="goog-inline-block kix-lineview-text-block"]'); //$NON-NLS-0$
 		if (mySpans) {
 			for (var i = 2; i < mySpans.length; i++) {
-				mySpans[i].addEventListener("keydown", onKeyEvent, false);
+				mySpans[i].addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 			}
 		}
 	}
 	addEventListenerToIframes();
 
-	document.addEventListener("keydown", onKeyEvent, false);
+	document.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 	var messageListener = function(request, sender, sendResponse) {
 		switch (request.cmd) {
-			case "onSubmitPopchromIssue":
+			case "onSubmitPopchromIssue": //$NON-NLS-0$
 				if (document.URL === request.url) {
 					try {
 						var sel = document.getSelection();
@@ -387,40 +392,40 @@ function init() {
 							rng = sel.getRangeAt(0);
 						}
 						var actElem = document.activeElement;
-						additionalInformation += "\n(actElem = document.activeElement).nodeName = " + actElem.nodeName;
-						if (actElem.hasOwnProperty("selectionStart")) {
-							additionalInformation += "\nactElem.selectionStart = " + actElem.selectionStart;
-							additionalInformation += "\nactElem.selectionEnd = " + actElem.selectionEnd;
-							additionalInformation += "\nactElem.value = " + JSON.stringify(actElem.value);
-							additionalInformation += "\nactElem.value.substring(actElem.selectionStart, actElem.selectionEnd) = " + JSON.stringify(actElem.value.substring(actElem.selectionStart, actElem.selectionEnd));
+						additionalInformation += "\n(actElem = document.activeElement).nodeName = " + actElem.nodeName; //$NON-NLS-0$
+						if (actElem.hasOwnProperty("selectionStart")) { //$NON-NLS-0$
+							additionalInformation += "\nactElem.selectionStart = " + actElem.selectionStart; //$NON-NLS-0$
+							additionalInformation += "\nactElem.selectionEnd = " + actElem.selectionEnd; //$NON-NLS-0$
+							additionalInformation += "\nactElem.value = " + JSON.stringify(actElem.value); //$NON-NLS-0$
+							additionalInformation += "\nactElem.value.substring(actElem.selectionStart, actElem.selectionEnd) = " + JSON.stringify(actElem.value.substring(actElem.selectionStart, actElem.selectionEnd)); //$NON-NLS-0$
 						} else if (sel) {
 							if (rng) {
-								additionalInformation += "\nrng.commonAncestorContainer.parentNode.outerHTML = " + JSON.stringify(rng.commonAncestorContainer.parentNode.outerHTML);
+								additionalInformation += "\nrng.commonAncestorContainer.parentNode.outerHTML = " + JSON.stringify(rng.commonAncestorContainer.parentNode.outerHTML); //$NON-NLS-0$
 							}
-							additionalInformation += "\nsel.toString() = " + JSON.stringify(sel.toString());
+							additionalInformation += "\nsel.toString() = " + JSON.stringify(sel.toString()); //$NON-NLS-0$
 						}
 						if (sel) {
-							additionalInformation += "\ndocument.getSelection() = sel = " + JSON.stringify(sel, function(key, value) {
+							additionalInformation += "\ndocument.getSelection() = sel = " + JSON.stringify(sel, function(key, value) { //$NON-NLS-0$
 								if (key.length > 0 && value instanceof Object) {
 									return typeof value;
 								} else {
 									return value;
 								}
-							}).replace(/([{,])("\w+":)/g, "$1\n$2");
+							}).replace(/([{,])("\w+":)/g, "$1\n$2"); //$NON-NLS-1$ //$NON-NLS-0$
 						}
 						if (rng) {
-							additionalInformation += "\ndocument.getSelection().getRangeAt(0) = rng = " + JSON.stringify(rng, function(key, value) {
+							additionalInformation += "\ndocument.getSelection().getRangeAt(0) = rng = " + JSON.stringify(rng, function(key, value) { //$NON-NLS-0$
 								if (key.length > 0 && value instanceof Object) {
 									return typeof value;
 								} else {
 									return value;
 								}
-							}).replace(/([{,])("\w+":)/g, "$1\n$2");
+							}).replace(/([{,])("\w+":)/g, "$1\n$2"); //$NON-NLS-1$ //$NON-NLS-0$
 						}
 						var appDetails = JSON.parse(request.appDetails);
-						var issueSummary = "What is the problem?";
-						var issueBody = "What steps will reproduce the problem?\n1. Use testcase below in a" + (actElem.nodeName.match(/^[aeio]/i) ? "n" : "") + " " + actElem.nodeName + ".\n2. What to do now?\n3. What to do next?\n\n" + "What is the expected output? What do you see instead?\n\n\n" + "What version of the product are you using? On what operating system?" + "\n\nPopchrom Version " + appDetails.version + "\nPopchrom ID " + appDetails.id + "\nPopchrom Locale " + appDetails.current_locale + "\nBrowser " + navigator.appVersion + "\n\nPlease review information about your minimal testcase below.\n\n" + additionalInformation;
-						console.log("issueBody.length = " + issueBody.length);
+						var issueSummary = "What is the problem?"; //$NON-NLS-0$
+						var issueBody = "What steps will reproduce the problem?\n1. Use testcase below in a" + (actElem.nodeName.match(/^[aeio]/i) ? "n" : "") + " " + actElem.nodeName + ".\n2. What to do now?\n3. What to do next?\n\n" + "What is the expected output? What do you see instead?\n\n\n" + "What version of the product are you using? On what operating system?" + "\n\nPopchrom Version " + appDetails.version + "\nPopchrom ID " + appDetails.id + "\nPopchrom Locale " + appDetails.current_locale + "\nBrowser " + navigator.appVersion + "\n\nPlease review information about your minimal testcase below.\n\n" + additionalInformation; //$NON-NLS-10$ //$NON-NLS-9$ //$NON-NLS-8$ //$NON-NLS-7$ //$NON-NLS-6$ //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+						console.log("issueBody.length = " + issueBody.length); //$NON-NLS-0$
 						if (issueBody.length) {
 							if (sendResponse) {
 								sendResponse({
@@ -430,18 +435,18 @@ function init() {
 							}
 						}
 					} catch (e) {
-						console.log("onMessage callback reports:\n" + e.stack);
+						console.log("onMessage callback reports:\n" + e.stack); //$NON-NLS-0$
 					}
 				}
 				break;
-			case "getSelection":
+			case "getSelection": //$NON-NLS-0$
 				try {
 					if (document.URL === request.url) {
 						var sel = document.getSelection();
 						var rng;
 						var text;
 						var actElem = document.activeElement;
-						if (actElem.hasOwnProperty("selectionStart")) {
+						if (actElem.hasOwnProperty("selectionStart")) { //$NON-NLS-0$
 							text = actElem.value.substring(actElem.selectionStart, actElem.selectionEnd);
 						} else if (sel) {
 							text = sel.toString();
@@ -453,21 +458,25 @@ function init() {
 						}
 					}
 				} catch (e) {
-					console.log("onMessage callback getSelection reports:\n" + e.stack);
+					console.log("onMessage callback getSelection reports:\n" + e.stack); //$NON-NLS-0$
 				}
 				break;
 		}
 	};
 	chrome.extension.onMessage.addListener(messageListener);
-	var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry";
+	var newIssueUrl = "https://code.google.com/p/trnsfrmr/issues/entry"; //$NON-NLS-0$
 	if (document.URL === newIssueUrl) {
-		console.log("I need issuedetails");
+		console.log("I need issuedetails"); //$NON-NLS-0$
 		chrome.extension.sendMessage({
 			cmd: "issuedetails" //$NON-NLS-0$
 		}, function(response) {
-			console.log("I got issuedetails " + JSON.stringify(response));
-			document.querySelector('textarea[name=comment]').value = response.body;
-			document.querySelector('input#summary').value = response.summary;
+			if (response && response.body && response.summary) {
+				console.log("I got issuedetails " + JSON.stringify(response)); //$NON-NLS-0$
+				document.querySelector('textarea[name=comment]').value = response.body; //$NON-NLS-0$
+				document.querySelector('input#summary').value = response.summary; //$NON-NLS-0$
+			} else {
+				console.log("I got incomplete issuedetails " + JSON.stringify(response)); //$NON-NLS-0$
+			}
 		});
 	}
 }
@@ -481,7 +490,7 @@ function globalReplacer(value) {
 	var m = settings.map;
 	// check all keys
 	for (var j = 0; j++ < m.size; m.next()) {
-		value = value.replace(new RegExp("\\b" + m.key() + "\\b", "g"), m.value());
+		value = value.replace(new RegExp("\\b" + m.key() + "\\b", "g"), m.value()); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 		value = replaceAllDates(value);
 	}
 	return value;

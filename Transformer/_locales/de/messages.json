@@ -11,6 +11,98 @@
     "message": "Optionen",
     "description": "Das Wort Optionen fuer die Optionsseite"
   },
+  "import_set": {
+    "message": "Wollen Sie aus dem augewählten Text ",
+    "description": ""
+  },
+  "import_selected_text": {
+    "message": " Abkürzung(en) erstellen?",
+    "description": ""
+  },
+  "import_new_before": {
+    "message": "Wollen Sie ",
+    "description": ""
+  },
+  "import_new_after": {
+    "message": " neue Abkürzung(en) erstellen?",
+    "description": ""
+  },
+  "name_abbrev": {
+    "message": "Name der Abkürzung?",
+    "description": ""
+  },
+  "or_delete_pattern": {
+    "message": "' Argumente benötigt, \nz.B.\n\\s+(\\d+)\\s+(\\w+), ansonst löschen Sie es bitte.",
+    "description": ""
+  },
+  "enter_pattern": {
+    "message": "Geben Sie ein Argument Muster ein, falls '",
+    "description": ""
+  },
+  "place_substitutions": {
+    "message": "' und platzieren Sie $$1 oder $$& wo angebracht.\nErsetzen Sie $$ mit zwei $$ Zeichen.\nFügen Sie Zeilenumbrüche ein wo notwendig.",
+    "description": ""
+  },
+  "review_expansion": {
+    "message": "Bitte prüfen Sie erweiterten Text für '",
+    "description": ""
+  },
+  "cannot_construct_regexp": {
+    "message": "Zeichenfolge ist kein gültiger regülarer Ausdruck: '",
+    "description": ""
+  },
+  "add_import_for": {
+    "message": "Erstelle/Importiere Popchrom Abkürzung(en) für '%s'",
+    "description": ""
+  },
+  "submit_issue_for": {
+    "message": "Erstelle neuen Popchrom Fehlerbericht für '%s'",
+    "description": ""
+  },
+  "fix_args_def": {
+    "message": "\nBitte korrigieren Sie Argumente oder Definition von Abkürzung \"",
+    "description": ""
+   },
+  "eg_regexp": {
+    "message": "\nz.B.\n[\"(\\d+)\\s+(\\w+)\",\n \"$$1: $$2\"]",
+    "description": ""
+  },
+  "two_elements": {
+    "message": "Abkürzungen mit Argumenten haben genau zwei String Argumente:",
+    "description": ""
+  },
+  "fix_non_quoted": {
+    "message": " ist nicht in Gänsefüßchen, wie es für Abkürzungen mit Argumenten erwartet wird!\nBitte korrigieren Sie die Definition von Abkürzung \"",
+    "description": ""
+  },
+  "fix_args_or_def": {
+    "message": "\nBitte korrigieren Sie Argumente oder Definition von Abkürzung \"",
+    "description": ""
+  },
+  "not_match_arguments": {
+    "message": "\" passt nicht zu Argument\nfür \"",
+    "description": ""
+  },
+  "unexpected_token": {
+    "message": "SyntaxError: Unexpected token ",
+    "description": ""
+  },
+  "see_regexp_help": {
+    "message": "Für die detailierte Syntax Beschreibung siehe http://www.ecma-international.org/ecma-262/5.1/#sec-15.10",
+    "description": ""
+  },
+  "fix_def": {
+    "message": "\nBitte korrigieren Sie die Definition von Abkürzung \"",
+    "description": ""
+  },
+  "recent_expansions": {
+    "message": " - Zuletzt verwendet",
+    "description": ""
+  },
+  "bad_issue_tab": {
+    "message": "Bitte erstellen Sie den Fehlerbericht vom Tab in dem Sie das Popchrom Problem bebachtet haben. Popchrom ist im aktuellen Tab nicht verfügbar.",
+    "description": ""
+  },
   "option_add": {
     "message": "Hinzufügen",
     "description": ""
@@ -68,11 +160,11 @@
     "description": ""
   },
   "dropzone_help": {
-    "message": "Ziehen Sie Ihre geänderten Abkürzungen von Desktop oder Dateimanager hier her. Bitte exportieren Sie zuvor Ihre Abkürzungen zur Datensicherung mittels Download button.",
-    "description": "Hilfetext für Schaltflächte zum Importieren."
+    "message": "Bitte ziehen Sie Ihre veränderte Download Datei vom Desktop oder Dateimanager hier her. Zuvor erfolgt ein automatischer Download, dem Sie gegebenenfalls zustimmen müssen.",
+    "description": "Help text for dropzone."
   },
   "delete_all_help": {
-    "message": "Delete all abbreviations. An automatic download is done first.",
+    "message": "Löscht alle Abkürzungen. Zuvor erfolgt ein automatischer Download, falls Sie zustimmen.",
     "description": "Help text for Delete All button."
   },
   "restore": {
@@ -160,6 +252,10 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
   },
   "texttab": {
     "message": "Text",
+    "description": ""
+  },
+  "odd_map_array_length": {
+    "message": "Bitte berichten Sie ein Popchrom Issue: arrayLength = ",
     "description": ""
   },
   "settingstab": {

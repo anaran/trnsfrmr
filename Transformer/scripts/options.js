@@ -21,7 +21,7 @@ function getDownloadFileName() {
 	try {
 		var arrayLength = JSON.parse(localStorage.map).length;
 		if (arrayLength % 2) {
-			window.alert(chrome.i18n.getMessage("odd_map_array_length") + arrayLength);
+			chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("odd_map_array_length") + arrayLength);
 		}
 		abbrevCount = arrayLength / 2;
 	} catch (e) {}
@@ -108,7 +108,7 @@ function exportToFileSystem() {
 		try {
 			var arrayLength = JSON.parse(localStorage.map).length;
 			if (arrayLength % 2) {
-				window.alert("Please report an issue! arrayLength = " + arrayLength); //$NON-NLS-0$
+				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("odd_map_array_length") + arrayLength); //$NON-NLS-0$
 			}
 			abbrevCount = arrayLength / 2;
 		} catch (e) {}
@@ -379,7 +379,7 @@ function import_settings(event) {
 	var optionsDocument;
 	try {
 		if (event.hasOwnProperty("srcElement")) { //$NON-NLS-0$
-			importArray = JSON.parse(window.prompt(chrome.i18n.getMessage("paste_below"))); //$NON-NLS-0$
+			importArray = JSON.parse(chrome.extension.getBackgroundPage().prompt(chrome.i18n.getMessage("paste_below"))); //$NON-NLS-0$
 		} else {
 			importArray = event;
 		}
@@ -397,20 +397,22 @@ function import_settings(event) {
 				}
 			}
 			if (newAbbreviations.length > 0) {
-				if (!window.confirm("Do you want to import " + newAbbreviations.length + " new abbreviations?")) { //$NON-NLS-0$ //$NON-NLS-1$
+				if (!chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("import_new_before")
+				+ newAbbreviations.length
+				+ chrome.i18n.getMessage("import_new_after"))) { //$NON-NLS-0$ //$NON-NLS-1$
 					return;
 				}
 			}
 			if (changedAbbreviations.length > 0) {
-				if (!window.confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
+				if (!chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("will_replace") + changedAbbreviations.toString())) { //$NON-NLS-0$
 					changedAbbreviations.forEach(function(value, index, object) {
 						importMap.remove(value);
 					});
-					window.alert(chrome.i18n.getMessage("changes_not_imported") + changedAbbreviations.toString()); //$NON-NLS-0$
+					chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("changes_not_imported") + changedAbbreviations.toString()); //$NON-NLS-0$
 				}
 			}
 			if (importMap.size === 0) {
-				window.alert(chrome.i18n.getMessage("nothing_to_import")); //$NON-NLS-0$
+				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("nothing_to_import")); //$NON-NLS-0$
 			} else {
 				for (var j = 0; j++ < importMap.size; importMap.next()) {
 					mapArray.push(importMap.key());
@@ -438,7 +440,7 @@ function import_settings(event) {
 			}
 		}
 	} catch (exception) {
-		window.alert(chrome.i18n.getMessage("invalid_data") + importArray + "\n" + exception); //$NON-NLS-0$ //$NON-NLS-1$
+		chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("invalid_data") + importArray + "\n" + exception); //$NON-NLS-0$ //$NON-NLS-1$
 	}
 }
 
@@ -596,7 +598,7 @@ function reportDragDrop(event) {
 					restore_options();
 					break;
 				case "none": //$NON-NLS-0$
-					if (window.confirm("cannot distinguish drag move vs. copy on your platform.\nDo you want to delete all abbreviations in popchrom now?")) { //$NON-NLS-0$
+					if (chrome.extension.getBackgroundPage().confirm("cannot distinguish drag move vs. copy on your platform.\nDo you want to delete all abbreviations in popchrom now?")) { //$NON-NLS-0$
 						localStorage.map = "[]"; //$NON-NLS-0$
 						restore_options();
 					} else {}
@@ -894,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 		draggableExport.addEventListener("click", function(event) { //$NON-NLS-0$
 			logEvent(event);
 			if (event.altKey) {
-				if (window.confirm(chrome.i18n.getMessage("You requested to remove all abbreviations. Please perform a download without removing abbreviations first."))) {
+				if (chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("You requested to remove all abbreviations. Please perform a download without removing abbreviations first."))) {
 					localStorage.map = "[]"; //$NON-NLS-0$
 					restore_options();
 				}
