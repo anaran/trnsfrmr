@@ -10,9 +10,7 @@
 		"https://*/*",
 		"notifications",
 		"storage",
-		"tabs",
-		"webNavigation",
-		"webRequest"
+		"tabs"
 	],
 	"description": "__MSG_extdescription__",
 	"default_locale": "en",
