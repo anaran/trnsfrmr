@@ -226,18 +226,20 @@ Um zum heutigen Datum Tage, Monate oder Jahre hinzuzufügen, können Sie folgend
 
 Wobei &lt;operator&gt; durch + oder - und <i>&lt;n&gt;</i> durch eine beliebige natürliche Zahl ersetzt werden kann.
 
-Abkürzungen mit Argumenten:
+Abkürzungen mit Argument Muster:
 
-Eine Erweiterung kann auch ein Array von zwei String Elementen sein.
+Eine Erweiterung kann auch mittels Benutzer-definierter Argument Muster gefundene Texte ersetzen.
 
-Diese werden als Argumente für String.prototype.replace (searchValue, replaceValue)
+Argument Muster und Definition werden als Argumente für String.prototype.replace (searchValue, replaceValue)
 
-verwendet und erlauben die Suche nach Argumenten die in der Ersetzung benutzt weren können.
+verwendet und erlauben die Suche nach Argumenten die in der Ersetzung benutzt werden können.
 
 z.B.
 Abkürzung tbug
-Wird erweitert zu... [\"\\\\s+(\\\\d+)\\\\s+(\\\\w+)\",
-\"Hello $$2!\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\n\"]
+Argument Muster \\s+(\\d+)\\s+(\\w+)
+Wird erweitert zu... \"Hello $$2!
+Please see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.
+\"
 
 erlaubt es eine Abkürzung \"tbug\" mit zwei Argumenten von
 
@@ -275,7 +277,18 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
     "description": ""
   },
   "changelog_text": {
-    "message": "Besuchen Sie bitte <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> um mehr Informationen zu erhalten.",
+    "message": "Besuchen Sie bitte <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> um mehr Informationen zu erhalten.
+
+Neu in Version 1.8
+
+Download der Abkürzungen in den Download Ordner.
+Import von Download Dateien durch Ziehen auf die Text Dropzone.
+WYSIWYG Bearbeitung von Name, Argument Muster und Text der Abkürzung.
+Steuerelemente bleiben beim Rollen der Tab Inhalte sichtbar.
+Popchrom Fehlerbericht über Kontextmenü.
+Neue Variable %CLIPBOARD% ist für die Definition von Abkürzungen verfügbar. 
+Viele Fehlerbehebungen.
+Verbesserte Inhalte in Dialogfenstern.",
     "description": ""
   },
   "hideicon": {

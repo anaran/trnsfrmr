@@ -224,18 +224,20 @@ To add days, months or years to the current date:
 
 You have to replace &lt;operator&gt; with + or - and <i>&lt;n&gt;</i> by a number of your choice.
 
-Abbreviations with arguments:
+Abbreviations with Argument Pattern:
 
-An expansion may also be an array of two string elements.
+An expansion may also replace text matched by a user-supplied argument pattern.
 
-They are used as the arguments to String.prototype.replace (searchValue, replaceValue)
+Argument pattern and definition are used as the arguments to String.prototype.replace (searchValue, replaceValue)
 
 and allow searching for arguments after abbreviations and replacing them inside of the replacement value.
 
 e.g.
 Abbreviation tbug
-Expand to... [\"\\\\s+(\\\\d+)\\\\s+(\\\\w+)\",
-\"Hello $$2!\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\n\"]
+Argument Pattern \\s+(\\d+)\\s+(\\w+)
+Expand to... \"Hello $$2!
+Please see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.
+\"
 
 will allow a boilerplate response with two arguments to expand from
 
@@ -275,7 +277,18 @@ This works by using the shortcut key again, but only when \"Select after replace
     "description": ""
   },
   "changelog_text": {
-    "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> for more information.",
+    "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> for more information.
+
+New in Version 1.8
+
+Download of abbreviations to Download folder.
+Import of download files by drop onto Text dropzone.
+WYSIWYG editing of abbreviation, arguments, and axpansion text.
+Headers remain visible when tabs are scrolled.
+Popchrom issue reporting integrated in context menu.
+New variable %CLIPBOARD% available in abbreviation definitions. 
+Several bugfixes.
+Improved reporting via dialog boxes.",
     "description": ""
   },
   "hideicon": {
