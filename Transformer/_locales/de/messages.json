@@ -99,8 +99,12 @@
     "message": " - Zuletzt verwendet",
     "description": ""
   },
+  "bad_abbrev_tab": {
+    "message": "Zeilenumbrüche in der Textauswahl bleiben nur erhalten, wenn die Abkürzung von einem Tab in dem Popchrom zur Verfügung steht erstellt wird. Popchrom ist im aktuellen Tab nicht verfügbar.",
+    "description": ""
+  },
   "bad_issue_tab": {
-    "message": "Bitte erstellen Sie den Fehlerbericht vom Tab in dem Sie das Popchrom Problem bebachtet haben. Popchrom ist im aktuellen Tab nicht verfügbar.",
+    "message": "Bitte erstellen Sie den Fehlerbericht vom Tab in dem Sie das Popchrom Problem beobachtet haben. Popchrom ist im aktuellen Tab nicht verfügbar.",
     "description": ""
   },
   "option_add": {

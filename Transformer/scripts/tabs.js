@@ -1,5 +1,5 @@
 /*global $: false*/
-	"use strict";
+"use strict"; //$NON-NLS-0$
 $(function() {
-	$("#tabs").tabs();
+	$("#tabs").tabs(); //$NON-NLS-0$
 });

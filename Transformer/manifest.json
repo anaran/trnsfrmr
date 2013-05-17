@@ -36,7 +36,7 @@
 	"content_scripts": [
 		{
 			"matches": ["http://*/*", "https://*/*"],
-			"js": ["scripts/settings.js", "scripts/hashmap.js", "scripts/date.js", "scripts/search.js"],
+			"js": ["scripts/settings.js", "scripts/hashmap.js", "scripts/date.js", "scripts/search.js", "scripts/jquery-1.4.2.min.js"],
 			"all_frames": true
 		}
 	],

@@ -1,11 +1,23 @@
 /*jslint browser: true, devel: true, todo: true */
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
-	"use strict"; //$NON-NLS-0$
+"use strict"; //$NON-NLS-0$
+
+// TODO "Format JS" in eclipse orion moves trailing comments on case labels to next line!
+// Use find regexp replace to fix that for now:
+// From:\n[ \t]+(//\$NON.+)
+// To: $1
+// Options: [v] Regular expression
 
 // TODO Find unquoted object properties and double-quote them (conforms to JSON)
 // Use find regexp replace to fix that for now:
 // From:([{,]\s+)((//.*\n)*)([^'"/ ]+):
 // To:$1$2"$4":
+
+//TODO Convert from querySelector() to $() jQuery
+// Use find regexp replace to fix that for now:
+// From:document.querySelector\(((['"]).+\2)\)
+// To:$$($1)[0]
+// Options: [v] Regular expression
 
 var settings;
 var pageaction;
@@ -20,8 +32,6 @@ function setNonEditableSelectionCursor(start, end, element, settings) {
 function setEditableSelectionCursor(selection, doc, expansionNode, settings) {
 	// set selection/cursor
 	selection.removeAllRanges();
-
-	//	expansionNode.normalize();
 	var range = doc.createRange();
 	range.selectNodeContents(expansionNode);
 	if (!settings.selectPhrase) {
@@ -30,7 +40,6 @@ function setEditableSelectionCursor(selection, doc, expansionNode, settings) {
 	}
 	// Always add the range to restore focus.
 	selection.addRange(range);
-	//	selection.anchorNode.parentNode.normalize();
 }
 
 function updateMostRecentlyUsedList(key) {
@@ -70,16 +79,10 @@ function findInputElements(elem) {
 var unExpandedValue;
 
 function extractKeyWord(str, s, e) {
-	//  "use strict";
 	var result = {};
 	result.before = "";
 	result.after = "";
 	result.key = "";
-
-	//  var s = element.selectionStart;
-	//  var e = element.selectionEnd;
-	//    var word;
-
 	// if nothing is selected find word boundaries
 	if (s === e) {
 		// string b(efore) and a(fter) cursor
@@ -93,12 +96,9 @@ function extractKeyWord(str, s, e) {
 		s -= rb[0].length;
 		e += ra[0].length;
 	}
-
-
 	result.before = str.substring(0, s);
 	result.key = str.substring(s, e);
 	result.after = str.substring(e);
-
 	return result;
 }
 
@@ -107,33 +107,28 @@ function handleArguments(value, r) {
 	try {
 		var x = JSON.parse(value);
 		if (x.length !== 2) {
-			chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("two_elements") + chrome.i18n.getMessage("eg_regexp")
-			+ chrome.i18n.getMessage("fix_def") + r.key + "\"\n" + value); //$NON-NLS-5$ //$NON-NLS-1$ //$NON-NLS-0$
+			chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("two_elements") + chrome.i18n.getMessage("eg_regexp") + chrome.i18n.getMessage("fix_def") + r.key + "\"\n" + value); //$NON-NLS-5$ //$NON-NLS-1$ //$NON-NLS-0$
 		}
 		try {
 			fromRegExp = new RegExp("^" + x[0], ""); //$NON-NLS-0$
 		} catch (e) {
 			// NOTE The initial array element is not a string (can be used in a RegExp constructor).
 			chrome.extension.getBackgroundPage().prompt(e.toString(), //$NON-NLS-1$ //$NON-NLS-0$
-            chrome.i18n.getMessage("see_regexp_help"));
+			chrome.i18n.getMessage("see_regexp_help"));
 		}
 		var toReplacement = x[1];
 		//          NOTE Is replacement argument really a string?
 		if (typeof(toReplacement) !== "string") { //$NON-NLS-0$
-			chrome.extension.getBackgroundPage().alert(toReplacement
-			+ chrome.i18n.getMessage("fix_non_quoted") + r.key + "\"\n" + value); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
+			chrome.extension.getBackgroundPage().alert(toReplacement + chrome.i18n.getMessage("fix_non_quoted") + r.key + "\"\n" + value); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 		}
 		try {
 			m = r.after.match(fromRegExp);
 			if (m === null) {
-				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("extname") + ": \"" + fromRegExp + chrome.i18n.getMessage("not_match_arguments")
-				+ r.key + "\" \"" + r.after.substring(0, Math.min(r.after.length, 15)) + (r.after.length > 15 ? "..." : "") + chrome.i18n.getMessage("fix_args_or_def") + r.key + "\"\n" + value); //$NON-NLS-7$ //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
+				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("extname") + ": \"" + fromRegExp + chrome.i18n.getMessage("not_match_arguments") + r.key + "\" \"" + r.after.substring(0, Math.min(r.after.length, 15)) + (r.after.length > 15 ? "..." : "") + chrome.i18n.getMessage("fix_args_or_def") + r.key + "\"\n" + value); //$NON-NLS-7$ //$NON-NLS-5$ //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 				return;
 			}
 			unExpandedValue = r.key + m[0];
 			offsetFromEnd = r.after.length - m[0].length;
-			// x = r.after.replace(fromRegExp, toReplacement);
-			//              chrome.extension.getBackgroundPage().alert("m="+JSON.stringify(m));
 		} catch (e1) {
 			chrome.extension.getBackgroundPage().alert(e1.toString()); //$NON-NLS-1$ //$NON-NLS-0$
 		}
@@ -162,7 +157,6 @@ function checkElements(elem) {
 		element = elem,
 		s, r, value, expandedElementType;
 	if ((element.tagName === "INPUT" && ((element.type === "text") || (element.type === "password"))) || element.tagName === "TEXTAREA") { //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-
 		// if text is selected abort... see wysiwyg-editor
 		if (element.selectionStart !== element.selectionEnd) {
 			var oldSelectionStart = element.selectionStart;
@@ -172,12 +166,8 @@ function checkElements(elem) {
 			// TODO reenable when selection in wysiwyg-editor works
 			return substituted;
 		}
-
 		r = extractKeyWord(element.value, element.selectionStart, element.selectionEnd);
 		value = settings.map.get(r.key);
-
-		//        var offsetFromEnd;
-		//        unExpandedValue = r.key;
 		value = handleArguments(value, r);
 		if (value) {
 			substituted = true;
@@ -188,14 +178,12 @@ function checkElements(elem) {
 				value = value.replace(/[\n\r]+/g, " "); //$NON-NLS-0$
 			}
 			var tmp = r.before + value;
-
-			//            var cursor = tmp.length;
 			element.value = tmp + r.after;
 			element.selectionStart = r.before.length;
 			element.selectionEnd = element.selectionStart;
 			var clipParam = "%CLIPBOARD%"; //$NON-NLS-0$
 			if (window.find(clipParam, "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+			"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 				chrome.extension.sendMessage({
 					cmd: "clipboard", //$NON-NLS-0$
 					action: "paste" //$NON-NLS-0$
@@ -217,10 +205,6 @@ function checkElements(elem) {
 		// element.normalize();
 		var doc = element.ownerDocument;
 		var selection = doc.getSelection();
-		//        NOTE undefined!
-		//        chrome.extension.getBackgroundPage().alert("element.selectionStart(HTML|BODY) " + element.selectionStart)
-		//      console.log( selection );
-
 		if (selection.isCollapsed) {
 			element = selection.anchorNode;
 			s = selection.anchorOffset;
@@ -228,7 +212,6 @@ function checkElements(elem) {
 			r = extractKeyWord(element.textContent, s, s);
 
 			value = settings.map.get(r.key);
-			//            unExpandedValue = r.key;
 			value = handleArguments(value, r);
 			if (value) {
 				substituted = true;
@@ -258,7 +241,7 @@ function checkElements(elem) {
 				}
 				element.parentNode.replaceChild(expansionNode, keyword);
 				if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-					"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 					chrome.extension.sendMessage({
 						cmd: "clipboard", //$NON-NLS-0$
 						action: "paste" //$NON-NLS-0$
@@ -276,10 +259,6 @@ function checkElements(elem) {
 		} else {
 			var ancestor = selection.anchorNode;
 			var unexpandedNode = doc.createTextNode(unExpandedValue);
-			//			document.getSelection().getRangeAt(0).deleteContents();
-			//			document.getSelection().getRangeAt(0).insertNode(unexpandedNode);
-			//			ancestor.parentNode.replaceChild(unexpandedNode, ancestor);
-			// Emulate insertAfter, see https://developer.mozilla.org/en-US/docs/DOM/Node.insertBefore
 			ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
 			selection.deleteFromDocument();
 			// Normalization also deactivated a selection.
@@ -311,7 +290,7 @@ function onKeyEvent(e) {
 		if (checkElements(element)) {
 			pageaction.notify();
 		} else {
-			if (document.activeElement.isContentEditable || (document.activeElement.hasOwnProperty("readOnly") && !document.activeElement.readOnly)) { //$NON-NLS-0$
+			if (document.activeElement.isContentEditable || !document.activeElement.hasOwnProperty("readOnly") || !document.activeElement.readOnly) { //$NON-NLS-0$
 				var notification = webkitNotifications.createNotification(
 				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
 				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
@@ -349,11 +328,9 @@ function addEventListenerToIframes() {
 			iframe.contentWindow.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 		}
 	}
-
 	if (pageHasEditableElements()) {
 		pageaction.show();
 	}
-
 	setTimeout(function() {
 		addEventListenerToIframes();
 	}, 500);
@@ -363,11 +340,11 @@ function addEventListenerToIframes() {
 function init() {
 	settings = new Settings();
 	pageaction = new PageAction();
-
 	settings.readRequest();
 	settings.enableListener();
 	if (document.body) {
 		// TODO This approach does not work in Google Drive yet (formerly Google Docs).
+		// TODO Note that it works fine in Google Drive Spreadsheets and Forms.
 		var mySpans = document.body.querySelectorAll('span[class="goog-inline-block kix-lineview-text-block"]'); //$NON-NLS-0$
 		if (mySpans) {
 			for (var i = 2; i < mySpans.length; i++) {
@@ -376,7 +353,6 @@ function init() {
 		}
 	}
 	addEventListenerToIframes();
-
 	document.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 	var messageListener = function(request, sender, sendResponse) {
 		switch (request.cmd) {
@@ -472,8 +448,8 @@ function init() {
 		}, function(response) {
 			if (response && response.body && response.summary) {
 				console.log("I got issuedetails " + JSON.stringify(response)); //$NON-NLS-0$
-				document.querySelector('textarea[name=comment]').value = response.body; //$NON-NLS-0$
-				document.querySelector('input#summary').value = response.summary; //$NON-NLS-0$
+				$('textarea[name=comment]')[0].value = response.body; //$NON-NLS-0$
+				$('input#summary')[0].value = response.summary; //$NON-NLS-0$
 			} else {
 				console.log("I got incomplete issuedetails " + JSON.stringify(response)); //$NON-NLS-0$
 			}

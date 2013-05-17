@@ -85,7 +85,7 @@ pre {
 }
 
 .key_args {
-  float:left;
+  float: left;
   position: relative;
 }
 
@@ -184,6 +184,8 @@ td {
 
 #version {
   position: fixed;
+  left: 82px;
+  top: 55px;
   z-index: 1;
 }
 

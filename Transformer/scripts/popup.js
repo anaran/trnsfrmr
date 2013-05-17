@@ -5,7 +5,6 @@
 function findTab(tabs) {
 	var url = chrome.extension.getURL("options.html"), //$NON-NLS-0$
 		i, tab;
-
 	for (i = 0; i < tabs.length; i++) {
 		tab = tabs[i];
 		if (tab.url === url) {
@@ -15,7 +14,6 @@ function findTab(tabs) {
 			return;
 		}
 	}
-
 	chrome.tabs.create({
 		url: url
 	});

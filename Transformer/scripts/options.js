@@ -7,6 +7,13 @@
 // Use find regexp replace to fix that for now:
 // From:([{,]\s+)((//.*\n)*)([^'"/ ]+):
 // To:$1$2"$4":
+// Options: [v] Regular expression
+
+//TODO Convert from querySelector() to $() jQuery
+// Use find regexp replace to fix that for now:
+// From:document.querySelector\(((['"]).+\2)\)
+// To:$$($1)[0]
+// Options: [v] Regular expression
 
 function logEvent(event) {
 	var text = JSON.stringify([event.type,
@@ -44,8 +51,6 @@ function getDownloadFileName() {
 	var offsetMinutes = timeZoneOffset % 60;
 	var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
 	fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$ //$NON-NLS-2$ //$NON-NLS-1$
-	//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
-	//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
 	fileName += '.txt'; //$NON-NLS-0$
 	return fileName;
 }
@@ -63,109 +68,6 @@ function getClipboard() {
 	var paste = pasteTarget.innerText;
 	actElem.removeChild(pasteTarget);
 	return paste;
-}
-
-function exportToFileSystem() {
-	window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-	var errorHandler = function(e) {
-		//  var msg = '';
-		//
-		//  switch (e.code) {
-		//    case FileError.QUOTA_EXCEEDED_ERR:
-		//      msg = 'QUOTA_EXCEEDED_ERR';
-		//      break;
-		//    case FileError.NOT_FOUND_ERR:
-		//      msg = 'NOT_FOUND_ERR';
-		//      break;
-		//    case FileError.SECURITY_ERR:
-		//      msg = 'SECURITY_ERR';
-		//      break;
-		//    case FileError.INVALID_MODIFICATION_ERR:
-		//      msg = 'INVALID_MODIFICATION_ERR';
-		//      break;
-		//    case FileError.INVALID_STATE_ERR:
-		//      msg = 'INVALID_STATE_ERR';
-		//      break;
-		//    default:
-		//      msg = 'Unknown Error';
-		//      break;
-		//  };
-
-		console.log('Error: ' + e); //$NON-NLS-0$
-	};
-	var onInitFs = function(fs) {
-		// Remove file if it already exists since existing file will not be truncated by write!
-		fs.root.getFile('popchrom.txt', { //$NON-NLS-0$
-			"create": false //$NON-NLS-0$
-		}, function(fileEntry) {
-			fileEntry.remove(function onSuccess() {
-				console.log("Removed " + fileEntry.toURL()); //$NON-NLS-0$
-			}, function onError() {
-				console.log("Cannot remove " + fileEntry.toURL()); //$NON-NLS-0$
-			});
-		});
-		var abbrevCount;
-		try {
-			var arrayLength = JSON.parse(localStorage.map).length;
-			if (arrayLength % 2) {
-				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("odd_map_array_length") + arrayLength); //$NON-NLS-0$
-			}
-			abbrevCount = arrayLength / 2;
-		} catch (e) {}
-		var d = new Date();
-		var fileName = 'popchrom-' + abbrevCount + '-'; //$NON-NLS-1$ //$NON-NLS-0$
-		fileName += d.getFullYear();
-		var month = d.getMonth() + 1;
-		fileName += "-" + ((month < 10) ? "0" + month : month); //$NON-NLS-0$ //$NON-NLS-1$
-		//	TODO getDay() returns the day of week,
-		//	see http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.5.16
-		var day = d.getDate();
-		fileName += "-" + ((day < 10) ? "0" + day : day); //$NON-NLS-0$ //$NON-NLS-1$
-		var hours = d.getHours();
-		fileName += "T" + ((hours < 10) ? "0" + hours : hours); //$NON-NLS-0$ //$NON-NLS-1$
-		var minutes = d.getMinutes();
-		fileName += ((minutes < 10) ? "0" + minutes : minutes); //$NON-NLS-0$
-		var seconds = d.getSeconds();
-		fileName += ((seconds < 10) ? "0" + seconds : seconds); //$NON-NLS-0$
-		var timeZoneOffset = -d.getTimezoneOffset();
-		var offsetMinutes = timeZoneOffset % 60;
-		var offsetHours = (timeZoneOffset - offsetMinutes) / 60;
-		fileName += (offsetHours > 0 ? "+" : "") + ((offsetHours < 10) ? "0" + offsetHours : offsetHours) + ((offsetMinutes < 10) ? "0" + offsetMinutes : offsetMinutes); //$NON-NLS-0$ //$NON-NLS-2$ //$NON-NLS-1$
-		//	var dateTimeFileString = dt.toTimeString().replace(/[^-+0-9]+/g, '');
-		//		var fileName = 'popchrom-'+dateTimeFileString+'.txt';
-		fileName += '.txt'; //$NON-NLS-0$
-		fs.root.getFile(fileName, {
-			"create": true //$NON-NLS-0$
-		}, function(fileEntry) {
-
-			// Create a FileWriter object for our FileEntry (log.txt).
-			fileEntry.createWriter(function(fileWriter) {
-
-				fileWriter.onwriteend = function(e) {
-					console.log('Write completed.'); //$NON-NLS-0$
-					console.log('See ' + fileEntry.fullPath); //$NON-NLS-0$
-					console.log('fileEntry.toURL() = ' + fileEntry.toURL()); //$NON-NLS-0$
-					exportFileURL = fileEntry.toURL();
-					$('a[download]')[0].href = fileEntry.toURL(); //$NON-NLS-0$
-					$('a[download]')[0].download = decodeURIComponent(fileEntry.toURL().split("/").pop()); //$NON-NLS-1$ //$NON-NLS-0$
-				};
-
-				fileWriter.onerror = function(e) {
-					console.log('Write failed: ' + e.toString()); //$NON-NLS-0$
-				};
-
-				// Create a new Blob and write it to log.txt.
-				var blob = new window.Blob([localStorage.map], {
-					"type": 'text/plain' //$NON-NLS-1$ //$NON-NLS-0$
-				});
-				fileWriter.write(blob);
-
-			}, errorHandler);
-
-		}, errorHandler);
-
-	};
-	window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024 /*5MB*/ , onInitFs, errorHandler);
 }
 
 var replaceKey = new KeyInfo();
@@ -200,7 +102,6 @@ function removeWhitespaces(str) {
 
 function onInputChange(event) {
 	event.srcElement.value = event.srcElement.value.replace(/\s/g, "");
-	// removeWhitespaces( event.srcElement.value );
 }
 
 function keysUnique(a) {
@@ -264,8 +165,6 @@ function createSubLine(key, args, value) {
 		rows = rowIndex + 1;
 		console.log("tc.length = " + tc.length); //$NON-NLS-0$
 		console.log("rows = " + rows); //$NON-NLS-0$
-		//    this.cols = cols; 
-		//    this.rows = rows; 
 		event.target.cols = cols > 78 ? cols : 78;
 		event.target.rows = rows > 4 ? rows : 4;
 		console.log("cols = " + cols); //$NON-NLS-0$
@@ -284,9 +183,7 @@ function add(event) {
 // Restores select box state to saved value from localStorage.
 function restore_options(event) {
 	$("#subs .sub_line").remove(); //$NON-NLS-0$
-
 	var map = chrome.extension.getBackgroundPage().getHashMap();
-
 	var subs = $("#subs"); //$NON-NLS-0$
 	var a = [];
 	for (var j = 0; j++ < map.size; map.next()) {
@@ -311,21 +208,16 @@ function restore_options(event) {
 		var line = createSubLine(a[k], args, expansion);
 		subs.append(line);
 	}
-
 	$("#checkbox_hideicon").attr('checked', localStorage.hideicon === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
 	$("#checkbox_animate").attr('checked', localStorage.animate === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
 	$("#checkbox_sound").attr('checked', localStorage.sound === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
 	$("#checkbox_selectphrase").attr('checked', localStorage.selectphrase === "true"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
-
 	if (localStorage.replacekey) {
 		replaceKey.fromStore(localStorage.replacekey);
 	} else {
 		replaceKey = new KeyInfo(32, true, false, false, false, false);
 	}
-
 	document.getElementById('spanExpandShortcut').innerText = replaceKey.toString(); //$NON-NLS-0$
-
-
 	add();
 }
 
@@ -346,10 +238,8 @@ function createShortcut(event) {
 
 function deleteShortcut(event) {
 	event.srcElement.innerText = "";
-
 	replaceKey = new KeyInfo();
 	localStorage.replacekey = replaceKey.toStore();
-
 }
 
 function setKeyErrorColors(a) {
@@ -362,12 +252,6 @@ function setKeyErrorColors(a) {
 			$(".sub_key", lines[i]).removeClass("bg_key_error"); //$NON-NLS-0$ //$NON-NLS-1$
 		}
 	}
-}
-
-function export_settings(event) {
-	// Send message to content page to export to local, sandboxed, filesystem.
-	var etfs = exportToFileSystem();
-	//    var etfs = chrome.extension.getBackgroundPage().exportToFileSystem();
 }
 
 function import_settings(event) {
@@ -397,9 +281,7 @@ function import_settings(event) {
 				}
 			}
 			if (newAbbreviations.length > 0) {
-				if (!chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("import_new_before")
-				+ newAbbreviations.length
-				+ chrome.i18n.getMessage("import_new_after"))) { //$NON-NLS-0$ //$NON-NLS-1$
+				if (!chrome.extension.getBackgroundPage().confirm(chrome.i18n.getMessage("import_new_before") + newAbbreviations.length + chrome.i18n.getMessage("import_new_after"))) { //$NON-NLS-0$ //$NON-NLS-1$
 					return;
 				}
 			}
@@ -446,16 +328,10 @@ function import_settings(event) {
 
 // Saves options to localStorage.
 function save_options(event) {
-	//	$("#saving").html(chrome.i18n.getMessage("saving")); //$NON-NLS-0$ //$NON-NLS-1$
-	//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
 	$('#saving_progress')[0].style.visibility = "visible"; //$NON-NLS-1$ //$NON-NLS-0$
-
 	$.Watermark.HideAll();
-
 	var lines = $("#subs .sub_line"); //$NON-NLS-0$ //$NON-NLS-1$
-
 	var a = [];
-
 	for (var i = 0; i < lines.length; i++) {
 		var key = $(".sub_key", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
 		var args = $(".sub_args", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
@@ -467,25 +343,17 @@ function save_options(event) {
 		}
 	}
 	if (keysUnique(a)) {
-
 		localStorage.map = JSON.stringify(a);
-
 		$.Watermark.ShowAll();
-
 		localStorage.hideicon = $("#checkbox_hideicon").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
 		localStorage.animate = $("#checkbox_animate").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
 		localStorage.sound = $("#checkbox_sound").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
 		localStorage.selectphrase = $("#checkbox_selectphrase").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
-
 		localStorage.replacekey = replaceKey.toStore();
-
-
 		chrome.extension.getBackgroundPage().broadcastSettings();
-
 		setTimeout(function() {
-			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
+//			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
 			$('#saving_progress')[0].style.visibility = "hidden"; //$NON-NLS-1$ //$NON-NLS-0$
-			//	$("#saving_progress").style.display = "saving"; //$NON-NLS-0$ //$NON-NLS-1$
 		}, 1000);
 		restore_options();
 		var blob = new window.Blob([localStorage.map], {
@@ -494,8 +362,6 @@ function save_options(event) {
 		var href = URL.createObjectURL(blob);
 		$('a[download]')[0].href = href; //$NON-NLS-0$
 		$('a[download]')[0].download = getDownloadFileName(); //$NON-NLS-0$
-		//        exportToFileSystem();
-		//        chrome.extension.getBackgroundPage().exportToFileSystem();
 	} else {
 		setKeyErrorColors(a);
 		$("#saving").html(chrome.i18n.getMessage("keys_not_unique")); //$NON-NLS-0$ //$NON-NLS-1$
@@ -513,17 +379,12 @@ function onKeyDown(event) {
 // Inits Strings (i18n) and restores data
 function init() {
 	document.title = chrome.i18n.getMessage("extname") + " - " + chrome.i18n.getMessage("options"); //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$
-
 	localizeString("caption", document.title); //$NON-NLS-0$
-
 	localize("save", "save"); //$NON-NLS-0$ //$NON-NLS-1$
-//	localize("export", "export"); //$NON-NLS-0$ //$NON-NLS-1$
-//	localize("import", "import"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("restore", "restore"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("add", "option_add"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("delete", "option_del"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("delete_all", "option_delete_all"); //$NON-NLS-0$ //$NON-NLS-1$
-
 	localize("guide", "guide"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("abbr", "abbr"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("long", "long"); //$NON-NLS-0$ //$NON-NLS-1$
@@ -532,20 +393,14 @@ function init() {
 	localize("helptab", "helptab"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("changelogtab", "changelogtab"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("changelog", "changelog_text"); //$NON-NLS-0$ //$NON-NLS-1$
-
 	localize("hideicon", "hideicon"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("anim", "anim"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("sound", "sound"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("selectphrase", "selectphrase"); //$NON-NLS-0$ //$NON-NLS-1$
-
 	localize("editshortcut", "option_shortcut_edit"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("deleteshortcut", "option_shortcut_delete"); //$NON-NLS-0$ //$NON-NLS-1$
 	localize("expandshortcut", "option_shortcut_expand"); //$NON-NLS-0$ //$NON-NLS-1$
-
 	restore_options();
-
-	//		document.getElementById("hiddenExpandShortcut").value = shortcuts.copy;
-	//		document.getElementById("spanExpandShortcut").innerText = getStringByShortcutCode(shortcuts.copy);
 }
 
 document.addEventListener("keydown", onKeyDown, false); //$NON-NLS-0$
@@ -557,159 +412,12 @@ function errorHandler(domError) {
 function readAsText(fileEntry, callback) {
 	fileEntry.file(function(file) {
 		var reader = new FileReader();
-
 		reader.onerror = errorHandler;
 		reader.onload = function(domError) {
 			callback(domError.target.result);
 		};
-
 		reader.readAsText(file);
 	});
-}
-
-function reportDragDrop(event) {
-	// this / event.target is current target element.
-	//   if (event.preventDefault) {
-	//   }
-	//   if (event.stopPropagation) {
-	//     event.stopPropagation(); // stops the browser from redirecting.
-	//   }
-	switch (event.type) {
-		case "dragstart": //$NON-NLS-0$
-			//         event.stopPropagation(); // stops the browser from redirecting.
-			break;
-		case "dragenter": //$NON-NLS-0$
-			// TODO needed for drop to work!
-			event.preventDefault(); // stops the browser from redirecting.
-			break;
-		case "dragend": //$NON-NLS-0$
-			//			console.log("onDragEnd: event.dataTransfer.dropEffect = " + event.dataTransfer.dropEffect);
-			//			console.log("onDragEnd: event.dataTransfer = " + JSON.stringify(event.dataTransfer));
-			var el = event.srcElement;
-			//	var href = chrome.extension.getBackgroundPage().getExportFileURL();
-			//	var name = href.split("/").pop();
-			el.href = "";
-			el.innerText = "";
-			switch (event.dataTransfer.dropEffect) {
-				case "copy": //$NON-NLS-0$
-					break;
-				case "move": //$NON-NLS-0$
-					localStorage.map = "[]"; //$NON-NLS-0$
-					restore_options();
-					break;
-				case "none": //$NON-NLS-0$
-					if (chrome.extension.getBackgroundPage().confirm("cannot distinguish drag move vs. copy on your platform.\nDo you want to delete all abbreviations in popchrom now?")) { //$NON-NLS-0$
-						localStorage.map = "[]"; //$NON-NLS-0$
-						restore_options();
-					} else {}
-					break;
-				default:
-					break;
-			}
-			break;
-		case "dragover": //$NON-NLS-0$
-			// TODO needed for drop to work!
-			event.preventDefault(); // stops the browser from redirecting.
-			break;
-		case "dragexit": //$NON-NLS-0$
-			break;
-		case "dragleave": //$NON-NLS-0$
-			break;
-		case "drop": //$NON-NLS-0$
-			// TODO needed for drop to work!
-			event.preventDefault(); // stops the browser from redirecting.
-			//            var item = event.dataTransfer.items[0];
-			//            if (!item || !item.type.match('text/*')) {
-			//                console.log("Sorry. That's not a text file.");
-			//                return;
-			//            }
-
-			//            var chosenFileEntry = event.dataTransfer.files[0].webkitGetAsEntry();
-			//            readAsText(chosenFileEntry, function(result) {
-			//                console.log(result);
-			//                chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
-			//            });
-			document.querySelector('a[download]').click(); //$NON-NLS-0$
-			var reader = new FileReader();
-
-			reader.onerror = errorHandler;
-			reader.onload = function(domError) {
-				//            callback(domError.target.result);
-				var result = domError.target.result;
-				console.log(result);
-				chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
-			};
-			reader.readAsText(event.dataTransfer.files[0]);
-			break;
-		default:
-			break;
-	}
-	//	console.log("event.type = " + event.type + ": event = " + JSON.stringify(event, function(key, value) {
-	//		if (key.length > 0 && value instanceof Object) {
-	//			return typeof value;
-	//		} else {
-	//			return value;
-	//		}
-	//	}).replace(/([{,])("\w+":)/g, "$1\n$2"));
-	console.log("event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer)); //$NON-NLS-1$ //$NON-NLS-0$
-	console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-	console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-	//    console.log("event.type = " + event.type + ": event.dataTransfer.getData('DownloadURL') = " + event.dataTransfer.getData("DownloadURL"));
-	//    console.log("event.type = " + event.type + ": event.dataTransfer.getData('downloadurl') = " + event.dataTransfer.getData("downloadurl"));
-	//    var length = event.dataTransfer.items.length;
-	//    for (var i = 0; i < length; i++) {
-	//        console.log("event.type = " + event.type + ": event.dataTransfer.items[i].webkitGetAsEntry() = " + event.dataTransfer.items[i].webkitGetAsEntry());
-	//        console.log("event.type = " + event.type + ": event.dataTransfer.getData(\"URL\") = " + event.dataTransfer.getData("URL"));
-	//        console.log("event.type = " + event.type + ": event.dataTransfer.items[" + i + "].type = " + event.dataTransfer.items[i].type);
-	//        if (event.dataTransfer.items[i].type === "downloadurl") {
-	//            // console.log("event.type = " + event.type + ": event.dataTransfer.items[i].getData(event.dataTransfer.items[i].type) = " + event.dataTransfer.items[i].getData(event.dataTransfer.items[i].type));
-	//        }
-	//    }
-	// See the section on the DataTransfer object.
-
-	return false;
-}
-
-//function onDragEnd(event) {
-//	var el = event.srcElement;
-//	//   var name = el.innerText.replace(":", "");
-//	//   var download_url_data = "application/octet-stream:" + name + ":" + el.href;
-//	//   event.dataTransfer.setData("DownloadURL", download_url_data);
-//	//   //  event.dataTransfer.effectAllowed = "copy";
-//	switch (event.dataTransfer.dropEffect) {
-//		case "move":
-//			break;
-//		case "copy":
-//			break;
-//		case "none":
-//			break;
-//		default:
-//			break;
-//	}
-//	console.log("onDragEnd: event.dataTransfer.dropEffect = " + event.dataTransfer.dropEffect);
-//	console.log("onDragEnd: event.dataTransfer = " + JSON.stringify(event.dataTransfer));
-//}
-
-function onDragStart(event) {
-	var el = event.srcElement;
-	//    var href = getExportFileURL();
-	//    var href = chrome.extension.getBackgroundPage().getExportFileURL();
-	//    var name = decodeURIComponent(href.split("/").pop());
-	//    el.href = href;
-	//    el.innerText = name;
-	var download_url_data = "application/octet-stream:" + name + ":" + href; //$NON-NLS-1$ //$NON-NLS-0$
-	//   if (event.preventDefault) {
-	//     event.preventDefault(); // stops the browser from redirecting.
-	//   }
-	//   if (event.stopPropagation) {
-	//     event.stopPropagation(); // stops the browser from redirecting.
-	//   }
-	// event.dataTransfer.setData("DownloadURL", download_url_data);
-	event.dataTransfer.setData("downloadurl", download_url_data); //$NON-NLS-0$
-	event.dataTransfer.effectAllowed = "copy"; //$NON-NLS-0$
-	event.dataTransfer.dropEffect = undefined;
-	reportDragDrop(event);
-	// event.dataTransfer.effectAllowed = "move";
 }
 
 // Add event listeners once the DOM has fully loaded by listening for the
@@ -717,182 +425,75 @@ function onDragStart(event) {
 // specific elements when it triggers.
 document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 	try {
-		// TODO options.js is also loaded by background.html to get access to export and import functionality.
+		// TODO Please note options.js is also loaded by background.html to get access to export and import functionality.
 		if (document.URL !== chrome.extension.getURL("options.html")) { //$NON-NLS-0$
 			console.log("early exit being loaded from other than options page..."); //$NON-NLS-0$
 			return;
 		}
 		init();
-		//        document.querySelector('button[name=export]').addEventListener('click', export_settings); //$NON-NLS-0$ //$NON-NLS-1$
-		//        document.querySelector('label[name=export]').title = chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
-		//		document.querySelector('span[name=caption]').title = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
-		//		document.querySelector('span#version').innerText = "Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
-		//        document.querySelector('button[name=import]').addEventListener('click', import_settings); //$NON-NLS-0$ //$NON-NLS-1$
-		//        var dropzoneImport = $('div#tabs-1')[0];
+		$('span#version')[0].innerText = " Version " + chrome.app.getDetails().version; //$NON-NLS-0$ //$NON-NLS-1$
 		var dropzoneImport = $('a[name=texttab]')[0]; //$NON-NLS-0$
 		var invalidDropTarget;
-		//        var dropzoneImport = $('label[name=import]')[0];
 		if (dropzoneImport) {
-			//		dropzoneImport.draggable = "false";
-			//			dropzoneImport.addEventListener("click", function doNothing(event) {
-			//				event.preventDefault();
-			//			}, false);
 			dropzoneImport.addEventListener("dragstart", function doNothing(event) { //$NON-NLS-0$
 				event.preventDefault();
 			}, false);
-			if (false) {
-				dropzoneImport.addEventListener("dragenter", function(event) { //$NON-NLS-0$
-					if (event.srcElement !== dropzoneImport || invalidDropTarget) {
-						return false;
-					}
-					reportDragDrop(event);
-				}, false);
-				//  TODO needed for drop to work!
-				dropzoneImport.addEventListener("dragover", function(event) { //$NON-NLS-0$
-					event.preventDefault();
-					event.dataTransfer.effectAllowed = "none"; //$NON-NLS-0$
-					event.dataTransfer.dropEffect = "none"; //$NON-NLS-0$
-					return false;
-				}, false);
-			} else {
+			if (true) {
 				document.addEventListener("dragover", function(event) { //$NON-NLS-0$
 					event.preventDefault();
 					if ((event.srcElement !== dropzoneImport) || invalidDropTarget) {
 						event.dataTransfer.effectAllowed = "none"; //$NON-NLS-0$
 						event.dataTransfer.dropEffect = "none"; //$NON-NLS-0$
 					}
-					console.log("ignore event.type = " + event.type); //$NON-NLS-0$
-					console.log("invalidDropTarget = " + invalidDropTarget); //$NON-NLS-0$
-					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 					return false;
 				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
 				document.addEventListener("dragenter", function(event) { //$NON-NLS-0$
-					//								invalidDropTarget = true;
-					console.log("invalidDropTarget = " + invalidDropTarget); //$NON-NLS-0$
-					if (event.srcElement === dropzoneImport && !invalidDropTarget) {
-						reportDragDrop(event);
-					}
-					console.log("ignore event.type = " + event.type); //$NON-NLS-0$
-					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-					//				return false;
+					// return false;
 				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-				//				document.addEventListener("dragleave", function(event) {
-				//					console.log("ignore event.type = " + event.type);
-				//								invalidDropTarget = false;
-				//				console.log("invalidDropTarget = " + invalidDropTarget);
-				//					console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-				//					console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
-				//					//				return false;
-				//				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-				dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
+//				dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
 			}
-			//                        dropzoneImport.addEventListener("dragexit", reportDragDrop, false);
-			//                        dropzoneImport.addEventListener("dragleave", reportDragDrop, false);
 			dropzoneImport.addEventListener("drop", function(event) { //$NON-NLS-0$
 				if (!invalidDropTarget) {
-					//				if (event.srcElement === draggableExport) {
-					reportDragDrop(event);
+					// TODO needed for drop to work!
+					event.preventDefault(); // stops the browser from redirecting.
+					$('a[download]')[0].click(); //$NON-NLS-0$
+					var reader = new FileReader();
+					reader.onerror = errorHandler;
+					reader.onload = function(domError) {
+						var result = domError.target.result;
+						console.log(result);
+						chrome.extension.getBackgroundPage().addOrImportAbbrevs(result);
+					};
+					reader.readAsText(event.dataTransfer.files[0]);
 				}
 			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-			//			document.addEventListener("drop", function(event) {
-			//				//				invalidDropTarget = true;
-			//				if (true) {
-			//					//			if (event.target === dropzoneImport) {
-			//					event.stopPropagation();
-			//					event.preventDefault();
-			//					//				} else {
-			//					//				event.stopPropagation(); 
-			//				} else {}
-			//				console.log("ignore event.type = " + event.type);
-			//				console.log("invalidDropTarget = " + invalidDropTarget);
-			//				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-			//				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
-			//			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
 			document.addEventListener("dragstart", function(event) { //$NON-NLS-0$
 				invalidDropTarget = true;
-				if (false && true || event.target === dropzoneImport) {
-					event.preventDefault();
-					//				} else {
-					//				event.stopPropagation(); 
-				} else {}
-				console.log("ignore event.type = " + event.type); //$NON-NLS-0$
-				console.log("invalidDropTarget = " + invalidDropTarget); //$NON-NLS-0$
-				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]'); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 			}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-			//			document.addEventListener("dragend", function(event) {
-			//				//				invalidDropTarget = true;
-			//					event.stopPropagation();
-			//				event.preventDefault();
-			//				console.log("ignore event.type = " + event.type);
-			//				console.log("ignore event.returnValue = " + event.returnValue);
-			//				console.log("invalidDropTarget = " + invalidDropTarget);
-			//				console.log(event.srcElement.localName + '#' + event.srcElement.id + '["' + event.srcElement.classList + '"]');
-			//				console.log(event.target.localName + '#' + event.target.id + '["' + event.target.classList + '"]');
-			//	console.log("ignore event.type = " + event.type + ": event.dataTransfer = " + JSON.stringify(event.dataTransfer));
-			//			}, true && "useCapture");
 			dropzoneImport.title = chrome.i18n.getMessage("dropzone_help"); //$NON-NLS-0$ //$NON-NLS-1$
 		}
-		document.querySelector('button[name=add]').addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
+		$('button[name=add]')[0].addEventListener('click', add); //$NON-NLS-0$ //$NON-NLS-1$
 		//	NOTE: See createSubLine(key, value) for delete button event listener setup. //$NON-NLS-0$ //$NON-NLS-1$
-		//	document.querySelector('button[name=delete]').addEventListener('click', del);
-		document.querySelector('span[name=editshortcut]').addEventListener('click', createShortcut); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('span[name=deleteshortcut]').addEventListener('click', deleteShortcut); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=download]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
+		//	$('button[name=delete]')[0].addEventListener('click', del);
+		$('span[name=editshortcut]')[0].addEventListener('click', createShortcut); //$NON-NLS-0$ //$NON-NLS-1$
+		$('span[name=deleteshortcut]')[0].addEventListener('click', deleteShortcut); //$NON-NLS-0$ //$NON-NLS-1$
+		$('button[name=download]')[0].addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
 			console.time("download"); //$NON-NLS-0$
-			document.querySelector('a[download]').click(); //$NON-NLS-0$
+			$('a[download]')[0].click(); //$NON-NLS-0$
 			console.timeEnd("download"); //$NON-NLS-0$
 		});
-		document.querySelector('button[name=delete_all]').title = chrome.i18n.getMessage("delete_all_help"); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=delete_all]').addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
-			document.querySelector('a[download]').click(); //$NON-NLS-0$
+		$('button[name=delete_all]')[0].title = chrome.i18n.getMessage("delete_all_help"); //$NON-NLS-0$ //$NON-NLS-1$
+		$('button[name=delete_all]')[0].addEventListener('click', function(event) { //$NON-NLS-0$ //$NON-NLS-1$
+			$('a[download]')[0].click(); //$NON-NLS-0$
 			console.time("delete_all"); //$NON-NLS-0$
 			localStorage['map' + (new Date()).getTime()] = localStorage.map; //$NON-NLS-0$
 			localStorage.map = "[]"; //$NON-NLS-0$
 			console.timeEnd("delete_all"); //$NON-NLS-0$
 			restore_options();
 		});
-		document.querySelector('button[name=save]').addEventListener('click', save_options); //$NON-NLS-0$ //$NON-NLS-1$
-		document.querySelector('button[name=save]').click(); //$NON-NLS-0$
-		//        var draggableExport;
-		//        var draggableExport = $('div#tabs-1')[0];
+		$('button[name=save]')[0].addEventListener('click', save_options); //$NON-NLS-0$ //$NON-NLS-1$
+		$('button[name=save]')[0].click(); //$NON-NLS-0$
 		var draggableExport = $('a[download]')[0]; //$NON-NLS-0$
-		//        draggableExport.href = getExportFileURL();
-		//        draggableExport.href = chrome.extension.getBackgroundPage().getExportFileURL();
-		//		var draggableExport = $('a[name=texttab]')[0];
-		//        draggableExport.draggable = "true";
-		//        var draggableExport = $('label[name=export]')[0];
-		if (false && draggableExport) {
-			draggableExport.addEventListener("dragstart", onDragStart, false && "useCapture"); //$NON-NLS-1$ //$NON-NLS-0$
-			draggableExport.addEventListener("click", function doNothing(event) { //$NON-NLS-0$
-				console.log(event);
-				//				event.preventDefault();
-			}, false);
-			//            draggableExport.addEventListener("dragenter", reportDragDrop, false);
-			draggableExport.addEventListener("dragend", function(event) { //$NON-NLS-0$
-				event.stopPropagation();
-				event.preventDefault();
-				console.log("event.type = " + event.type); //$NON-NLS-0$
-				console.log("event.returnValue = " + event.returnValue); //$NON-NLS-0$
-				if (outsideBrowser(event)) {
-					//                    console.log("Elvis has left the building.");
-					//				if (event.srcElement === draggableExport) {
-					reportDragDrop(event);
-				}
-				invalidDropTarget = false;
-			}, false && "useCapture"); //$NON-NLS-0$
-			draggableExport.title += chrome.i18n.getMessage("export_help"); //$NON-NLS-0$ //$NON-NLS-1$
-			//            draggableExport.addEventListener("dragover", reportDragDrop, false);
-			//            draggableExport.addEventListener("dragexit", reportDragDrop, false);
-			//            draggableExport.addEventListener("dragleave", reportDragDrop, false);
-			//			draggableExport.addEventListener("drop", reportDragDrop, false);
-		} else {
-			console.log("draggableExport = " + draggableExport); //$NON-NLS-0$
-		}
-		// TODO testing an empty event type: ""
-		//        draggableExport.addEventListener("", logEvent, false);
 		draggableExport.addEventListener("click", function(event) { //$NON-NLS-0$
 			logEvent(event);
 			if (event.altKey) {
@@ -902,24 +503,6 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 				}
 			}
 		}, false);
-		draggableExport.addEventListener("load", logEvent, false); //$NON-NLS-0$
-		draggableExport.addEventListener("error", logEvent, false); //$NON-NLS-0$
-		draggableExport.addEventListener("abort", logEvent, false); //$NON-NLS-0$
-		//        chrome.webRequest.onBeforeRequest.addListener(function(details) {
-		//            console.log(JSON.stringify(details));
-		//        }, {
-		//            urls: ["<all_urls>"]
-		//        });
-		//        chrome.webRequest.onCompleted.addListener(function(details) {
-		//            console.log(JSON.stringify(details));
-		//        }, {
-		//            urls: ["<all_urls>"]
-		//        });
-		//        chrome.webRequest.onErrorOccurred.addListener(function(details) {
-		//            console.log(JSON.stringify(details));
-		//        }, {
-		//            urls: ["<all_urls>"]
-		//        });
 	} catch (exception) {
 		console.log(Date() + ":\n" + "document.readyState:" + document.readyState + "\ndocument.URL:" + document.URL + "\ne.stack:" + exception.stack); //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 	}

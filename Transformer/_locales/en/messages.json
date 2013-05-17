@@ -99,6 +99,10 @@
     "message": " - Recent Expansions",
     "description": ""
   },
+  "bad_abbrev_tab": {
+    "message": "Linebreak in text selections are only preserved when abbreviation is added from a tab where Popchrom is available. Popchrom is not available in this tab.",
+    "description": ""
+  },
   "bad_issue_tab": {
     "message": "Please create your issue report from tab where you experienced Popchrom issue. Popchrom is not available in this tab.",
     "description": ""

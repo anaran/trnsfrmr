@@ -1,3 +1,6 @@
+/*jslint todo: true */
+"use strict"; //$NON-NLS-0$
+// TODO Please see
 // http://stackoverflow.com/questions/368280/javascript-hashmap-equivalent
 
 // linking the key-value-pairs is optional
