@@ -107,6 +107,16 @@
     "message": "Please create your issue report from tab where you experienced Popchrom issue. Popchrom is not available in this tab.",
     "description": ""
   },
+  "abbrev_exists": {
+    "message": "Abbreviation $NAME$ already exists!. Please choose another name if you don't like $NAME $2.",
+    "description": "",
+  "placeholders": {
+    "name": {
+      "content": "$1",
+      "example": ""
+    }
+  }
+  },
   "option_add": {
     "message": "Add",
     "description": ""

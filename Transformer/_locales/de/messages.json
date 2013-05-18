@@ -107,6 +107,16 @@
     "message": "Bitte erstellen Sie den Fehlerbericht vom Tab in dem Sie das Popchrom Problem beobachtet haben. Popchrom ist im aktuellen Tab nicht verfügbar.",
     "description": ""
   },
+  "abbrev_exists": {
+    "message": "Abkürzung $NAME$ ist vergeben!. Bitte wählen Sie einen besseren Namen wenn Ihnen $NAME$ 2 nicht zusagt.",
+    "description": "",
+  "placeholders": {
+    "name": {
+      "content": "$1",
+      "example": ""
+    }
+  }
+  },
   "option_add": {
     "message": "Hinzufügen",
     "description": ""
