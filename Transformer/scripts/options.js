@@ -102,6 +102,18 @@ function removeWhitespaces(str) {
 
 function onInputChange(event) {
 	event.srcElement.value = event.srcElement.value.replace(/\s/g, "");
+	// TODO Please note that the dynamically added value properties are distinct from the element's value attribute!
+	//	var nl = document.querySelectorAll('.sub_key[value="'+event.srcElement.value+'"]');
+	var nl = document.querySelectorAll('.sub_key[value]'); //$NON-NLS-0$
+	for (var i = 0, count = 0; i < nl.length; i++) {
+		if (nl[i].value === event.srcElement.value) {
+			count++;
+		}
+	}
+	if (count > 1) {
+		event.srcElement.value = event.srcElement.value + "2"; //$NON-NLS-0$
+		chrome.extension.getBackgroundPage().alert(event.srcElement.title = chrome.i18n.getMessage("abbrev_exists", [event.srcElement.value])); //$NON-NLS-0$
+	}
 }
 
 function keysUnique(a) {
@@ -150,8 +162,8 @@ function createSubLine(key, args, value) {
 		event.target.rows = 4;
 	});
 	$(".expand50-1000", line).focus(function(event) { //$NON-NLS-0$
-		console.log(event.timeStamp);
-		console.log(event);
+//		console.log(event.timeStamp);
+//		console.log(event);
 		var tc = event.target.value;
 		var rowIndex = 0;
 		var cols = 0;
@@ -163,11 +175,11 @@ function createSubLine(key, args, value) {
 			}
 		});
 		rows = rowIndex + 1;
-		console.log("tc.length = " + tc.length); //$NON-NLS-0$
-		console.log("rows = " + rows); //$NON-NLS-0$
+//		console.log("tc.length = " + tc.length); //$NON-NLS-0$
+//		console.log("rows = " + rows); //$NON-NLS-0$
 		event.target.cols = cols > 78 ? cols : 78;
 		event.target.rows = rows > 4 ? rows : 4;
-		console.log("cols = " + cols); //$NON-NLS-0$
+//		console.log("cols = " + cols); //$NON-NLS-0$
 	});
 	$(".del_button>button", line).click(del); //$NON-NLS-0$
 	return line;
@@ -197,7 +209,7 @@ function restore_options(event) {
 			var array = JSON.parse(map.get(a[k]));
 			var arrayLength = array.length;
 			if (arrayLength !== 2) {
-				console.error(chrome.i18n.getMessage("Please report an issue! arrayLength = ") + arrayLength);
+				chrome.extension.getBackgroundPage().alert(chrome.i18n.getMessage("odd_map_array_length") + arrayLength); //$NON-NLS-0$
 			} else {
 				args = array[0];
 				expansion = array[1];
@@ -328,44 +340,75 @@ function import_settings(event) {
 
 // Saves options to localStorage.
 function save_options(event) {
-	$('#saving_progress')[0].style.visibility = "visible"; //$NON-NLS-1$ //$NON-NLS-0$
-	$.Watermark.HideAll();
-	var lines = $("#subs .sub_line"); //$NON-NLS-0$ //$NON-NLS-1$
-	var a = [];
-	for (var i = 0; i < lines.length; i++) {
-		var key = $(".sub_key", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
-		var args = $(".sub_args", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
-		var value = $(".expand50-1000", lines[i])[0].value; //$NON-NLS-0$
-
-		if (key !== "" || value !== "") { //$NON-NLS-0$ //$NON-NLS-1$
-			a.push(key);
-			a.push(JSON.stringify([args, value]));
-		}
-	}
-	if (keysUnique(a)) {
-		localStorage.map = JSON.stringify(a);
-		$.Watermark.ShowAll();
-		localStorage.hideicon = $("#checkbox_hideicon").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
-		localStorage.animate = $("#checkbox_animate").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
-		localStorage.sound = $("#checkbox_sound").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
-		localStorage.selectphrase = $("#checkbox_selectphrase").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
-		localStorage.replacekey = replaceKey.toStore();
-		chrome.extension.getBackgroundPage().broadcastSettings();
-		setTimeout(function() {
-//			$("#saving").html(""); //$NON-NLS-0$ //$NON-NLS-1$
-			$('#saving_progress')[0].style.visibility = "hidden"; //$NON-NLS-1$ //$NON-NLS-0$
-		}, 1000);
-		restore_options();
-		var blob = new window.Blob([localStorage.map], {
-			"type": 'text/plain' //$NON-NLS-1$ //$NON-NLS-0$
-		});
-		var href = URL.createObjectURL(blob);
-		$('a[download]')[0].href = href; //$NON-NLS-0$
-		$('a[download]')[0].download = getDownloadFileName(); //$NON-NLS-0$
-	} else {
-		setKeyErrorColors(a);
-		$("#saving").html(chrome.i18n.getMessage("keys_not_unique")); //$NON-NLS-0$ //$NON-NLS-1$
-	}
+	// TODO Look into alternatives to provide non-blocking progress feedback.
+	// This nesting of setTimeout calls is a really limited solution.
+	window.setTimeout(function() {
+		var progress = document.querySelector('#saving_progress');
+		progress.max = 100;
+		progress.value = 0;
+		progress.style.visibility = "visible"; //$NON-NLS-0$
+		$.Watermark.HideAll();
+		progress.value = 20;
+		window.setTimeout(function() {
+			var lines = $("#subs .sub_line"); //$NON-NLS-0$ //$NON-NLS-1$
+			var a = [];
+			for (var i = 0; i < lines.length; i++) {
+				var key = $(".sub_key", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
+				var args = $(".sub_args", lines[i])[0].value; //$NON-NLS-0$ //$NON-NLS-1$
+				var value = $(".expand50-1000", lines[i])[0].value; //$NON-NLS-0$
+				if (key !== "" || value !== "") { //$NON-NLS-0$ //$NON-NLS-1$
+					a.push(key);
+					a.push(JSON.stringify([args, value]));
+				}
+			}
+			//			console.log('before on at ' + (new Date()).toJSON());
+			progress.value = 40;
+			window.setTimeout(function() {
+				// TODO Please note that uniqueness is not enforces during entry.
+				// Import will also not create duplicates but ask for permission to overwrite.
+				//				if (keysUnique(a)) {
+				localStorage.map = JSON.stringify(a);
+				$.Watermark.ShowAll();
+				progress.value = 50;
+				window.setTimeout(function() {
+					localStorage.hideicon = $("#checkbox_hideicon").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
+					localStorage.animate = $("#checkbox_animate").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
+					localStorage.sound = $("#checkbox_sound").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
+					localStorage.selectphrase = $("#checkbox_selectphrase").attr('checked'); //$NON-NLS-0$ //$NON-NLS-1$
+					localStorage.replacekey = replaceKey.toStore();
+					chrome.extension.getBackgroundPage().broadcastSettings();
+					progress.value = 60;
+					window.setTimeout(function() {
+						restore_options();
+						progress.value = 70;
+						window.setTimeout(function() {
+							var blob = new window.Blob([localStorage.map], {
+								"type": 'text/plain' //$NON-NLS-1$ //$NON-NLS-0$
+							});
+							progress.value = 80;
+							window.setTimeout(function() {
+								var href = URL.createObjectURL(blob);
+								progress.value = 90;
+								window.setTimeout(function() {
+									$('a[download]')[0].href = href; //$NON-NLS-0$
+									$('a[download]')[0].download = getDownloadFileName(); //$NON-NLS-0$
+									//				} else {
+									//					setKeyErrorColors(a);
+									//					$("#saving").html(chrome.i18n.getMessage("keys_not_unique")); //$NON-NLS-0$ //$NON-NLS-1$
+									//				}
+									progress.value = 100;
+									window.setTimeout(function() {
+										//							console.log('before off at ' + (new Date()).toJSON());
+										progress.style.visibility = "hidden"; //$NON-NLS-0$
+									}, 200);
+								}, 200);
+							}, 200);
+						}, 200);
+					}, 200);
+				}, 200);
+			}, 200);
+		}, 200);
+	}, 200);
 }
 
 function onKeyDown(event) {
@@ -450,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function() { //$NON-NLS-0$
 				document.addEventListener("dragenter", function(event) { //$NON-NLS-0$
 					// return false;
 				}, false && "useCapture"); //$NON-NLS-0$ //$NON-NLS-1$
-//				dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
+				//				dropzoneImport.addEventListener("dragenter", reportDragDrop, false); //$NON-NLS-0$ //$NON-NLS-1$
 			}
 			dropzoneImport.addEventListener("drop", function(event) { //$NON-NLS-0$
 				if (!invalidDropTarget) {
