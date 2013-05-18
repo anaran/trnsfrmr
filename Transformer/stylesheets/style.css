@@ -48,6 +48,20 @@ div#buttons {
 
 #saving_progress {
   width: 30px;
+  display: inline-block;
+  visibility: hidden;
+  -webkit-animation-delay: 0s;
+/*-webkit-animation-duration: 1s;
+-webkit-animation: move_eye 4s linear 0s infinite alternate;
+-webkit-animation-direction: normal;
+-webkit-animation-duration: 0s;
+-webkit-animation-fill-mode: none;
+-webkit-animation-iteration-count: infinite;
+-webkit-animation-name: none;
+-webkit-animation-timing-function: ease;
+-webkit-appearance: progress-bar;
+-webkit-writing-mode: horizontal-tb;
+writing-mode: lr-tb;*/
 }
 
 .saving {
