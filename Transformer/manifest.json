@@ -5,7 +5,6 @@
 	"permissions": [
 		"clipboardRead",
 		"contextMenus",
-		"file://*/*",
 		"http://*/*",
 		"https://*/*",
 		"notifications",
