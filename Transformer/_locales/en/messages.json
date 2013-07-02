@@ -293,7 +293,7 @@ New in Version 1.8
 
 Download of abbreviations to Download folder.
 Import of download files by drop onto Text dropzone.
-WYSIWYG editing of abbreviation, arguments, and axpansion text.
+WYSIWYG editing of abbreviation, arguments, and expansion text.
 Headers remain visible when tabs are scrolled.
 Popchrom issue reporting integrated in context menu.
 New variable %CLIPBOARD% available in abbreviation definitions. 
