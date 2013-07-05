@@ -323,7 +323,7 @@ Improved reporting via dialog boxes.",
   },
   "map_template": {
     "message": "[\"today\",\"%DATE%\",\"sy\",\"Sincerely yours\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $$2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\\\n\\\"]\"]",
-    "description": "Vorlage fuer die Abbkürzungen"
+    "description": "Vorlage fuer die Abkürzungen"
   },
   "keys_not_unique": {
     "message": "The abbreviations have to be unique.",
