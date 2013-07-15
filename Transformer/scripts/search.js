@@ -90,9 +90,9 @@ function extractKeyWord(str, s, e) {
 		var a = str.substring(e);
 		// take care of U+00A0 NO-BREAK SPACE as well
 		// Fixes issue 70.
-		var rb = b.match(/[^ \t\n\u00A0]*$/);
-		var ra = a.match(/^[^ \t\n\u00A0]*/);
-
+		// take care of >;<& to fix issue 38.
+		var rb = b.match(/[^ \t\n\u00A0>;]*$/);
+		var ra = a.match(/^[^ \t\n\u00A0<&]*/);
 		s -= rb[0].length;
 		e += ra[0].length;
 	}
@@ -205,12 +205,22 @@ function checkElements(elem) {
 		// element.normalize();
 		var doc = element.ownerDocument;
 		var selection = doc.getSelection();
-		if (selection.isCollapsed) {
-			element = selection.anchorNode;
-			s = selection.anchorOffset;
-
+		var kcc = document.body.querySelector('.kix-cursor-caret'); //$NON-NLS-0$
+		var kso, gbcr, efp, crfp;
+		if (kcc) { //$NON-NLS-0$
+			// TODO Please note Google Drive (formerly Google Docs) uses KIX, mildly useful sources available at
+			// https://github.com/benjamn/kix-standalone
+			// found via http://stackoverflow.com/questions/7877225/google-docs-textcursor
+			// or directly in Chrome DevTools Source views
+			kso = document.body.querySelector('.kix-selection-overlay'); //$NON-NLS-0$
+			gbcr = kcc.getBoundingClientRect();
+			efp = document.elementFromPoint(gbcr.left, gbcr.bottom);
+			crfp = document.caretRangeFromPoint(gbcr.left, gbcr.bottom);
+		}
+		if (selection.isCollapsed && !kso) {
+			element = kcc ? efp : selection.anchorNode;
+			s = kcc ? crfp.startOffset : selection.anchorOffset;
 			r = extractKeyWord(element.textContent, s, s);
-
 			value = settings.map.get(r.key);
 			value = handleArguments(value, r);
 			if (value) {
@@ -219,7 +229,9 @@ function checkElements(elem) {
 				value = replaceAllDates(value);
 
 				var beforepos = r.before.length;
-
+if (kcc) {
+element.textContent = r.before + " " + value + " " + r.after;
+} else{
 				// split text into "element" - "keyword" - "aftervalue"
 				var keyword = element.splitText(beforepos);
 				var aftervalue = keyword.splitText(unExpandedValue.length);
@@ -254,6 +266,7 @@ function checkElements(elem) {
 					});
 				} else {
 					setEditableSelectionCursor(selection, doc, expansionNode, settings);
+				}
 				}
 			}
 		} else {
@@ -347,7 +360,7 @@ function init() {
 		// TODO Note that it works fine in Google Drive Spreadsheets and Forms.
 		var mySpans = document.body.querySelectorAll('span[class="goog-inline-block kix-lineview-text-block"]'); //$NON-NLS-0$
 		if (mySpans) {
-			for (var i = 2; i < mySpans.length; i++) {
+			for (var i = 0; i < mySpans.length; i++) {
 				mySpans[i].addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 			}
 		}
