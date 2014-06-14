@@ -307,7 +307,7 @@ function init() {
 	};
 	var addAbbrevId = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id addAbbrevId background.js:250
-		// but multiple items are crated if id is absent. Live with the error for now.
+		// but multiple items are created if id is absent. Live with the error for now.
 		"id": "addAbbrevId", //$NON-NLS-1$ //$NON-NLS-0$
 		"type": "normal", //$NON-NLS-1$ //$NON-NLS-0$
 		"title": chrome.i18n.getMessage("add_import_for"), //$NON-NLS-0$
@@ -334,7 +334,7 @@ function init() {
 	};
 	var submitPopchromIssueId = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id submitPopchromIssueId
-		// but multiple items are crated if id is absent. Live with the error for now.
+		// but multiple items are created if id is absent. Live with the error for now.
 		"id": "submitPopchromIssueId", //$NON-NLS-1$ //$NON-NLS-0$
 		"type": "normal", //$NON-NLS-1$ //$NON-NLS-0$
 		"title": chrome.i18n.getMessage("submit_issue_for"), //$NON-NLS-0$
@@ -352,7 +352,7 @@ function init() {
 	};
 	var toggleMarkText = chrome.contextMenus.create({
 		// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
-		// but multiple items are crated if id is absent. Live with the error for now.
+		// but multiple items are created if id is absent. Live with the error for now.
 		"id": "toggleMarkText", //$NON-NLS-1$ //$NON-NLS-0$
 		"type": "checkbox", //$NON-NLS-1$ //$NON-NLS-0$
 		"checked": JSON.parse(localStorage.selectphrase), //$NON-NLS-0$
