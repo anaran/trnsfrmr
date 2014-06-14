@@ -156,7 +156,7 @@ function checkElements(elem) {
 	var substituted = false,
 		element = elem,
 		s, r, value, expandedElementType;
-	if ((element.tagName === "INPUT" && ((element.type === "text") || (element.type === "password"))) || element.tagName === "TEXTAREA") { //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+	if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") { //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 		// if text is selected abort... see wysiwyg-editor
 		if (element.selectionStart !== element.selectionEnd) {
 			var oldSelectionStart = element.selectionStart;
@@ -203,7 +203,8 @@ function checkElements(elem) {
 		// e.g. "badly " "split" "" "" "" " text" becomes "badly split text"
 		// Don't do this here since it invalidates the current selection!
 		// element.normalize();
-		var doc = element.ownerDocument;
+		// var doc = element.ownerDocument;
+		var doc = document;
 		var selection = doc.getSelection();
 		var kcc = document.body.querySelector('.kix-cursor-caret'); //$NON-NLS-0$
 		var kso, gbcr, efp, crfp;
@@ -270,19 +271,25 @@ element.textContent = r.before + " " + value + " " + r.after;
 				}
 			}
 		} else {
+		    try {
 			var ancestor = selection.anchorNode;
 			var unexpandedNode = doc.createTextNode(unExpandedValue);
 			ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
 			selection.deleteFromDocument();
-			// Normalization also deactivated a selection.
-			var x = unexpandedNode.parentNode;
-			x.normalize();
 			var range = doc.createRange();
 			range.selectNode(unexpandedNode);
 			document.getSelection().removeAllRanges();
 			document.getSelection().addRange(range);
 			document.getSelection().collapseToStart();
-			substituted = true;
+			// Normalization also deactivated a selection.
+			// Since it may change the HTML structure we
+			// do this last.
+			unexpandedNode.parentNode && unexpandedNode.parentNode.normalize();
+		    }
+		    catch (error) {
+			console.log(error, range, unexpandedNode);
+		    }
+		    substituted = false;
 		}
 	}
 	return substituted;
@@ -379,8 +386,8 @@ function init() {
 			}
 		}
 	}
-	addEventListenerToIframes();
-	document.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
+	// addEventListenerToIframes();
+	document.addEventListener("keydown", onKeyEvent, true); //$NON-NLS-0$
 	var messageListener = function(request, sender, sendResponse) {
 		switch (request.cmd) {
 			case "onSubmitPopchromIssue": //$NON-NLS-0$
