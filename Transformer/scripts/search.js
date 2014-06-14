@@ -117,7 +117,7 @@ function handleArguments(value, r) {
 			chrome.i18n.getMessage("see_regexp_help"));
 		}
 		var toReplacement = x[1];
-		//          NOTE Is replacement argument really a string?
+		// NOTE Is replacement argument really a string?
 		if (typeof(toReplacement) !== "string") { //$NON-NLS-0$
 			chrome.extension.getBackgroundPage().alert(toReplacement + chrome.i18n.getMessage("fix_non_quoted") + r.key + "\"\n" + value); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 		}
@@ -152,7 +152,7 @@ function handleArguments(value, r) {
 
 //replaces the keys with the assigned values in the element.
 function checkElements(elem) {
-	//  "use strict";
+	// "use strict";
 	var substituted = false,
 		element = elem,
 		s, r, value, expandedElementType;
@@ -230,66 +230,65 @@ function checkElements(elem) {
 				value = replaceAllDates(value);
 
 				var beforepos = r.before.length;
-if (kcc) {
-element.textContent = r.before + " " + value + " " + r.after;
-} else{
-				// split text into "element" - "keyword" - "aftervalue"
-				var keyword = element.splitText(beforepos);
-				var aftervalue = keyword.splitText(unExpandedValue.length);
-				// TODO check for other linebreaks like unix or mac style
-				var lines = value.split("\n"); //$NON-NLS-0$
-				var expansionNode = doc.createElement("div"); //$NON-NLS-0$
-				if (lines.length > 1) {
-					for (var i = 0; i < lines.length; i++) {
-						var div = doc.createElement("div"); //$NON-NLS-0$
-						if (lines[i].length > 0) {
-							expansionNode.appendChild(div.appendChild(doc.createTextNode(lines[i])).parentNode);
-						} else {
-							expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode); //$NON-NLS-0$
+				if (kcc) {
+					element.textContent = r.before + " " + value + " " + r.after;
+				} else {
+					// split text into "element" - "keyword" - "aftervalue"
+					var keyword = element.splitText(beforepos);
+					var aftervalue = keyword.splitText(unExpandedValue.length);
+					// TODO check for other linebreaks like unix or mac style
+					var lines = value.split("\n"); //$NON-NLS-0$
+					var expansionNode = doc.createElement("div"); //$NON-NLS-0$
+					if (lines.length > 1) {
+						for (var i = 0; i < lines.length; i++) {
+							var div = doc.createElement("div"); //$NON-NLS-0$
+							if (lines[i].length > 0) {
+								expansionNode.appendChild(div.appendChild(doc.createTextNode(lines[i])).parentNode);
+							} else {
+								expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode); //$NON-NLS-0$
+							}
 						}
+					} else {
+						var span = doc.createElement("span"); //$NON-NLS-0$
+						expansionNode.appendChild(span.appendChild(doc.createTextNode(lines[0])).parentNode);
 					}
-				} else {
-					var span = doc.createElement("span"); //$NON-NLS-0$
-					expansionNode.appendChild(span.appendChild(doc.createTextNode(lines[0])).parentNode);
-				}
-				element.parentNode.replaceChild(expansionNode, keyword);
-				if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-					chrome.extension.sendMessage({
-						cmd: "clipboard", //$NON-NLS-0$
-						action: "paste" //$NON-NLS-0$
-					}, function(response) {
-						if (response.paste) {
-							document.getSelection().getRangeAt(0).deleteContents();
-							document.getSelection().getRangeAt(0).insertNode(document.createTextNode(response.paste));
-						}
+					element.parentNode.replaceChild(expansionNode, keyword);
+					if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+					"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+						chrome.extension.sendMessage({
+							cmd: "clipboard", //$NON-NLS-0$
+							action: "paste" //$NON-NLS-0$
+						}, function(response) {
+							if (response.paste) {
+								document.getSelection().getRangeAt(0).deleteContents();
+								document.getSelection().getRangeAt(0).insertNode(document.createTextNode(response.paste));
+							}
+							setEditableSelectionCursor(selection, doc, expansionNode, settings);
+						});
+					} else {
 						setEditableSelectionCursor(selection, doc, expansionNode, settings);
-					});
-				} else {
-					setEditableSelectionCursor(selection, doc, expansionNode, settings);
-				}
+					}
 				}
 			}
 		} else {
-		    try {
-			var ancestor = selection.anchorNode;
-			var unexpandedNode = doc.createTextNode(unExpandedValue);
-			ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
-			selection.deleteFromDocument();
-			var range = doc.createRange();
-			range.selectNode(unexpandedNode);
-			document.getSelection().removeAllRanges();
-			document.getSelection().addRange(range);
-			document.getSelection().collapseToStart();
-			// Normalization also deactivated a selection.
-			// Since it may change the HTML structure we
-			// do this last.
-			unexpandedNode.parentNode && unexpandedNode.parentNode.normalize();
-		    }
-		    catch (error) {
-			console.log(error, range, unexpandedNode);
-		    }
-		    substituted = false;
+			try {
+				var ancestor = selection.anchorNode;
+				var unexpandedNode = doc.createTextNode(unExpandedValue);
+				ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
+				selection.deleteFromDocument();
+				var range = doc.createRange();
+				range.selectNode(unexpandedNode);
+				document.getSelection().removeAllRanges();
+				document.getSelection().addRange(range);
+				document.getSelection().collapseToStart();
+				// Normalization also deactivated a selection.
+				// Since it may change the HTML structure we
+				// do this last.
+				unexpandedNode.parentNode && unexpandedNode.parentNode.normalize();
+			} catch (error) {
+				console.log(error, range, unexpandedNode);
+			}
+			substituted = false;
 		}
 	}
 	return substituted;
@@ -311,35 +310,35 @@ function onKeyEvent(e) {
 			pageaction.notify();
 		} else {
 			if (document.activeElement.isContentEditable || !document.activeElement.hasOwnProperty("readOnly") || !document.activeElement.readOnly) { //$NON-NLS-0$
-  			if (chrome.hasOwnProperty("notifications")) {
-  			    var opt = {
-  			        type: "basic",
-  			        title: chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"),
-  			        message: getMostRecentlyUsedList().filter(function(value, index, object) {
-  			            return true;
-  			        }).map(function(value, index, object) {
-  			            return value;
-  			        }).join(" "),
-  			        iconUrl: chrome.extension.getURL("icons/icon-48x48.png")
-  			    }
-  			    var notification = chrome.notifications.create("", opt, function(notificationId) {
-  			        return notificationId;
-  			    });
-  			}
-//				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
-//				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
-//				//TODO See issue chromium:134315 for possible trouble with this.
-//				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
-//				chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
-//				//			HMTL content seems to be only supported by a possible future createHTMLNotification
-//				//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-//				getMostRecentlyUsedList().filter(function(value, index, object) {
-//					return true;
-//				}).map(function(value, index, object) {
-//					return value;
-//				}).join(" ") // notification body text //$NON-NLS-0$
-//				);
-//				notification.show();
+				if (chrome.hasOwnProperty("notifications")) {
+					var opt = {
+						type: "basic",
+						title: chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"),
+						message: getMostRecentlyUsedList().filter(function(value, index, object) {
+							return true;
+						}).map(function(value, index, object) {
+							return value;
+						}).join(" "),
+						iconUrl: chrome.extension.getURL("icons/icon-48x48.png")
+					}
+					var notification = chrome.notifications.create("", opt, function(notificationId) {
+						return notificationId;
+					});
+				}
+				// //NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
+				// //chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
+				// //TODO See issue chromium:134315 for possible trouble with this.
+				// chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
+				// chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
+				// // HMTL content seems to be only supported by a possible future createHTMLNotification
+				// // See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+				// getMostRecentlyUsedList().filter(function(value, index, object) {
+				// return true;
+				// }).map(function(value, index, object) {
+				// return value;
+				// }).join(" ") // notification body text //$NON-NLS-0$
+				// );
+				// notification.show();
 			} else {
 				chrome.extension.sendMessage({
 					cmd: "options" //$NON-NLS-0$
@@ -390,7 +389,8 @@ function init() {
 	document.addEventListener("keydown", onKeyEvent, true); //$NON-NLS-0$
 	var messageListener = function(request, sender, sendResponse) {
 		switch (request.cmd) {
-			case "onSubmitPopchromIssue": //$NON-NLS-0$
+			case "onSubmitPopchromIssue":
+				//$NON-NLS-0$
 				if (document.URL === request.url) {
 					try {
 						var sel = document.getSelection();
@@ -449,7 +449,8 @@ function init() {
 					}
 				}
 				break;
-			case "getSelection": //$NON-NLS-0$
+			case "getSelection":
+				//$NON-NLS-0$
 				try {
 					if (document.URL === request.url) {
 						var sel = document.getSelection();
