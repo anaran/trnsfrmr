@@ -304,21 +304,35 @@ function onKeyEvent(e) {
 			pageaction.notify();
 		} else {
 			if (document.activeElement.isContentEditable || !document.activeElement.hasOwnProperty("readOnly") || !document.activeElement.readOnly) { //$NON-NLS-0$
-				var notification = webkitNotifications.createNotification(
-				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
-				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
-				//TODO See issue chromium:134315 for possible trouble with this.
-				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
-				chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
-				//			HMTL content seems to be only supported by a possible future createHTMLNotification
-				//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-				getMostRecentlyUsedList().filter(function(value, index, object) {
-					return true;
-				}).map(function(value, index, object) {
-					return value;
-				}).join(" ") // notification body text //$NON-NLS-0$
-				);
-				notification.show();
+  			if (chrome.hasOwnProperty("notifications")) {
+  			    var opt = {
+  			        type: "basic",
+  			        title: chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"),
+  			        message: getMostRecentlyUsedList().filter(function(value, index, object) {
+  			            return true;
+  			        }).map(function(value, index, object) {
+  			            return value;
+  			        }).join(" "),
+  			        iconUrl: chrome.extension.getURL("icons/icon-48x48.png")
+  			    }
+  			    var notification = chrome.notifications.create("", opt, function(notificationId) {
+  			        return notificationId;
+  			    });
+  			}
+//				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
+//				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
+//				//TODO See issue chromium:134315 for possible trouble with this.
+//				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
+//				chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
+//				//			HMTL content seems to be only supported by a possible future createHTMLNotification
+//				//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+//				getMostRecentlyUsedList().filter(function(value, index, object) {
+//					return true;
+//				}).map(function(value, index, object) {
+//					return value;
+//				}).join(" ") // notification body text //$NON-NLS-0$
+//				);
+//				notification.show();
 			} else {
 				chrome.extension.sendMessage({
 					cmd: "options" //$NON-NLS-0$
