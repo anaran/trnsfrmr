@@ -325,6 +325,17 @@ function onKeyEvent(e) {
 						return notificationId;
 					});
 				}
+			    else if (window.hasOwnProperty('Notification')) {
+				var notification = new Notification(
+				    chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), {
+					icon: chrome.extension.getURL("icons/icon-48x48.png"),
+					body: getMostRecentlyUsedList().filter(function(value, index, object) {
+					    return true;
+					}).map(function(value, index, object) {
+					    return value;
+					}).join(" ")
+				    });
+				}
 				// //NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
 				// //chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
 				// //TODO See issue chromium:134315 for possible trouble with this.
