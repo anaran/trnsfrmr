@@ -28,7 +28,7 @@
 // Options: [v] Regular expression
 
 var default_icon = chrome.extension.getURL("icons/icon-16x16.png"); //$NON-NLS-0$
-
+var toggleMarkText;
 var notifyImages = [
 chrome.extension.getURL("icons/anim/notify0.png"), //$NON-NLS-0$
 chrome.extension.getURL("icons/anim/notify1.png"), //$NON-NLS-0$
@@ -201,6 +201,11 @@ function updateSettings(windows) {
 	// TODO same function in backgroundpage... migrate!
 	var settings = getSettings(),
 		w, t, callback = function(response) {};
+	if (toggleMarkText) {
+		chrome.contextMenus.update(toggleMarkText, {
+			checked: JSON.parse(settings.selectPhrase)
+		});
+	}
 	for (w in windows) {
 		var tabs = windows[w].tabs;
 		for (t in tabs) {
@@ -355,9 +360,10 @@ function init() {
 		broadcastSettings();
 		reloadOptionsPage();
 	};
-	var toggleMarkText = chrome.contextMenus.create({
-		// TODO Causes lastError:Cannot create item with duplicate id toggleMarkText
-		// but multiple items are created if id is absent. Live with the error for now.
+	toggleMarkText = chrome.contextMenus.create({
+		// TODO Causes lastError:Cannot create item with duplicate id
+		// toggleMarkText but multiple items are created if id is
+		// absent. Live with the error for now.
 		"id": "toggleMarkText", //$NON-NLS-1$ //$NON-NLS-0$
 		"type": "checkbox", //$NON-NLS-1$ //$NON-NLS-0$
 		"checked": JSON.parse(localStorage.selectphrase), //$NON-NLS-0$
@@ -369,7 +375,6 @@ function init() {
 			console.log("lastError:" + chrome.extension.lastError.message);
 		}
 	});
-	//	chrome.contextMenus.onClicked.addListener(onClick);
 	chrome.pageAction.onClicked.addListener(function(tab) {
 		console.log("clicked popchrom pageAction on tab " + tab.url); //$NON-NLS-0$
 		reloadOptionsPage("createAsWell"); //$NON-NLS-0$
