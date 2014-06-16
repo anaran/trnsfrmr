@@ -189,7 +189,7 @@ function add(event) {
 	var subs = $("#subs"); //$NON-NLS-0$
 	var line = createSubLine("", "", ""); //$NON-NLS-0$ //$NON-NLS-1$
 	subs.prepend(line);
-	$("a[name=texttab]").click(); //$NON-NLS-0$
+	// $("a[name=texttab]").click(); //$NON-NLS-0$
 }
 
 // Restores select box state to saved value from localStorage.

@@ -1,3 +1,4 @@
+/* -*- Mode: js; tab-width: 8; indent-tabs-mode: t; js-indent-level: 8; fill-column: 80 -*- */
 /*jslint browser: true, devel: true, todo: false */
 /*global Map, window: false, chrome: false, localStorage: false, $: false, KeyInfo: false */
 "use strict"; //$NON-NLS-0$
@@ -111,6 +112,10 @@ function onPageActionMessage(request, sender, sendResponse) {
 	switch (request.action) {
 		case "show": //$NON-NLS-0$
 			if (localStorage.hideicon !== "true") { //$NON-NLS-0$
+				chrome.pageAction.setIcon({
+					"tabId": sender.tab.id, //$NON-NLS-0$
+					"path": default_icon //$NON-NLS-0$
+				});
 				chrome.pageAction.show(sender.tab.id);
 			}
 			break;

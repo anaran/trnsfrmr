@@ -1,3 +1,4 @@
+/* -*- Mode: js; tab-width: 8; indent-tabs-mode: t; js-indent-level: 8; fill-column: 80 -*- */
 /*jslint browser: true, devel: true, todo: true */
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
 "use strict"; //$NON-NLS-0$
@@ -288,7 +289,7 @@ function checkElements(elem) {
 			} catch (error) {
 				console.log(error, range, unexpandedNode);
 			}
-			substituted = false;
+			substituted = true;
 		}
 	}
 	return substituted;
@@ -398,6 +399,9 @@ function init() {
 	}
 	// addEventListenerToIframes();
 	document.addEventListener("keydown", onKeyEvent, true); //$NON-NLS-0$
+	if (pageHasEditableElements()) {
+		pageaction.show();
+	}
 	var messageListener = function(request, sender, sendResponse) {
 		switch (request.cmd) {
 			case "onSubmitPopchromIssue":
@@ -503,9 +507,12 @@ function init() {
 	}
 }
 
-setTimeout(function() {
+document.addEventListener('readystatechange', function(event) {
+	if (event.target.readyState !== 'complete') {
+		return;
+	}
 	init();
-}, 0);
+}, false);
 
 // global replacer
 function globalReplacer(value) {
