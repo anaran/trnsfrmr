@@ -37,36 +37,21 @@ div#tabs>ul {
 div#buttons {
   background-color: #FFF7D9;
   display: block;
-  left: 32px;
-  min-width: 450px;
-  padding: 6px 6px 6px 146px;   
+  float: right;
+  padding: 6px 6px 6px 6px;
   position: fixed;
   right: 30px;
   top: 107px;
   z-index: 1;
 }
 
-#saving_progress {
-  width: 30px;
-  display: inline-block;
-  visibility: hidden;
-  -webkit-animation-delay: 0s;
-/*-webkit-animation-duration: 1s;
--webkit-animation: move_eye 4s linear 0s infinite alternate;
--webkit-animation-direction: normal;
--webkit-animation-duration: 0s;
--webkit-animation-fill-mode: none;
--webkit-animation-iteration-count: infinite;
--webkit-animation-name: none;
--webkit-animation-timing-function: ease;
--webkit-appearance: progress-bar;
--webkit-writing-mode: horizontal-tb;
-writing-mode: lr-tb;*/
+#save {
+  margin: 6px;
 }
 
-.saving {
-  position: relative;
-  top: 8px;
+#saving {
+  width: 30px;
+  visibility: hidden;
 }
 
 .sub_line {
@@ -123,10 +108,6 @@ pre {
   height: inherit;
 }
 
-#saving {
-  position: absolute;
-}
-
 #head {
   background-color: #FFCC66;
   font-size: 24pt;
@@ -178,7 +159,7 @@ li > a {
 }
 
 [dropzone] {
-  border-style: dashed dashed none;
+  border-style: dashed;
 }
 
 #tabs-1 {

@@ -4,7 +4,7 @@
     "description": "Erweiterungsname"
   },
   "extdescription": {
-    "message": "Sparen Sie sich Zeit und Arbeit mit Popchrom indem Sie für Textpassagen Abkürzungen hinterlegen. Ob Sie eine einfache Email Signatur, Ihre Adressdaten oder ganze Absätze hinterlegen möchte, Sie werden die einfache Verwendung von Popchrom, bei der Vermeidung des wiederholten eintippens, lieben.",
+    "message": "Sparen Sie sich Zeit und Arbeit mit Popchrom indem Sie für Textpassagen Abkürzungen hinterlegen.",
     "description": "Ausführliche Beschreibung der Erweiterung"
   },
   "options": {
@@ -323,7 +323,7 @@ Verbesserte Inhalte in Dialogfenstern.",
   },
   "map_template": {
     "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $$2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\\\n\\\"]\"]",
-    "description": "Vorlage fuer die Abbkürzungen"
+    "description": "Vorlage fuer die Abkürzungen"
   },
   "keys_not_unique": {
     "message": "Die Abkürzungen sind nicht eindeutig.",

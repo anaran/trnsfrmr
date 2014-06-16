@@ -1,3 +1,4 @@
+/* -*- Mode: js; tab-width: 8; indent-tabs-mode: t; js-indent-level: 8; fill-column: 80 -*- */
 /*jslint browser: true, devel: true, todo: true */
 /*global Settings, PageAction, replaceAllDates, window: false, chrome: false, $: false, KeyInfo: false */
 "use strict"; //$NON-NLS-0$
@@ -90,9 +91,9 @@ function extractKeyWord(str, s, e) {
 		var a = str.substring(e);
 		// take care of U+00A0 NO-BREAK SPACE as well
 		// Fixes issue 70.
-		var rb = b.match(/[^ \t\n\u00A0]*$/);
-		var ra = a.match(/^[^ \t\n\u00A0]*/);
-
+		// take care of >;<& to fix issue 38.
+		var rb = b.match(/[^ \t\n\u00A0>;]*$/);
+		var ra = a.match(/^[^ \t\n\u00A0<&]*/);
 		s -= rb[0].length;
 		e += ra[0].length;
 	}
@@ -117,7 +118,7 @@ function handleArguments(value, r) {
 			chrome.i18n.getMessage("see_regexp_help"));
 		}
 		var toReplacement = x[1];
-		//          NOTE Is replacement argument really a string?
+		// NOTE Is replacement argument really a string?
 		if (typeof(toReplacement) !== "string") { //$NON-NLS-0$
 			chrome.extension.getBackgroundPage().alert(toReplacement + chrome.i18n.getMessage("fix_non_quoted") + r.key + "\"\n" + value); //$NON-NLS-3$ //$NON-NLS-1$ //$NON-NLS-0$
 		}
@@ -152,11 +153,11 @@ function handleArguments(value, r) {
 
 //replaces the keys with the assigned values in the element.
 function checkElements(elem) {
-	//  "use strict";
+	// "use strict";
 	var substituted = false,
 		element = elem,
 		s, r, value, expandedElementType;
-	if ((element.tagName === "INPUT" && ((element.type === "text") || (element.type === "password"))) || element.tagName === "TEXTAREA") { //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+	if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") { //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 		// if text is selected abort... see wysiwyg-editor
 		if (element.selectionStart !== element.selectionEnd) {
 			var oldSelectionStart = element.selectionStart;
@@ -203,14 +204,25 @@ function checkElements(elem) {
 		// e.g. "badly " "split" "" "" "" " text" becomes "badly split text"
 		// Don't do this here since it invalidates the current selection!
 		// element.normalize();
-		var doc = element.ownerDocument;
+		// var doc = element.ownerDocument;
+		var doc = document;
 		var selection = doc.getSelection();
-		if (selection.isCollapsed) {
-			element = selection.anchorNode;
-			s = selection.anchorOffset;
-
+		var kcc = document.body.querySelector('.kix-cursor-caret'); //$NON-NLS-0$
+		var kso, gbcr, efp, crfp;
+		if (kcc) { //$NON-NLS-0$
+			// TODO Please note Google Drive (formerly Google Docs) uses KIX, mildly useful sources available at
+			// https://github.com/benjamn/kix-standalone
+			// found via http://stackoverflow.com/questions/7877225/google-docs-textcursor
+			// or directly in Chrome DevTools Source views
+			kso = document.body.querySelector('.kix-selection-overlay'); //$NON-NLS-0$
+			gbcr = kcc.getBoundingClientRect();
+			efp = document.elementFromPoint(gbcr.left, gbcr.bottom);
+			crfp = document.caretRangeFromPoint(gbcr.left, gbcr.bottom);
+		}
+		if (selection.isCollapsed && !kso) {
+			element = kcc ? efp : selection.anchorNode;
+			s = kcc ? crfp.startOffset : selection.anchorOffset;
 			r = extractKeyWord(element.textContent, s, s);
-
 			value = settings.map.get(r.key);
 			value = handleArguments(value, r);
 			if (value) {
@@ -219,56 +231,64 @@ function checkElements(elem) {
 				value = replaceAllDates(value);
 
 				var beforepos = r.before.length;
-
-				// split text into "element" - "keyword" - "aftervalue"
-				var keyword = element.splitText(beforepos);
-				var aftervalue = keyword.splitText(unExpandedValue.length);
-				// TODO check for other linebreaks like unix or mac style
-				var lines = value.split("\n"); //$NON-NLS-0$
-				var expansionNode = doc.createElement("div"); //$NON-NLS-0$
-				if (lines.length > 1) {
-					for (var i = 0; i < lines.length; i++) {
-						var div = doc.createElement("div"); //$NON-NLS-0$
-						if (lines[i].length > 0) {
-							expansionNode.appendChild(div.appendChild(doc.createTextNode(lines[i])).parentNode);
-						} else {
-							expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode); //$NON-NLS-0$
+				if (kcc) {
+					element.textContent = r.before + " " + value + " " + r.after;
+				} else {
+					// split text into "element" - "keyword" - "aftervalue"
+					var keyword = element.splitText(beforepos);
+					var aftervalue = keyword.splitText(unExpandedValue.length);
+					// TODO check for other linebreaks like unix or mac style
+					var lines = value.split("\n"); //$NON-NLS-0$
+					var expansionNode = doc.createElement("div"); //$NON-NLS-0$
+					if (lines.length > 1) {
+						for (var i = 0; i < lines.length; i++) {
+							var div = doc.createElement("div"); //$NON-NLS-0$
+							if (lines[i].length > 0) {
+								expansionNode.appendChild(div.appendChild(doc.createTextNode(lines[i])).parentNode);
+							} else {
+								expansionNode.appendChild(div.appendChild(doc.createElement("br")).parentNode); //$NON-NLS-0$
+							}
 						}
+					} else {
+						var span = doc.createElement("span"); //$NON-NLS-0$
+						expansionNode.appendChild(span.appendChild(doc.createTextNode(lines[0])).parentNode);
 					}
-				} else {
-					var span = doc.createElement("span"); //$NON-NLS-0$
-					expansionNode.appendChild(span.appendChild(doc.createTextNode(lines[0])).parentNode);
-				}
-				element.parentNode.replaceChild(expansionNode, keyword);
-				if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-				"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-					chrome.extension.sendMessage({
-						cmd: "clipboard", //$NON-NLS-0$
-						action: "paste" //$NON-NLS-0$
-					}, function(response) {
-						if (response.paste) {
-							document.getSelection().getRangeAt(0).deleteContents();
-							document.getSelection().getRangeAt(0).insertNode(document.createTextNode(response.paste));
-						}
+					element.parentNode.replaceChild(expansionNode, keyword);
+					if (window.find("%CLIPBOARD%", "aCaseSensitive", !"aBackwards", !"aWrapAround", //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+					"aWholeWord", !"aSearchInFrames", !"aShowDialog")) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+						chrome.extension.sendMessage({
+							cmd: "clipboard", //$NON-NLS-0$
+							action: "paste" //$NON-NLS-0$
+						}, function(response) {
+							if (response.paste) {
+								document.getSelection().getRangeAt(0).deleteContents();
+								document.getSelection().getRangeAt(0).insertNode(document.createTextNode(response.paste));
+							}
+							setEditableSelectionCursor(selection, doc, expansionNode, settings);
+						});
+					} else {
 						setEditableSelectionCursor(selection, doc, expansionNode, settings);
-					});
-				} else {
-					setEditableSelectionCursor(selection, doc, expansionNode, settings);
+					}
 				}
 			}
 		} else {
-			var ancestor = selection.anchorNode;
-			var unexpandedNode = doc.createTextNode(unExpandedValue);
-			ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
-			selection.deleteFromDocument();
-			// Normalization also deactivated a selection.
-			var x = unexpandedNode.parentNode;
-			x.normalize();
-			var range = doc.createRange();
-			range.selectNode(unexpandedNode);
-			document.getSelection().removeAllRanges();
-			document.getSelection().addRange(range);
-			document.getSelection().collapseToStart();
+			try {
+				var ancestor = selection.anchorNode;
+				var unexpandedNode = doc.createTextNode(unExpandedValue);
+				ancestor.parentNode.insertBefore(unexpandedNode, ancestor);
+				selection.deleteFromDocument();
+				var range = doc.createRange();
+				range.selectNode(unexpandedNode);
+				document.getSelection().removeAllRanges();
+				document.getSelection().addRange(range);
+				document.getSelection().collapseToStart();
+				// Normalization also deactivated a selection.
+				// Since it may change the HTML structure we
+				// do this last.
+				unexpandedNode.parentNode && unexpandedNode.parentNode.normalize();
+			} catch (error) {
+				console.log(error, range, unexpandedNode);
+			}
 			substituted = true;
 		}
 	}
@@ -291,21 +311,46 @@ function onKeyEvent(e) {
 			pageaction.notify();
 		} else {
 			if (document.activeElement.isContentEditable || !document.activeElement.hasOwnProperty("readOnly") || !document.activeElement.readOnly) { //$NON-NLS-0$
-				var notification = webkitNotifications.createNotification(
-				//NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
-				//chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
-				//TODO See issue chromium:134315 for possible trouble with this.
-				chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
-				chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
-				//			HMTL content seems to be only supported by a possible future createHTMLNotification
-				//			See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-				getMostRecentlyUsedList().filter(function(value, index, object) {
-					return true;
-				}).map(function(value, index, object) {
-					return value;
-				}).join(" ") // notification body text //$NON-NLS-0$
-				);
-				notification.show();
+				if (chrome.hasOwnProperty("notifications")) {
+					var opt = {
+						type: "basic",
+						title: chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"),
+						message: getMostRecentlyUsedList().filter(function(value, index, object) {
+							return true;
+						}).map(function(value, index, object) {
+							return value;
+						}).join(" "),
+						iconUrl: chrome.extension.getURL("icons/icon-48x48.png")
+					}
+					var notification = chrome.notifications.create("", opt, function(notificationId) {
+						return notificationId;
+					});
+				}
+			    else if (window.hasOwnProperty('Notification')) {
+				var notification = new Notification(
+				    chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), {
+					icon: chrome.extension.getURL("icons/icon-48x48.png"),
+					body: getMostRecentlyUsedList().filter(function(value, index, object) {
+					    return true;
+					}).map(function(value, index, object) {
+					    return value;
+					}).join(" ")
+				    });
+				}
+				// //NOTE Don't try to use a smaller icon since it will be streched and become low-resolution.
+				// //chrome.extension.getURL("icons/icon-16x16.png"), // icon url - can be relative
+				// //TODO See issue chromium:134315 for possible trouble with this.
+				// chrome.extension.getURL("icons/icon-48x48.png"), // icon url - can be relative, NOT! //$NON-NLS-0$
+				// chrome.i18n.getMessage("extname") + chrome.i18n.getMessage("recent_expansions"), // notification title //$NON-NLS-0$
+				// // HMTL content seems to be only supported by a possible future createHTMLNotification
+				// // See http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+				// getMostRecentlyUsedList().filter(function(value, index, object) {
+				// return true;
+				// }).map(function(value, index, object) {
+				// return value;
+				// }).join(" ") // notification body text //$NON-NLS-0$
+				// );
+				// notification.show();
 			} else {
 				chrome.extension.sendMessage({
 					cmd: "options" //$NON-NLS-0$
@@ -347,16 +392,20 @@ function init() {
 		// TODO Note that it works fine in Google Drive Spreadsheets and Forms.
 		var mySpans = document.body.querySelectorAll('span[class="goog-inline-block kix-lineview-text-block"]'); //$NON-NLS-0$
 		if (mySpans) {
-			for (var i = 2; i < mySpans.length; i++) {
+			for (var i = 0; i < mySpans.length; i++) {
 				mySpans[i].addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
 			}
 		}
 	}
-	addEventListenerToIframes();
-	document.addEventListener("keydown", onKeyEvent, false); //$NON-NLS-0$
+	// addEventListenerToIframes();
+	document.addEventListener("keydown", onKeyEvent, true); //$NON-NLS-0$
+	if (pageHasEditableElements()) {
+		pageaction.show();
+	}
 	var messageListener = function(request, sender, sendResponse) {
 		switch (request.cmd) {
-			case "onSubmitPopchromIssue": //$NON-NLS-0$
+			case "onSubmitPopchromIssue":
+				//$NON-NLS-0$
 				if (document.URL === request.url) {
 					try {
 						var sel = document.getSelection();
@@ -415,7 +464,8 @@ function init() {
 					}
 				}
 				break;
-			case "getSelection": //$NON-NLS-0$
+			case "getSelection":
+				//$NON-NLS-0$
 				try {
 					if (document.URL === request.url) {
 						var sel = document.getSelection();
@@ -457,9 +507,12 @@ function init() {
 	}
 }
 
-setTimeout(function() {
+document.addEventListener('readystatechange', function(event) {
+	if (event.target.readyState !== 'complete') {
+		return;
+	}
 	init();
-}, 0);
+}, false);
 
 // global replacer
 function globalReplacer(value) {
