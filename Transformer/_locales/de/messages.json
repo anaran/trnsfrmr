@@ -4,7 +4,7 @@
     "description": "Erweiterungsname"
   },
   "extdescription": {
-    "message": "Sparen Sie sich Zeit und Arbeit mit Popchrom indem Sie für Textpassagen Abkürzungen hinterlegen. Ob Sie eine einfache Email Signatur, Ihre Adressdaten oder ganze Absätze hinterlegen möchte, Sie werden die einfache Verwendung von Popchrom, bei der Vermeidung des wiederholten eintippens, lieben.",
+    "message": "Sparen Sie sich Zeit und Arbeit mit Popchrom indem Sie für Textpassagen Abkürzungen hinterlegen.",
     "description": "Ausführliche Beschreibung der Erweiterung"
   },
   "options": {
@@ -100,11 +100,11 @@
     "description": ""
   },
   "bad_abbrev_tab": {
-    "message": "Zeilenumbrüche in der Textauswahl bleiben nur erhalten, wenn die Abkürzung von einem Tab in dem Popchrom zur Verfügung steht erstellt wird. Popchrom ist im aktuellen Tab nicht verfügbar.",
+    "message": "Zeilenumbrüche in der Textauswahl bleiben nur erhalten, wenn die Abkürzung von einem Reiter in dem Popchrom zur Verfügung steht erstellt wird. Popchrom ist im aktuellen Reiter nicht verfügbar.",
     "description": ""
   },
   "bad_issue_tab": {
-    "message": "Bitte erstellen Sie den Fehlerbericht vom Tab in dem Sie das Popchrom Problem beobachtet haben. Popchrom ist im aktuellen Tab nicht verfügbar.",
+    "message": "Bitte erstellen Sie den Fehlerbericht vom Reiter in dem Sie das Popchrom Problem beobachtet haben. Popchrom ist im aktuellen Reiter nicht verfügbar.",
     "description": ""
   },
   "abbrev_exists": {
@@ -206,7 +206,7 @@
     
 Drücken Sie dann einfach Ihre selbst definierte Tastenkombination (voreingestellt ist 'Strg + Leertaste') um die Abkürzung zu ersetzen.
 
-Um neue Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s' oder den Speichern Button.
+Um neue Abkürzungen oder Anpassungen zu speichern drücken Sie bitte 'Strg + s' oder die Schaltfläche Speichern.
  
 Es gibt einige besondere Parameter, die Sie in Ihre Abkürzungen integrieren können:
 
@@ -289,12 +289,21 @@ Die geschieht durch erneute Verwendung der Tastenkombination für Textsubstituti
   "changelog_text": {
     "message": "Besuchen Sie bitte <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> um mehr Informationen zu erhalten.
 
+Neu in Version 1.9
+
+Schaltfläche Speichern ist nun oberhalb der einzellnen Reiter besser
+erreichbar.
+Navigation mit Tabulator Taste springt nun in alle Text Felder einer
+Abkürzung.
+Viele Fehlerbehebungen (verursacht von Änderungen in gmail, aktuellen
+Goolge Chrome Versionen).
+
 Neu in Version 1.8
 
 Download der Abkürzungen in den Download Ordner.
 Import von Download Dateien durch Ziehen auf die Text Dropzone.
 WYSIWYG Bearbeitung von Name, Argument Muster und Text der Abkürzung.
-Steuerelemente bleiben beim Rollen der Tab Inhalte sichtbar.
+Steuerelemente bleiben beim Rollen der Reiter Inhalte sichtbar.
 Popchrom Fehlerbericht über Kontextmenü.
 Neue Variable %CLIPBOARD% ist für die Definition von Abkürzungen verfügbar. 
 Viele Fehlerbehebungen.
@@ -323,7 +332,7 @@ Verbesserte Inhalte in Dialogfenstern.",
   },
   "map_template": {
     "message": "[\"heute\",\"%DATE%\",\"mfg\",\"Mit freundlichen Gr\u00fc\u00dfen\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $$2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\\\n\\\"]\"]",
-    "description": "Vorlage fuer die Abbkürzungen"
+    "description": "Vorlage fuer die Abkürzungen"
   },
   "keys_not_unique": {
     "message": "Die Abkürzungen sind nicht eindeutig.",

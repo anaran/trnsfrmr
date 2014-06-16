@@ -4,7 +4,7 @@
     "description": "Extensionname"
   },
   "extdescription": {
-    "message": "Save time and effort with Popchrom by creating your own shortcuts for text phrases! Whether it's a simple email signature or several paragraphs of a standard response, you'll love how easy it is to use Popchrom to avoid typing the same thing over and over.",
+    "message": "Save time and effort with Popchrom by creating your own shortcuts for text phrases.",
     "description": "Long extension description"
   },
   "options": {
@@ -289,6 +289,12 @@ This works by using the shortcut key again, but only when \"Select after replace
   "changelog_text": {
     "message": "Please visit <a href=\"http://code.google.com/p/trnsfrmr/\" target=\"_blank\">http://code.google.com/p/trnsfrmr/</a> for more information.
 
+New in Version 1.9
+
+Make Save button available above individual tabs.
+Tab key navigation now moves through all text fields of an abbreviation.
+Many bug fixes (prompted by changes to gmail, current Goolge Chrome versions).
+
 New in Version 1.8
 
 Download of abbreviations to Download folder.
@@ -323,7 +329,7 @@ Improved reporting via dialog boxes.",
   },
   "map_template": {
     "message": "[\"today\",\"%DATE%\",\"sy\",\"Sincerely yours\",\"tbug\",\"[\\\"\\\\\\\\s+(\\\\\\\\d+)\\\\\\\\s+(\\\\\\\\w+)\\\",\\n\\\"Hello $$2!\\\\nPlease see http://code.google.com/p/trnsfrmr/issues/detail?id=$$1 for details.\\\\n\\\"]\"]",
-    "description": "Vorlage fuer die Abbkürzungen"
+    "description": "Vorlage fuer die Abkürzungen"
   },
   "keys_not_unique": {
     "message": "The abbreviations have to be unique.",

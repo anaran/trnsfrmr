@@ -28,6 +28,9 @@
         <li><a href="#tabs-2" name="settingstab"></a></li>
         <li><a href="#tabs-3" name="helptab"></a></li>
         <li><a href="#tabs-4" name="changelogtab"></a></li>
+        <button name="save" id="save">Save</button>
+        <progress id="saving_progress"><span id=saving class="saving"></span>
+</progress>
       </ul>
       <div id="tabs-1"  class="tab_class">
 <div id="buttons" class="buttons_align_right">
@@ -36,9 +39,6 @@
 		<button name="download" id="download">Download</button>
 		<button name="delete_all" id="delete_all">Delete All</button>
 		<button name="add" id="add">Add</button>
-        <button name="save" id="save">Save</button>
-        <progress id="saving_progress"><span id=saving class="saving"></span>
-</progress>
 <!--        <label name="export" id="export"></label> -->
 <!--        <label name="import" id="import"></label> -->
         </div>      
@@ -46,13 +46,13 @@
           <div class="sub_line_template">
 <span class="key_args">
             <div class="key_div">              
-            	<input class="sub_key" type="text" value="" tabindex="2"/>            
+            	<input class="sub_key" type="text" value="" tabindex="1"/>
             </div>
             <div class="args_div">              
-            	<input class="sub_args" type="text" value="" tabindex="3"/>            
+            	<input class="sub_args" type="text" value="" tabindex="1"/>
             </div>
             <div class="del_button">
-            	<button name="delete" tabindex="-1"></button>            
+            	<button name="delete" tabindex="-1"></button>
             </div>
 </span>
             <span class="value_div">              
